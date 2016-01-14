@@ -16,6 +16,9 @@ $router->map('GET', '/?', function() {
 $router->map('GET', '/[a:controller]/[a:action]/?', function($controller, $action) {
 	\Core::callController($controller, $action);
 });
+$router->map('POST', '/[a:controller]/[a:action]/?', function($controller, $action) {
+	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
+});
 
 $match = $router->match();
 
@@ -24,5 +27,7 @@ if($match && is_callable($match['target'])) {
 	call_user_func_array($match['target'], $match['params']); 
 } else {
 	# no route was matched
+	echo '404 on match';
+	exit;
 }
 

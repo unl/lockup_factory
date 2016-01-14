@@ -1,0 +1,27 @@
+{
+    "config": {
+        "vendor-dir": "vendor/composer"
+    },
+    "require": {
+        "simple-cas/simple-cas": "dev-master",
+        "pear-pear.php.net/HTTP_Request2": "*",
+        "unl/php-wdn-templates": "^4.1",
+        "unl/unl_cache_lite": "0.1.*",
+        "php-activerecord/php-activerecord": "^1.1",
+        "altorouter/altorouter": "1.1.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/saltybeagle/SimpleCAS.git"
+        },
+        {
+            "type": "pear",
+            "url": "http://pear.php.net"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/unlpear/UNL_Cache_Lite.git"
+        }
+    ]
+}

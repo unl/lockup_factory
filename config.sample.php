@@ -20,6 +20,6 @@ error_reporting(E_ALL);
 ActiveRecord\Config::initialize(function ($cfg) {
     $cfg->set_model_directory(__DIR__ . '/src/Models');
     $cfg->set_connections(array(
-        'development' => 'mysql::lockups:lockups@localhost/lockups'
+        'development' => 'mysql://root:admin@localhost/lockups'
     ));
 });

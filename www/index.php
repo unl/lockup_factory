@@ -16,6 +16,24 @@ $router->map('GET', '/?', function() {
 $router->map('GET', '/[a:controller]/[a:action]/?', function($controller, $action) {
 	\Core::callController($controller, $action);
 });
+$router->map('GET', '/[a:controller]/[a:action]/[**:trailing]', function($controller, $action, $trailing) {
+	# convert "trailing" into an array of params
+	$params = array();
+	$key = NULL;
+	$even = TRUE;
+
+	$array = explode('/', $trailing);
+	for ($i = 0; $i < count($array); $i++) {
+		if ($even) {
+			$key = $array[$i];
+		} else {
+			$params[$key] = $array[$i];
+		}
+		$even = !$even;
+	}
+
+	\Core::callController($controller, $action, $params);
+});
 $router->map('POST', '/[a:controller]/[a:action]/?', function($controller, $action) {
 	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
 });

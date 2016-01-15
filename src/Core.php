@@ -5,6 +5,7 @@ class Core {
 		array("href" => "http://www.unl.edu", "text" => 'UNL'),
 		array("href" => '/', "text" => "UNL Lockup Factory")
 	);
+	const ROOT = __DIR__ . '/..';
 
 	public static function callController($controller, $action, $params = NULL) {
 		$controller_name = 'Controllers\\' . ucfirst($controller) . 'Controller';

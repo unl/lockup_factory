@@ -66,7 +66,6 @@ vagrantfile:
         forward_agent: false
         forward_x11: false
         shell: 'bash -l'
-        insert_key: false
     vagrant:
         host: detect
 server:

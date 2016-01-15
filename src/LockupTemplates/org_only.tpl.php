@@ -70,7 +70,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:110px;line-height:125%;font-family:Tungsten;-inkscape-font-specification:'Tungsten, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#474746;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:110px;line-height:125%;font-family:<?php echo $lockup->font_family ?>;-inkscape-font-specification:'Tungsten, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#474746;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="212.67999"
        y="983.70239"
        id="text3340"

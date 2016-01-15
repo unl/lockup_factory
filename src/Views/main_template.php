@@ -36,8 +36,8 @@ $page->breadcrumbs .= '</ul>';
 # navigation
 $page->navlinks = '
 <ul>
-<li><a href="/">New Lockup</a></li>
-<li><a href="/manage/">Manage Lockups</a></li>
+<li><a href="/lockups/create/">New Lockup</a></li>
+<li><a href="/lockups/manage/">Manage Lockups</a></li>
 </ul>'
 ;
 

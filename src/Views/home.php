@@ -9,7 +9,7 @@
             	<a href="/lockups/create/" class="wdn-button wdn-button-brand">Create a New Logo Lockup</a>
             </div>
             <div class="wdn-col">
-            	<a href="/lockups/manage/" class="wdn-button wdn-button-brand">Manage my Current Lockups</a>
+            	<a href="/lockups/manage/" class="wdn-button wdn-button-brand">Manage my Logo Lockups</a>
             </div>
         </div>
 	</div>

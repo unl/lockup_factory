@@ -17,6 +17,7 @@ $page->affiliation = '<a href="http://ucomm.unl.edu">University Communications</
 # css
 
 # javascript
+$page->head .= '<script type="text/javascript">WDN.initializePlugin("notice");</script>' . PHP_EOL;
 
 # other
 
@@ -41,8 +42,49 @@ $page->navlinks = '
 </ul>'
 ;
 
-# set output and footer
-$page->maincontentarea = $main_content;
+# set output
+$page->maincontentarea = '';
+if (($notice = \Core::getNotice()) != NULL) {
+    $class = '';
+    switch ($notice['level']) {
+        case 'success':
+            $class = 'affirm';
+            break;
+        case 'failure':
+            $class = 'negate';
+            break;
+        case 'alert':
+            $class = 'alert';
+            break;
+    }
+    $page->maincontentarea .= '
+        <div id="notice" class="wdn_notice ' . $class . '">
+            <div class="close">
+            <a href="#" title="Close this notice">Close this notice</a>
+            </div>
+            <div class="message">
+            <h4>' . $notice['header'] . '</h4>
+            <div class="message-content">' . html_entity_decode($notice['messageHTML']) . '</div>
+            </div>
+        </div>
+    ';
+} else {
+    $page->maincontentarea .= '
+        <div id="notice" class="wdn_notice" style="display: none;">
+            <div class="close">
+            <a href="#" title="Close this notice">Close this notice</a>
+            </div>
+            <div class="message">
+            <h4>Message Header</h4>
+            <div class="message-content">Message Content</div>
+            </div>
+        </div>
+    ';
+}
+$page->maincontentarea .= $main_content;
+
+
+# set footer
 $page->leftcollinks = 'leftcollinks';
 
 # echo everything

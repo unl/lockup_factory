@@ -1,6 +1,7 @@
 <?php
 namespace Controllers;
 use Models\Lockup;
+use Models\LockupFile;
 
 class LockupsController extends Controller {
 	public static $lockup_templates_directory = __DIR__ . '/../LockupTemplates';
@@ -76,9 +77,27 @@ class LockupsController extends Controller {
 			fclose($file);
 
 			# take this svg and make the appropriate files
-			$string = self::generateFiles($id);
-			return $string;
+			$frontend_output = self::generateFiles($id);
+			self::storeGenerateOutput(join($frontend_output, '<br>'));
+			\Core::redirect($lockup_model->getDownloadURL());
 		}
+	}
+
+	public static function downloadAction($get_params) {
+		self::requireAuth();
+
+		$id = $get_params['id'];
+		$lockup = Lockup::find($id, array('include' => array('files')));
+
+		if (empty($id) || empty($lockup)) {
+			// error
+		} else {
+			$context = new \stdClass;
+			$context->lockup = $lockup;
+
+			return self::renderView('download_lockup_files', $context);
+		}
+
 	}
 
 	private static function createLockup($template, $lockup) {
@@ -95,17 +114,125 @@ class LockupsController extends Controller {
 		$new_png_200 = \Core::ROOT . '/tmp/png_' . $id . '_200.png';
 		$new_png_400 = \Core::ROOT . '/tmp/png_' . $id . '_400.png';
 		$new_png_800 = \Core::ROOT . '/tmp/png_' . $id . '_800.png';
+		$new_eps = \Core::ROOT . '/tmp/eps_' . $id . '.eps';
 
-		$output = array();
+		$backend_output = array();
+		$frontend_output = array();
+
 		$return_var = NULL;
-		exec('inkscape --export-text-to-path --export-pdf=' . $new_pdf . ' ' . $starting_svg, $output, $return_var);
-		exec('inkscape --export-plain-svg=' . $new_svg . ' ' . $new_pdf, $output, $return_var);
-		exec('inkscape -h800 --export-png=' . $new_png_800 . ' ' . $new_svg, $output, $return_var);
-		exec('inkscape -h400 --export-png=' . $new_png_400 . ' ' . $new_svg, $output, $return_var);
-		exec('inkscape -h200 --export-png=' . $new_png_200 . ' ' . $new_svg, $output, $return_var);
-		exec('inkscape -h100 --export-png=' . $new_png_100 . ' ' . $new_svg, $output, $return_var);
+		exec('inkscape --export-text-to-path --export-pdf=' . $new_pdf . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_pdf, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'pdf',
+				'data' => fread($file, filesize($new_pdf))
+			));
+			fclose($file);
 
-		return 'done';
+			$frontend_output[] = 'PDF created.';
+		} else {
+			$frontend_output[] = 'Error creating PDF.';
+		}
+
+		exec('inkscape --export-plain-svg=' . $new_svg . ' ' . $new_pdf . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_svg, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'svg',
+				'data' => fread($file, filesize($new_svg))
+			));
+			fclose($file);
+
+			$frontend_output[] = 'SVG created.';
+		} else {
+			$frontend_output[] = 'Error creating SVG.';
+		}
+
+		exec('inkscape -h800 --export-png=' . $new_png_800 . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_png_800, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'png_800',
+				'data' => fread($file, filesize($new_png_800))
+			));
+			fclose($file);
+
+			$frontend_output[] = '800px PNG created.';
+		} else {
+			$frontend_output[] = 'Error creating 800px PNG.';
+		}
+
+		exec('inkscape -h400 --export-png=' . $new_png_400 . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_png_400, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'png_400',
+				'data' => fread($file, filesize($new_png_400))
+			));
+			fclose($file);
+
+			$frontend_output[] = '400px PNG created.';
+		} else {
+			$frontend_output[] = 'Error creating 400px PNG.';
+		}
+
+		exec('inkscape -h200 --export-png=' . $new_png_200 . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_png_200, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'png_200',
+				'data' => fread($file, filesize($new_png_200))
+			));
+			fclose($file);
+
+			$frontend_output[] = '200px PNG created.';
+		} else {
+			$frontend_output[] = 'Error creating 200px PNG.';
+		}
+
+		exec('inkscape -h100 --export-png=' . $new_png_100 . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_png_100, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'png_100',
+				'data' => fread($file, filesize($new_png_100))
+			));
+			fclose($file);
+
+			$frontend_output[] = '100px PNG created.';
+		} else {
+			$frontend_output[] = 'Error creating 100px PNG.';
+		}
+
+		exec('inkscape -h100 --export-eps=' . $new_eps . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_eps, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $id,
+				'type' => 'eps',
+				'data' => fread($file, filesize($new_eps))
+			));
+			fclose($file);
+
+			$frontend_output[] = 'EPS created.';
+		} else {
+			$frontend_output[] = 'Error creating EPS.';
+		}
+
+		return $frontend_output;
 	}
 
 	private static function calculateTextWidth($text) {

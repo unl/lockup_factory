@@ -9,6 +9,8 @@ require_once $config_file;
 
 require_once __DIR__ . '/../vendor/composer/autoload.php';
 
+session_start();
+
 $router = new AltoRouter();
 $router->map('GET', '/?', function() {
 	\Core::callController('home', 'view');

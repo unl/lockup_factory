@@ -11,7 +11,7 @@ vagrantfile:
             private_network: 192.168.56.101
             forwarded_port:
                 vflnp_11cowcgduhbn:
-                    host: '5600'
+                    host: '9857'
                     guest: '22'
                 vflnp_zkgq621m6wnz:
                     host: '8009'
@@ -188,7 +188,7 @@ apache:
             ssl_cipher: ''
             directories:
                 avd_vjcrobctzv8w:
-                    path: /var/www/html
+                    path: /var/www/html/www
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -214,6 +214,8 @@ php:
             - cli
             - intl
             - gd
+            - xml
+            - libxml
         pear: {  }
         pecl: {  }
     ini:

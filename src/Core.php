@@ -42,4 +42,27 @@ class Core {
             exit($exit);
         }
 	}
+
+	# get flash notice information
+	public static function getNotice()
+    {
+        if (isset($_SESSION['flash_notice'])) {
+            $notice = $_SESSION['flash_notice'];
+            unset($_SESSION['flash_notice']);
+            return $notice;
+        } else {
+            return NULL;
+        }
+    }
+
+    public static function getGenerateOutput()
+    {
+    	if (isset($_SESSION['generate_output'])) {
+            $notice = $_SESSION['generate_output'];
+            unset($_SESSION['generate_output']);
+            return $notice;
+        } else {
+            return NULL;
+        }
+    }
 }

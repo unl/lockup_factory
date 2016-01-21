@@ -1,18 +1,22 @@
 <?php
 
+# standard autoloader
 function autoload($class)
 {
     $class = str_replace(array('_', '\\'), '/', $class);
     include $class . '.php';
 }
-
-require __DIR__ . '/vendor/composer/autoload.php';
 spl_autoload_register('autoload');
 
+# our projects' include paths (these will be added to by composer)
 set_include_path(
     __DIR__ . '/src'
 );
 
+# the composer autoloader
+require __DIR__ . '/vendor/composer/autoload.php';
+
+# do this stuff
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 

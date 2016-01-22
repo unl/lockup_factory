@@ -6,6 +6,7 @@ class Core {
 		array("href" => '/', "text" => "UNL Lockup Factory")
 	);
 	const ROOT = __DIR__ . '/..';
+	public static $absolute_base_url = 'http://lockupfactory.unl.edu/';
 
 	public static function callController($controller, $action, $params = NULL) {
 		$controller_name = 'Controllers\\' . ucfirst($controller) . 'Controller';

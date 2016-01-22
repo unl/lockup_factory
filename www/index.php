@@ -11,9 +11,17 @@ require_once __DIR__ . '/../vendor/composer/autoload.php';
 
 session_start();
 
+# initialize auth things
+\Auth::setUpClient();
+\Auth::singleLogOut();
+\Auth::setUser();
+
 $router = new AltoRouter();
 $router->map('GET', '/?', function() {
 	\Core::callController('home', 'view');
+});
+$router->map('GET', '/logout/?', function() {
+	\Auth::logout();
 });
 $router->map('GET', '/[a:controller]/[a:action]/?', function($controller, $action) {
 	\Core::callController($controller, $action);
@@ -37,6 +45,9 @@ $router->map('GET', '/[a:controller]/[a:action]/[**:trailing]', function($contro
 	\Core::callController($controller, $action, $params);
 });
 $router->map('POST', '/[a:controller]/[a:action]/?', function($controller, $action) {
+	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
+});
+$router->map('POST', '/[a:controller]/[a:action]/[**:trailing]', function($controller, $action, $trailing) {
 	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
 });
 

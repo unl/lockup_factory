@@ -30,7 +30,6 @@ class Controller {
     }
 
     public static function requireAuth() {
-        $auth = new Auth;
-        $auth->authenticate();
+        \Auth::authenticate();
     }
 }

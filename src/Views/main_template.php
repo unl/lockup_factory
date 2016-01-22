@@ -17,6 +17,7 @@ $page->affiliation = '<a href="http://ucomm.unl.edu">University Communications</
 # css
 
 # javascript
+$page->head .= '<script type="text/javascript">WDN.setPluginParam("idm", "logout", "/logout/");</script>' . PHP_EOL;
 $page->head .= '<script type="text/javascript">WDN.initializePlugin("notice");</script>' . PHP_EOL;
 
 # other

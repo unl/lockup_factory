@@ -51,6 +51,8 @@ class LockupsController extends Controller {
 	}
 
 	public static function postGenerateAction($post_params) {
+		self::requireAuth();
+
 		$id = $post_params['id'];
 		$lockup_model = Lockup::find($id);
 
@@ -75,6 +77,10 @@ class LockupsController extends Controller {
 			$file = fopen($filename, 'w');
 			fwrite($file, $svg_text);
 			fclose($file);
+
+			# take this "temp" lockup and make it the users
+			$lockup_model->user_id = \Auth::$current_user->id;
+			$lockup_model->save();
 
 			# take this svg and make the appropriate files
 			$frontend_output = self::generateFiles($id);

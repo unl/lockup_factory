@@ -1,0 +1,17 @@
+label > input { /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+label > input + img { /* IMAGE STYLES */
+  cursor: pointer;
+  box-shadow: 0px 0px 8px #DDDDDD;
+}
+label > input:checked + img { /* (RADIO CHECKED) IMAGE STYLES */
+  box-shadow: 0px 0px 8px #1B9AE8;
+}
+form legend {
+	font-size: 1.5em;
+}
+.page-title {
+	margin-top: 0;
+}

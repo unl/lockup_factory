@@ -40,7 +40,6 @@ class Auth
         return false;
     }
 
-
     public static function singleLogOut()
     {
         \phpCAS::handleLogoutRequests(false);

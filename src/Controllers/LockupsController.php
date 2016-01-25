@@ -19,15 +19,18 @@ class LockupsController extends Controller {
 		# take the params and generate a base lockup from that template
 		$lockup = new \stdClass;
 		$lockup->org_name = strtoupper($post_params['organization']);
-		$lockup->org_width = self::calculateTextWidth($lockup->org_name);
-		$lockup->width = 152 + 62 + $lockup->org_width + 31; // 152 is the base width/height of the N. 62 is the width of the serif
-		$lockup->font_family = 'Tungsten A, Tungsten B';
-		$svg_text = self::createLockup('org_only', $lockup);
+		$lockup->affil_name = $post_params['affiliation'];
+		$lockup->org_width = self::calculateOrgWidth($lockup->org_name);
+		$lockup->affil_width = self::calculateAffilWidth($lockup->affil_name);
+		$lockup->width = 152 + 62 + max($lockup->org_width, $lockup->affil_width) + 31; // 152 is the base width/height of the N. 62 is the width of the serif
+		$lockup->main_font_family = 'Tungsten A, Tungsten B';
+		$lockup->secondary_font_family = 'Mercury SSm A, Mercury SSm B';
+		$svg_text = self::createLockup($post_params['type'], $lockup);
 		
 		$model = Lockup::create(array(
 			'organization' => $post_params['organization'],
-			'affiliation' => NULL,
-			'style' => 'org_only',
+			'affiliation' => $post_params['affiliation'],
+			'style' => $post_params['type'],
 			'user_id' => NULL,
 			'date_created' => date('Y-m-d H:i:s'),
 			'preview_svg' => $svg_text
@@ -37,6 +40,8 @@ class LockupsController extends Controller {
 	}
 
 	public static function previewAction($get_params) {
+		\Core::$breadcrumbs[] = array('text' => 'Preview Lockup');
+
 		$id = $get_params['id'];
 		$lockup = Lockup::find($id);
 
@@ -61,10 +66,13 @@ class LockupsController extends Controller {
 		} else {
 			$lockup = new \stdClass;
 			$lockup->org_name = strtoupper($lockup_model->organization);
-			$lockup->org_width = self::calculateTextWidth($lockup->org_name);
+			$lockup->affil_name = $lockup_model->affiliation;
+			$lockup->org_width = self::calculateOrgWidth($lockup->org_name);
+			$lockup->affil_width = self::calculateAffilWidth($lockup->affil_name);
 			$lockup->width = 152 + 62 + $lockup->org_width + 31; // 152 is the base width/height of the N. 62 is the width of the serif
-			$lockup->font_family = 'Tungsten';
-			$svg_text = self::createLockup('org_only', $lockup);
+			$lockup->main_font_family = 'Tungsten';
+			$lockup->secondary_font_family = 'Mercury Display';
+			$svg_text = self::createLockup($lockup_model->style, $lockup);
 
 			# write this to a temp file
 			$filename = \Core::ROOT . '/tmp/temp_svg_' . $lockup_model->id . '.svg';
@@ -78,7 +86,7 @@ class LockupsController extends Controller {
 			fwrite($file, $svg_text);
 			fclose($file);
 
-			# take this "temp" lockup and make it the users
+			# take this "temp" lockup and make it the user's
 			$lockup_model->user_id = \Auth::$current_user->id;
 			$lockup_model->save();
 
@@ -91,20 +99,41 @@ class LockupsController extends Controller {
 
 	public static function downloadAction($get_params) {
 		self::requireAuth();
+		\Core::$breadcrumbs[] = array('text' => 'Lockup Details and Files');
 
 		$id = $get_params['id'];
-		$lockup = Lockup::find($id, array('include' => array('files')));
+		$lockup = Lockup::find($id, array('include' => array('files', 'user')));
 
 		if (empty($id) || empty($lockup)) {
 			// error
 		} else {
+			# check that this lockup belongs to the user
+			if ($lockup->user != \Auth::$current_user) {
+				# not the right user
+				self::flashNotice(parent::NOTICE_LEVEL_ALERT, 'Not your lockup', 'This lockup was not created by you, and you are unable to edit it.');
+				\Core::redirect('/lockups/manage/');
+			}
+
 			$context = new \stdClass;
 			$context->lockup = $lockup;
 
 			return self::renderView('download_lockup_files', $context);
 		}
-
 	}
+
+	public static function manageAction($get_params) {
+		self::requireAuth();
+		\Core::$breadcrumbs[] = array('text' => 'Manage Lockups');
+
+		$context = new \stdClass;
+		$context->lockups = \Auth::$current_user->lockups;
+
+		return self::renderView('manage_lockups', $context);
+	}
+
+///////////***********///////////
+	//     PRIVATE     ///
+////////////////////////////
 
 	private static function createLockup($template, $lockup) {
 		ob_start();
@@ -241,7 +270,7 @@ class LockupsController extends Controller {
 		return $frontend_output;
 	}
 
-	private static function calculateTextWidth($text) {
+	private static function calculateOrgWidth($text) {
 		return array_sum(array_map(function ($letter) {
 			switch($letter) {
 				# these widths are dependent on the font-size. For reference, 16,57,41 are for 110px font
@@ -255,6 +284,17 @@ class LockupsController extends Controller {
 					break;
 				default:
 					return 41;
+					break;
+			}
+		}, str_split($text)));
+	}
+
+	private static function calculateAffilWidth($text) {
+		return array_sum(array_map(function ($letter) {
+			switch($letter) {
+				# these widths are dependent on the font-size. For reference, 20 are for 32pt = 44px font
+				default:
+					return 20;
 					break;
 			}
 		}, str_split($text)));

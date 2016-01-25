@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="test-lockup.svg">
+   sodipodi:docname="affiliate_org_template.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,17 +25,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.82"
-     inkscape:cx="463.1644"
-     inkscape:cy="297.56098"
+     inkscape:zoom="0.47"
+     inkscape:cx="418.96357"
+     inkscape:cy="-92.682922"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1849"
-     inkscape:window-height="925"
-     inkscape:window-x="39"
-     inkscape:window-y="97"
+     inkscape:window-width="1796"
+     inkscape:window-height="924"
+     inkscape:window-x="35"
+     inkscape:window-y="215"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -72,15 +72,29 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:110px;line-height:125%;font-family:<?php echo $lockup->main_font_family ?>;-inkscape-font-specification:'Tungsten, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#474746;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="212.67999"
-       y="983.70239"
+       y="1013.7024"
        id="text3340"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          x="212.67999"
-         y="983.70239"
+         y="1013.7024"
          id="tspan3342"><tspan
            x="212.67999"
-           y="983.70239"
+           y="1013.7024"
            id="tspan3344"><?php echo $lockup->org_name ?></tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:300;font-stretch:normal;font-size:40px;line-height:125%;font-family:<?php echo $lockup->secondary_font_family ?>;-inkscape-font-specification:'Mercury Display, Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#474746;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="212.67999"
+       y="902.86371"
+       id="text3392"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="212.67999"
+         y="902.86371"
+         id="tspan3394"><tspan
+           x="212.67999"
+           y="902.86371"
+           id="tspan3396"><?php echo $lockup->affil_name ?></tspan></tspan></text>
   </g>
 </svg>

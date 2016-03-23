@@ -11,7 +11,7 @@ class LockupFile extends \ActiveRecord\Model {
 	}
 
 	public function getName() {
-		return $this->lockup->organization . '_' . $this->type . $this->getFileExtension();
+		return 'N' . substr($this->orientation,0,1) . '_' . $this->lockup->getOrganizationFilename() . '_' . $this->color . ($this->reverse ? '_rev' : '') . $this->getFileExtension();
 	}
 
 	public function getFileExtension() {

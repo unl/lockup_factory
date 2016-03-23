@@ -10,7 +10,7 @@ if (file_exists($wdn_include_path)) {
 
 # Document titles
 $page->doctitle = '<title>UNL Lockup Factory</title>';
-$page->titlegraphic = 'UNL Lockup Factory';
+$page->titlegraphic = 'UNL Lockup Fabricator';
 $page->pagetitle = '';
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communications</a>';
 

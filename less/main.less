@@ -1,17 +1,70 @@
 label > input { /* HIDE RADIO */
-  visibility: hidden; /* Makes input not-clickable */
-  position: absolute; /* Remove input from document flow */
+	visibility: hidden; /* Makes input not-clickable */
+	position: absolute; /* Remove input from document flow */
 }
-label > input + img { /* IMAGE STYLES */
-  cursor: pointer;
-  box-shadow: 0px 0px 8px #DDDDDD;
+label img {
+	padding: 5px;
 }
-label > input:checked + img { /* (RADIO CHECKED) IMAGE STYLES */
-  box-shadow: 0px 0px 8px #1B9AE8;
+label > input + img, label > input + img + img { /* IMAGE STYLES */
+	cursor: pointer;
+	box-shadow: 0px 0px 8px #DDDDDD;
+}
+label > input:checked + img, label > input:checked + img + img { /* (RADIO CHECKED) IMAGE STYLES */
+	box-shadow: 0px 0px 8px #1B9AE8;
 }
 form legend {
 	font-size: 1.5em;
 }
 .page-title {
 	margin-top: 0;
+}
+div.center {
+	text-align: center;
+}
+svg.preview {
+	border: 2px dashed #DDDDDD;
+	max-width: 100%;
+	max-height: 100%;
+}
+.toolbox, .visual-island {
+    background: #f9f8f5;
+    margin-bottom: 1em;
+    word-wrap: break-word;
+	padding: 0 !important;
+	.tools, .details {
+		padding: 1em;
+		border-left: 1px solid #d5d5d2;
+		border-right: 1px solid #d5d5d2;
+		border-bottom: 1px solid #d5d5d2;
+		&.top-border {
+			border-top: 1px solid #d5d5d2;
+		}
+	}
+    h1, h2, h3, h4, h5, h6, .vi-header{
+		display: block;
+		font-size: .802em !important;
+		margin: 0;
+		border-bottom: 1px solid #474746;
+		font-family: "Gotham SSm A","Gotham SSm B",Verdana,"Verdana Ref",Geneva,Tahoma,"Lucida Grande","Lucida Sans Unicode","Lucida Sans","DejaVu Sans","Bitstream Vera Sans","Liberation Sans",sans-serif;
+		width: 100%;
+		background-color: #474746;
+		padding: 1em;
+		text-transform: uppercase;
+		color:#fff;
+		font-weight: 400;
+		font-style: normal;
+		text-align: center;
+	}
+	p {
+		padding: 0 1em 1em 1em;
+	}
+	ul {
+		padding: 0;
+		padding-left: 1em;
+		margin: 0;
+	    a {
+	    	border-bottom: none;
+	    	font-family: "Gotham SSm A","Gotham SSm B",Verdana,"Verdana Ref",Geneva,Tahoma,"Lucida Grande","Lucida Sans Unicode","Lucida Sans","DejaVu Sans","Bitstream Vera Sans","Liberation Sans",sans-serif;
+	    }
+	}
 }

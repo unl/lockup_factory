@@ -1,5 +1,5 @@
 <div class="wdn-band">
-
+Clink. Clang. Clong. Logo ready!!! Bzzzt. Doing! Clang!!! Logo ready! 
 </div>
 
 <div class="wdn-band">

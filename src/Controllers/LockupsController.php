@@ -2,6 +2,7 @@
 namespace Controllers;
 use Models\Lockup;
 use Models\LockupFile;
+use Models\User;
 use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
@@ -10,10 +11,13 @@ class LockupsController extends Controller {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');
 
 		$context = new \stdClass;
+		$context->approvers = User::find('all', array('conditions' => array('role' => 'approver')));
 		return self::renderView('new_lockup', $context);
 	}
 
 	public static function postCreateAction($post_params) {
+		self::requireAuth();
+
 		# take the params and generate a base lockup from that template
 		$lockup = new \stdClass;
 
@@ -40,11 +44,12 @@ class LockupsController extends Controller {
 			'acronym' => 					strtoupper($post_params['acronym']),
 			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
 			'extension_county' =>	 		$post_params['extension_county'],
-			'style' => $post_params['type'],
-			'user_id' => NULL,
-			'date_created' => date('Y-m-d H:i:s'),
-			'preview_svg' => $svg_text,
-			'vert_preview_svg' => $vert_svg_text
+			'style' => 						$post_params['type'],
+			'user_id' => 					\Auth::$current_user->id,
+			'date_created' => 				date('Y-m-d H:i:s'),
+			'preview_svg' => 				$svg_text,
+			'vert_preview_svg' => 			$vert_svg_text,
+			'approver_id' => 				$post_params['approver']
 		));
 
 		\Core::redirect($model->getPreviewURL());

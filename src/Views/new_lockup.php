@@ -1,7 +1,26 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
         <h3 class="page-title">Create New Logo Lockup</h3>
+
         <form method="POST" action="">
+            <?php if (\Auth::$current_user === NULL): ?>
+                <fieldset>
+                    <legend>Log In</legend>
+                    <div><label>We'll need you to log in to your UNL account before creating a lockup.</label></div>
+                    <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
+                </fieldset>
+            <?php endif; ?>
+
+            <fieldset>
+                <legend>Communicator Approval</legend>
+                <label for="approver">Select your Communicator Contact:</label>
+                <select id="approver" name="approver">
+                    <?php foreach ($context->approvers as $user): ?>
+                        <option value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
+                    <?php endforeach; ?>
+                </select>
+            </fieldset>
+
             <fieldset>
                 <legend>Style</legend>
                 <div>
@@ -28,7 +47,7 @@
                             <img class="vert" style="display: none;" src="/images/org_two_line_vert_example.png">
                         </label><br>
                         <label for="type-org-two-line">
-                            Organization-only lockup, with two lines.
+                            Organization-only lockup, with two lines. The lines are vertically centered in the horizontal version.
                         </label><br><br>
                     </div>
                 </div>
@@ -50,7 +69,7 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_1-2_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-1-2">
-                            Organization and subject lockup. 
+                            Organization and subject lockup. Two lines for the subject, for extra detail when necessary.
                         </label><br><br>
                     </div>
                 </div>
@@ -62,7 +81,7 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_2-1_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-2-1">
-                            Organization and subject lockup. 
+                            Organization and subject lockup. Two lines for the organization.
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -72,7 +91,7 @@
                             <img class="vert" style="display: none;" src="/images/acronym_vert_example.png">
                         </label><br>
                         <label for="type-acronym">
-                            Larger main text, for use with acronyms.
+                            Larger main text, for use with acronyms. This is intended only for merchandise.
                         </label><br><br>
                     </div>
                 </div>
@@ -84,7 +103,7 @@
                             <img class="vert" style="display: none;" src="/images/acronym_subject_vert_example.png">
                         </label><br>
                         <label for="type-acronym-subject">
-                            Larger main text, for use with acronyms. Secondary line included.
+                            Larger main text, for use with acronyms. Secondary line included. This is intended only for merchandise.
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -103,39 +122,78 @@
                 <legend>Text</legend>
                 <div id="organization-field">
                     <label for="organization">Organization</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            30 characters max
+                        </div>
+                    </div>
                     <input type="text" name="organization" id="organization">
                 </div>
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            30 characters max
+                        </div>
+                    </div>
                     <input type="text" name="organization_second_line" id="organization-second-line">
                 </div>
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            40 characters max
+                        </div>
+                    </div>
                     <input type="text" name="subject" id="subject">
                     <br>
                 </div>
                 <div id="subject-second-line-field" style="display: none;">
                     <label for="subject-second-line">Subject Second Line</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            40 characters max
+                        </div>
+                    </div>
                     <input type="text" name="subject_second_line" id="subject-second-line">
                     <br>
                 </div>
                 <div id="acronym-field" style="display: none;">
                     <label for="acronym">Acronym</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            10 characters max
+                        </div>
+                    </div>
                     <input type="text" name="acronym" id="acronym">
                     <br>
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
                     <label for="acronym-subject">Acronym Subject</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            15 characters max
+                        </div>
+                    </div>
                     <input type="text" name="acronym_subject" id="acronym-subject">
                     <br>
                 </div>
                 <div id="extension-county-field" style="display: none;">
                     <label for="extension-county">Extension County</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            40 characters max
+                        </div>
+                    </div>
                     <input type="text" name="extension_county" id="extension-county">
                     <br>
                 </div>
                 <br>
-                <button type="submit" class="wdn-button wdn-button-triad">Submit</button>
+                <?php if (\Auth::$current_user !== NULL): ?>
+                    <button type="submit" class="wdn-button wdn-button-brand">Submit Lockup</button>
+                <?php else: ?>
+                    <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
+                <?php endif; ?>
             </fieldset>
         </form>
 	</div>

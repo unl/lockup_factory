@@ -19,6 +19,14 @@ class Lockup extends \ActiveRecord\Model {
 		return '/lockups/download/id/' . $this->id . '/';
 	}
 
+	public function getZIPDownloadLink() {
+		return '/files/zipdownload/id/' . $this->id . '/';
+	}
+
+	public function getZIPDownloadName() {
+		return 'N_' . $this->getOrganizationFilename() . '_logo_lockups.zip';
+	}
+
 	public function getPNGDownloadURL() {
 		foreach ($this->files as $file) {
 			if ($file->type == 'png' && $file->color == 'RGB' && $file->orientation == 'horiz') {

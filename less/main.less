@@ -26,6 +26,102 @@ svg.preview {
 	max-width: 100%;
 	max-height: 100%;
 }
+
+.tooltip {
+	> div {
+	    position: absolute;
+	    display: none;
+	    background-color: #fff;
+	    color: #000;
+	    box-shadow: 0px 1px 4px RGBA(0,0,0,0.2);
+	    padding: .75em;
+	    bottom: 160%;
+	    left: -91px;
+	    width: 200px;
+	    text-align: left;
+	    z-index: 250;
+	}
+	> div:before {
+	    background-color: white;
+	    content: "";
+	    display: block;
+	    width: 15px; 
+	    height: 15px; 
+	    position: absolute;
+	    bottom: -8px;
+	    left: 50%;
+	    margin-left: -7px;
+	    transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	    -o-transform: rotate(45deg);
+	    -moz-transform: rotate(45deg);
+	    -webkit-transform: rotate(45deg);
+	    box-shadow: 0px 0px 4px RGBA(0,0,0,0.25);
+	}
+	> div:after {
+	    content:"";
+	    height: 12px;
+	    width: 40px;
+	    background-color: #fff;
+	    display: block;
+	    position: absolute;
+	    bottom: 0px;
+	    left: 50%;
+	    margin-left: -24px;
+	}
+	&.hang-right > div {
+	    left: -27px;
+	}
+	&.hang-left > div {
+	    left: -157px;
+	}
+	&.hang-right > div:before {
+	    left: 34px;
+	    margin-left: -7px;
+	}
+	&.hang-right > div:after {
+	    left: 34px;
+	    margin-left: -24px;
+	}
+	&.hang-left > div:before {
+	    left: 166px;
+	    margin-left: -7px;
+	}
+	&.hang-left > div:after {
+	    left: 166px;
+	    margin-left: -24px;
+	}
+
+	background-color: #1B9AE8;
+    border-radius: 2em;
+    height: 1.5em;
+    width: 1.5em;
+    padding: 0 0.2em;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    font-size: 0.85em;
+    line-height: 1.6em;
+    position: relative;
+    font-size: .8125rem;
+    ul li {
+	    margin-bottom: .75em;
+	}
+	span.heading{
+	    font-family: "Tungsten A","Tungsten B",HelveticaNeueCondensed,HelveticaNeue-Condensed,"Helvetica Neue Condensed",HelveticaNeueRomanCondensed,HelveticaNeue-Roman-Condensed,"Helvetica Neue Roman Condensed","Arial Narrow",HelveticaNeue,"Helvetica Neue",HelveticaNeueRoman,HelveticaNeue-Roman,"Helvetica Neue Roman",Helvetica,Tahoma,Geneva,Arial,sans-serif;
+	    font-size: 1.777em;
+	}
+	&:hover > div {
+	    display: block;
+	}
+	p {
+	    margin: 0;
+	}
+	&.italic *{
+	    font-style: italic;
+	}
+}
+
 .toolbox, .visual-island {
     background: #f9f8f5;
     margin-bottom: 1em;

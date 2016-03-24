@@ -12,22 +12,32 @@
 
 		<div id="explanation">
 			<p>
-			<strong>This is only a preview!</strong> Downloading these images as SVG or elsewise will not work, as you likely do not have the fonts
-			necessary to display the text. Please log in to your UNL account, and click "Generate Files" to create vectorized versions as well as 
-			PNGs, with all color variations, which you can download and use for your organization.
+			<strong>This is only a preview!</strong> Your lockup is being reviewed by University Communications and your Communicator Contact. You can check the status of your
+			lockup by clicking "Manage Lockups" in the navigation menu.
 			</p>
 		</div>
 
-		<?php if (\Auth::$current_user !== NULL): ?>
-		<form method="POST" action="/lockups/generate/">
+		<?php if (\Auth::$current_user->role == 'admin' || \Auth::$current_user->id == $context->lockup->approver_id): ?>
+		<form method="POST" action="/lockups/generate/" id="generate">
+			<div><label>You have permission to generate this lockup. Click "Generate Files" below to begin.</label></div>
 			<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-			<button type="submit" class="wdn-button wdn-button-triad">Generate Files</button>
+			<button type="submit" class="wdn-button wdn-button-triad" id="submit-generate">Generate Files</button>
+			<div style="display: none;" id="going-message">
+				<img src="/images/spinner.svg" style="height: 16px;">
+				<label style="font-style: italic;">And off we go! This will take a little while. Please be patient, we'll redirect you when this is complete.</label>
+			</div>
 		</form>
-		<span>
-			
-		</span>
-		<?php else: ?>
-			<a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
 		<?php endif; ?>
 	</div>
 </div>
+
+<script type="text/javascript">
+require(['jquery'], function ($) {
+    $(document).ready(function () {
+    	$('#generate').submit(function (submit) {
+    		$('#going-message').css('display', 'inline-block');
+    		$('#submit-generate').attr('disabled', 'disabled');
+    	});
+    });
+});
+</script>

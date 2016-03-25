@@ -40,6 +40,21 @@ class Auth
         return false;
     }
 
+    public static function autoLogin()
+    {
+        if (!array_key_exists('unl_sso', $_COOKIE)) {
+            //No unl_sso cookie was found, no need to auto-login.
+            return;
+        }
+        if (self::$current_user != NULL) {
+            //We are already logged in, no need to auto-login
+            return;
+        }
+        
+        //Everything looks good.  Log in!
+        $result = \phpCAS::checkAuthentication();
+    }
+
     public static function singleLogOut()
     {
         \phpCAS::handleLogoutRequests(false);

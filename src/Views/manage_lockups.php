@@ -1,18 +1,81 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
+    <?php if (\Auth::$current_user->isAdmin()): ?>
         <table>
             <thead>
                 <tr>
-                    <th>My Lockups</th>
+                    <th>ID</th>
+                    <th>All Lockups</th>
+                    <th>Submitter</th>
+                    <th>Status</th>
                 </tr>   
             </thead>
             <tbody>
-            <?php foreach ($context->lockups as $lockup): ?>
+            <?php foreach ($context->all_lockups as $lockup): ?>
                 <tr>
-                    <td><a href="<?php echo $lockup->getDownloadURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><?php echo $lockup->id ?></td>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><?php echo $lockup->user->username ?></td>
+                    <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
+    <?php else: ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>My Lockups</th>
+                    <th>Status</th>
+                </tr>   
+            </thead>
+            <tbody>
+            <?php foreach ($context->my_lockups as $lockup): ?>
+                <tr>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><?php echo $lockup->status; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <?php if (\Auth::$current_user->isApprover()): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lockups Needing Communicator Approval</th>
+                    <th>Status</th>
+                </tr>   
+            </thead>
+            <tbody>
+            <?php foreach ($context->approver_lockups as $lockup): ?>
+                <tr>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><?php echo $lockup->status; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+
+        <?php if (\Auth::$current_user->isCreative()): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lockups Needing Creative Approval</th>
+                    <th>Status</th>
+                </tr>   
+            </thead>
+            <tbody>
+            <?php foreach ($context->approver_lockups as $lockup): ?>
+                <tr>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><?php echo $lockup->status; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+    <?php endif; ?>
 	</div>
 </div>

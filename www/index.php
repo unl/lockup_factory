@@ -14,6 +14,7 @@ session_start();
 # initialize auth things
 \Auth::setUpClient();
 \Auth::singleLogOut();
+\Auth::autoLogin();
 \Auth::setUser();
 
 $router = new AltoRouter();

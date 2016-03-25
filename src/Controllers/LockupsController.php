@@ -56,6 +56,7 @@ class LockupsController extends Controller {
 	}
 
 	public static function previewAction($get_params) {
+		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Preview Lockup');
 
 		$id = $get_params['id'];
@@ -64,11 +65,44 @@ class LockupsController extends Controller {
 		if (empty($id) || empty($lockup)) {
 			// error
 		} else {
+			if ($lockup->status == Lockup::GENERATED) {
+				\Core::redirect($lockup->getDownloadURL());
+			}
+
 			$context = new \stdClass;
 			$context->lockup = $lockup;
 
 			return self::renderView('preview_lockup', $context);
 		}
+	}
+
+	public static function postApproveAction($post_params) {
+		self::requireAuth();
+		$id = $post_params['id'];
+		$lockup = Lockup::find($id);
+
+		if (empty($id) || empty($lockup)) {
+			return 'error';
+		} else {
+			if (\Auth::$current_user->isAdmin()) {
+				$lockup->status = Lockup::READY_TO_GENERATE;
+			} else if (\Auth::$current_user->isCreative()) {
+				if ($lockup->status == Lockup::AWAITING_APPROVAL) {
+					$lockup->status = Lockup::CREATIVE_APPROVED;
+				} else if ($lockup->status == Lockup::COMMUNICATOR_APPROVED) {
+					$lockup->status = Lockup::READY_TO_GENERATE;
+				}
+			} else if (\Auth::$current_user->isApprover() && $lockup->approver_id == \Auth::$current_user->id) {
+				if ($lockup->status == Lockup::AWAITING_APPROVAL) {
+					$lockup->status = Lockup::COMMUNICATOR_APPROVED;
+				} else if ($lockup->status == Lockup::CREATIVE_APPROVED) {
+					$lockup->status = Lockup::READY_TO_GENERATE;
+				}
+			}
+			$lockup->save();
+		}
+
+		\Core::redirect($lockup->getPreviewURL());
 	}
 
 	public static function postGenerateAction($post_params) {
@@ -77,16 +111,15 @@ class LockupsController extends Controller {
 		$id = $post_params['id'];
 		$lockup_model = Lockup::find($id);
 
-		if (empty($id) || empty($lockup_model)) {
+		if (empty($id) || empty($lockup_model) || $lockup_model->status != Lockup::READY_TO_GENERATE) {
 			return 'error';
 		} else {
-			# take this "temp" lockup and make it the user's
-			$lockup_model->user_id = \Auth::$current_user->id;
-			$lockup_model->save();
-
-			# take this svg and make the appropriate files
 			$frontend_output = $lockup_model->createAllVersions();
 			self::storeGenerateOutput(join($frontend_output, '&#013; &#010;'));
+
+			$lockup_model->status = Lockup::GENERATED;
+			$lockup_model->save();
+
 			\Core::redirect($lockup_model->getDownloadURL());
 		}
 	}
@@ -102,7 +135,7 @@ class LockupsController extends Controller {
 			// error
 		} else {
 			# check that this lockup belongs to the user
-			if ($lockup->user != \Auth::$current_user) {
+			if ($lockup->user != \Auth::$current_user && !(\Auth::$current_user->isCreative()) && !(\Auth::$current_user->id == $lockup->approver_id)) {
 				# not the right user
 				self::flashNotice(parent::NOTICE_LEVEL_ALERT, 'Not your lockup', 'This lockup was not created by you, and you are unable to edit it.');
 				\Core::redirect('/lockups/manage/');
@@ -120,7 +153,10 @@ class LockupsController extends Controller {
 		\Core::$breadcrumbs[] = array('text' => 'Manage Lockups');
 
 		$context = new \stdClass;
-		$context->lockups = \Auth::$current_user->lockups;
+		$context->all_lockups = Lockup::all(array('include' => array('user')));
+		$context->my_lockups = \Auth::$current_user->lockups;
+		$context->approver_lockups = Lockup::all(array('conditions' => array('approver_id' => \Auth::$current_user->id)));
+		$context->creative_approval_lockups = Lockup::all(array('conditions' => array('status in (?)', array('awaiting_approval', 'communicator_approved'))));
 
 		return self::renderView('manage_lockups', $context);
 	}

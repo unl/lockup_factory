@@ -2,25 +2,32 @@ label > input { /* HIDE RADIO */
 	visibility: hidden; /* Makes input not-clickable */
 	position: absolute; /* Remove input from document flow */
 }
+
 label img {
 	padding: 5px;
 }
+
 label > input + img, label > input + img + img { /* IMAGE STYLES */
 	cursor: pointer;
 	box-shadow: 0px 0px 8px #DDDDDD;
 }
+
 label > input:checked + img, label > input:checked + img + img { /* (RADIO CHECKED) IMAGE STYLES */
 	box-shadow: 0px 0px 8px #1B9AE8;
 }
+
 form legend {
 	font-size: 1.5em;
 }
+
 .page-title {
 	margin-top: 0;
 }
+
 div.center {
 	text-align: center;
 }
+
 svg.preview {
 	border: 2px dashed #DDDDDD;
 	max-width: 100%;
@@ -41,6 +48,7 @@ svg.preview {
 	    text-align: left;
 	    z-index: 250;
 	}
+
 	> div:before {
 	    background-color: white;
 	    content: "";
@@ -58,6 +66,7 @@ svg.preview {
 	    -webkit-transform: rotate(45deg);
 	    box-shadow: 0px 0px 4px RGBA(0,0,0,0.25);
 	}
+
 	> div:after {
 	    content:"";
 	    height: 12px;
@@ -69,24 +78,30 @@ svg.preview {
 	    left: 50%;
 	    margin-left: -24px;
 	}
+
 	&.hang-right > div {
 	    left: -27px;
 	}
+
 	&.hang-left > div {
 	    left: -157px;
 	}
+
 	&.hang-right > div:before {
 	    left: 34px;
 	    margin-left: -7px;
 	}
+
 	&.hang-right > div:after {
 	    left: 34px;
 	    margin-left: -24px;
 	}
+
 	&.hang-left > div:before {
 	    left: 166px;
 	    margin-left: -7px;
 	}
+
 	&.hang-left > div:after {
 	    left: 166px;
 	    margin-left: -24px;
@@ -107,16 +122,20 @@ svg.preview {
     ul li {
 	    margin-bottom: .75em;
 	}
+
 	span.heading{
 	    font-family: "Tungsten A","Tungsten B",HelveticaNeueCondensed,HelveticaNeue-Condensed,"Helvetica Neue Condensed",HelveticaNeueRomanCondensed,HelveticaNeue-Roman-Condensed,"Helvetica Neue Roman Condensed","Arial Narrow",HelveticaNeue,"Helvetica Neue",HelveticaNeueRoman,HelveticaNeue-Roman,"Helvetica Neue Roman",Helvetica,Tahoma,Geneva,Arial,sans-serif;
 	    font-size: 1.777em;
 	}
+
 	&:hover > div {
 	    display: block;
 	}
+
 	p {
 	    margin: 0;
 	}
+
 	&.italic *{
 	    font-style: italic;
 	}
@@ -136,6 +155,7 @@ svg.preview {
 			border-top: 1px solid #d5d5d2;
 		}
 	}
+
     h1, h2, h3, h4, h5, h6, .vi-header{
 		display: block;
 		font-size: .802em !important;
@@ -151,9 +171,11 @@ svg.preview {
 		font-style: normal;
 		text-align: center;
 	}
+
 	p {
 		padding: 0 1em 1em 1em;
 	}
+	
 	ul {
 		padding: 0;
 		padding-left: 1em;

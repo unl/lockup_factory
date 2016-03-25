@@ -11,6 +11,24 @@ class Lockup extends \ActiveRecord\Model {
 		array('user')
 	);
 
+	# status flows like this:
+	# ######## awaiting_approval #########
+	#           /           \
+	#          /            \
+	#    comm_approved      creative_approved
+	#            \              /
+	#            \             /
+	#            ready_to_generate
+	#                    |
+	#                    |
+	#                generated
+
+	const AWAITING_APPROVAL = 'awaiting_approval';
+	const COMMUNICATOR_APPROVED = 'communicator_approved';
+	const CREATIVE_APPROVED = 'creative_approved';
+	const READY_TO_GENERATE = 'ready_to_generate';
+	const GENERATED = 'generated';
+
 	public function getPreviewURL() {
 		return '/lockups/preview/id/' . $this->id . '/';
 	}

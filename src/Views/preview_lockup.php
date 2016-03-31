@@ -1,6 +1,6 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
-		<h3 class="page-title">Preview for "<?php echo $context->lockup->getName() ?>" Logo Lockup</h3>
+		<h3 class="page-title">Preview for "<?php echo $context->lockup->getName() ?>" Lockup</h3>
 		<div class="bp2-wdn-grid-set-halves wdn-center">
             <div class="wdn-col center">
 				<?php echo $context->lockup->preview_svg; ?>

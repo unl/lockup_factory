@@ -24,14 +24,68 @@ form legend {
 	margin-top: 0;
 }
 
-div.center {
+div.center, section.center {
 	text-align: center;
+}
+
+div.right, section.right {
+	text-align: right;
 }
 
 svg.preview {
 	border: 2px dashed #DDDDDD;
 	max-width: 100%;
 	max-height: 100%;
+}
+
+.wdn-hero {
+    position: relative;
+    overflow: hidden;
+    height: 25.24em;
+    height: 42vh;
+    background-color: #000;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    video {
+    	width: 100%;
+    }
+}
+
+.wdn-hero-text {
+    position: relative;
+    bottom: auto;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+}
+
+.wdn-hero-heading {
+    z-index: 1;
+    margin: 0;
+    font-size: 3.923rem;
+    text-transform: uppercase;
+    color: #fff;
+    .hero-line {
+	    display: inline-block;
+	    line-height: 1;
+	    border-top: 1px solid rgba(255, 255, 255, 0.2);
+	    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	}
+}
+
+.is-video.wdn-hero .wdn-hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .tooltip {
@@ -175,7 +229,7 @@ svg.preview {
 	p {
 		padding: 0 1em 1em 1em;
 	}
-	
+
 	ul {
 		padding: 0;
 		padding-left: 1em;
@@ -186,3 +240,53 @@ svg.preview {
 	    }
 	}
 }
+
+@media (min-width: 0px) {
+	.wdn-hero {
+	    height: 5em;
+	    height: 10vh;
+	    max-height: 8em;
+	}
+}
+
+@media (min-height: 480px) and (min-width: 480px) {
+	.wdn-hero {
+	    height: 15em;
+	    height: 30vh;
+	    max-height: 22em;
+	}
+}
+
+@media (min-height: 718px) and (min-width: 960px) {
+	.wdn-hero {
+	    height: 25.24em;
+	    height: 56vh;
+	    max-height: 31.474em;
+	}
+}
+
+@media (min-height: 895px) and (min-width: 1044px) {
+	.wdn-hero {
+	    height: 31.474em;
+	    height: 75vh;
+	    max-height: 33.645em;
+	}
+}
+
+
+@media (min-width: 480px) {
+	.wdn-hero-heading {
+	    font-size: 4.1538rem;
+	}
+}
+@media (min-width: 768px) {
+	.wdn-hero-heading {
+	    font-size: 5.61rem;
+	}
+}
+@media (min-width: 1044px) {
+	.wdn-hero-heading {
+	    font-size: 5.997rem;
+	}
+}
+

@@ -42,7 +42,7 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getZIPDownloadName() {
-		return 'N_' . $this->getOrganizationFilename() . '_logo_lockups.zip';
+		return 'N_' . $this->getFolderName() . '_lockups.zip';
 	}
 
 	public function getPNGDownloadURL() {
@@ -55,18 +55,24 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getOrganizationFilename() {
-		if (strpos($this->style, 'org') === 0) {
-			return str_replace(' ', '_', $this->organization . '_' . $this->subject);
-		} else if (strrpos($this->style, 'acronym') === 0) {
-			return str_replace(' ', '_', $this->acronym . '_' . $this->acronym_subject);
-		} else if ($this->style == 'extension') {
-			return str_replace(' ', '_', 'Extension_' . $this->extension_county);
+		return str_replace(' ', '_', $this->file_organization . '_' . $this->file_department_acronym);
+	}
+
+	public function getDepartmentFilename() {
+		return str_replace(' ', '_', $this->file_department . '_' .  $this->file_organization_acronym . '_' . $this->file_department_acronym);
+	}
+
+	public function getFolderName() {
+		if (!empty($this->file_department)) {
+			return $this->getDepartmentFilename();
+		} else {
+			return $this->getOrganizationFilename();
 		}
 	}
 
 	public function getName() {
 		if (strpos($this->style, 'org') === 0) {
-			return $this->organization . ' ' . $this->subject;
+			return $this->organization . ' ' . $this->organization_second_line . ' ' . $this->subject . ' ' . $this->subject_second_line;
 		} else if (strrpos($this->style, 'acronym') === 0) {
 			return $this->acronym . ' ' . $this->acronym_subject;
 		} else if ($this->style == 'extension') {
@@ -135,6 +141,7 @@ class Lockup extends \ActiveRecord\Model {
 		$new_pdf = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.pdf';
 		$new_svg = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.svg';
 		$new_png = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.png';
+		$new_jpg = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.jpg';
 		$new_eps = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.eps';
 
 		echo $new_pdf;
@@ -175,10 +182,20 @@ class Lockup extends \ActiveRecord\Model {
 				'data' => fread($file, filesize($new_svg))
 			));
 			fclose($file);
+			$file = fopen($new_svg, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $this->id,
+				'type' => 'ai',
+				'orientation' => $orient,
+				'color' => $color,
+				'reverse' => $rev,
+				'data' => fread($file, filesize($new_svg))
+			));
+			fclose($file);
 
-			$frontend_output[] = 'SVG created.';
+			$frontend_output[] = 'SVG/AI created.';
 		} else {
-			$frontend_output[] = 'Error creating SVG.';
+			$frontend_output[] = 'Error creating SVG/AI.';
 		}
 
 		exec('inkscape -h200 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
@@ -195,9 +212,19 @@ class Lockup extends \ActiveRecord\Model {
 			));
 			fclose($file);
 
-			$frontend_output[] = '800px PNG created.';
+			exec('convert ' . $new_png . ' ' . $new_jpg . ' 2>&1', $backend_output, $return_var);
+			LockupFile::create(array(
+				'lockup_id' => $this->id,
+				'type' => 'jpg',
+				'orientation' => $orient,
+				'color' => $color,
+				'reverse' => $rev,
+				'data' => file_get_contents($new_jpg)
+			));
+
+			$frontend_output[] = '200px PNG/JPG created.';
 		} else {
-			$frontend_output[] = 'Error creating 800px PNG.';
+			$frontend_output[] = 'Error creating 200px PNG/JPG.';
 		}
 		
 		exec('inkscape --export-eps=' . $new_eps . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);

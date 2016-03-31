@@ -31,6 +31,11 @@ class FilesController extends Controller {
 			'RGB' => 'RGB (HEX)'
 		);
 
+		$orient_map = array(
+			'horiz' => 'Nh_' . $lockup->getFolderName(),
+			'vert' => 'Nv_' . $lockup->getFolderName()
+		);
+
 		$file_type_map = array(
 			'ai' => 'AI',
 			'eps' => 'EPS',
@@ -43,26 +48,25 @@ class FilesController extends Controller {
 		$zip = new \ZipArchive();
 		$zip_filename = \Core::ROOT . '/tmp/temp_zip_' . $lockup->id . '.zip';
 		if ($zip->open($zip_filename, \ZipArchive::CREATE) === TRUE) {
-			foreach ($color_map as $key => $color_folder) {
-				$zip->addEmptyDir($color_folder);
-				foreach ($file_type_map as $fkey => $file_type_folder) {
-					$zip->addEmptyDir($color_folder . '/' . $file_type_folder);
+			foreach ($orient_map as $okey => $orient) {
+				$zip->addEmptyDir($orient);
+				foreach ($color_map as $ckey => $color_folder) {
+					$zip->addEmptyDir($orient . '/' . $color_folder);
 				}
 			}
 
 			foreach ($lockup->files as $file) {
 				$folder = '';
 				if ($file->color == 'blk' && $file->reverse) {
-					$folder = 'Rev/' . $file_type_map[$file->type];
+					$folder = $orient_map[$file->orientation] . '/Rev';
 				} else {
-					$folder = $color_map[$file->color] . '/' . $file_type_map[$file->type];
+					$folder = $orient_map[$file->orientation] . '/' . $color_map[$file->color];
 				}
 				$zip->addFromString($folder . '/' . $file->getName(), $file->data);
 			}
 
 			$zip->close();
 		}
-
 		self::sendZipFile($lockup, $zip_filename);
 	}
 

@@ -1,6 +1,6 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
-        <h3 class="page-title">Create New Logo Lockup</h3>
+        <h3 class="page-title">Create New Lockup</h3>
 
         <form method="POST" action="">
             <?php if (\Auth::$current_user === NULL): ?>
@@ -10,6 +10,28 @@
                     <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
                 </fieldset>
             <?php endif; ?>
+
+            
+            <fieldset>
+                <legend>File Name Designations</legend>
+                <label class="explanation">These fields are for the system to determine file names for your created files, and do not affect the
+                actual text in the lockup.</label>
+                <div class="bp2-wdn-grid-set-halves">
+                    <div class="wdn-col">
+                        <label for="file-organization">College/Organization/Institution</label>
+                        <input type="text" id="file-organization" name="file_organization">
+                        <label for="file-organization-acronym">College/Organization/Institution Acronym</label>
+                        <input type="text" id="file-organization-acronym" name="file_organization_acronym">
+                    </div>
+                    <div class="wdn-col">
+                        <label for="file-department">Department</label>
+                        <input type="text" id="file-department" name="file_department">
+                        <label for="file-department-acronym">Department Acronym</label>
+                        <input type="text" id="file-department-acronym" name="file_department_acronym">
+                    </div>
+                </div>
+
+            </fieldset>
 
             <fieldset>
                 <legend>Communicator Approval</legend>
@@ -119,7 +141,7 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend>Text</legend>
+                <legend>Lockup Text</legend>
                 <div id="organization-field">
                     <label for="organization">Organization</label>
                     <div class="tooltip wdn-icon-info italic hang-right">

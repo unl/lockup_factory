@@ -1,6 +1,6 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
-	<h3 class="page-title">Your files for "<?php echo $context->lockup->getName(); ?>" Logo Lockup</h3>
+	<h3 class="page-title">Your files for "<?php echo $context->lockup->getName(); ?>" Lockup</h3>
 	<div class="wdn-center">
    		<div class="center">
 			<img src="<?php echo $context->lockup->getPNGDownloadURL() ?>">

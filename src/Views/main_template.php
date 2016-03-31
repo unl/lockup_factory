@@ -87,7 +87,9 @@ $page->maincontentarea .= $main_content;
 
 
 # set footer
-$page->leftcollinks = 'leftcollinks';
+ob_start();
+include \Core::ROOT . '/src/Views/localfooter.php';
+$page->leftcollinks = ob_get_clean();
 
 # echo everything
 echo $page;

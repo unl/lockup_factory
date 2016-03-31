@@ -49,7 +49,11 @@ class LockupsController extends Controller {
 			'date_created' => 				date('Y-m-d H:i:s'),
 			'preview_svg' => 				$svg_text,
 			'vert_preview_svg' => 			$vert_svg_text,
-			'approver_id' => 				$post_params['approver']
+			'approver_id' => 				$post_params['approver'],
+			'file_organization' =>			$post_params['file_organization'],
+			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
+			'file_department' => 			$post_params['file_department'],
+			'file_department_acronym' =>	$post_params['file_department_acronym']
 		));
 
 		\Core::redirect($model->getPreviewURL());

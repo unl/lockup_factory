@@ -93,6 +93,8 @@ class FilesController extends Controller {
 	    header('Pragma: public');
 	    header('Content-Length: ' . filesize($temp_zip_file));
 	    readfile($temp_zip_file);
+	    # cleanup this temp file
+	    unlink($temp_zip_file);
 	    exit;
 	}
 }

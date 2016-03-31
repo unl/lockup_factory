@@ -144,8 +144,6 @@ class Lockup extends \ActiveRecord\Model {
 		$new_jpg = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.jpg';
 		$new_eps = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.eps';
 
-		echo $new_pdf;
-
 		$backend_output = array();
 		$frontend_output = array();
 
@@ -246,6 +244,12 @@ class Lockup extends \ActiveRecord\Model {
 			$frontend_output[] = 'Error creating EPS.';
 		}
 		
+		# cleanup these files
+		unlink($new_jpg);
+		unlink($new_pdf);
+		unlink($new_png);
+		unlink($new_eps);
+		unlink($new_svg);
 
 		return $frontend_output;
 	}

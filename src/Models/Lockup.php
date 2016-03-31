@@ -63,10 +63,12 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getFolderName() {
-		if (!empty($this->file_department)) {
+		if (!empty($this->file_department) || !empty($this->file_department_acronym)) {
 			return $this->getDepartmentFilename();
-		} else {
+		} else if (!empty($this->file_organization) || !empty($this->file_organization_acronym)) {
 			return $this->getOrganizationFilename();
+		} else {
+			return str_replace(' ', '_', $this->getName());
 		}
 	}
 
@@ -76,7 +78,7 @@ class Lockup extends \ActiveRecord\Model {
 		} else if (strrpos($this->style, 'acronym') === 0) {
 			return $this->acronym . ' ' . $this->acronym_subject;
 		} else if ($this->style == 'extension') {
-			return 'Extension: ' . $this->extension_county;
+			return 'EXTENSION ' . $this->extension_county;
 		}
 	}
 

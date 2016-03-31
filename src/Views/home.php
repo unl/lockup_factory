@@ -17,7 +17,7 @@
         <p>
             Part of the goal of every University communication, regardless of the audience, is to 
             identify consistently and positively with the University. Using a Nebraska N icon lockup 
-            is one way for any University department or unit to do just that. UNL Lockup Factory makes it easy to have a lockup created 
+            is one way for any University department or unit to do just that. UNL Lockup Factory makes it easy to have an icon lockup created 
             so your unit can align with and take full advantage of the University’s strong brand.
         </p>
     </div>

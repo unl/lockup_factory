@@ -108,6 +108,18 @@
                     </div>
                     <div class="wdn-col">
                         <label>
+                            <input type="radio" name="type" value="org_subject_2_2" id="type-org-subject-2-2">
+                            <img class="horiz" src="/images/org_subject_2-2_example.png">
+                            <img class="vert" style="display: none;" src="/images/org_subject_2-2_vert_example.png">
+                        </label><br>
+                        <label for="type-org-subject-2-2">
+                            Organization and subject lockup. Two lines for the organization, two lines for the subject.
+                        </label><br><br>
+                    </div>
+                </div>
+                <div class="bp2-wdn-grid-set-halves wdn-center">
+                    <div class="wdn-col">
+                        <label>
                             <input type="radio" name="type" value="acronym" id="type-acronym">
                             <img class="horiz" src="/images/acronym_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_vert_example.png">
@@ -116,8 +128,6 @@
                             Larger main text, for use with acronyms. This is intended only for merchandise.
                         </label><br><br>
                     </div>
-                </div>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="acronym_subject" id="type-acronym-subject">
@@ -128,6 +138,8 @@
                             Larger main text, for use with acronyms. Secondary line included. This is intended only for merchandise.
                         </label><br><br>
                     </div>
+                </div>
+                <div class="bp2-wdn-grid-set-halves wdn-center">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="extension" id="type-extension">
@@ -262,6 +274,14 @@ require(['jquery'], function ($) {
                 $('#organization-second-line-field').show();
                 $('#subject-field').show();
                 $('#subject-second-line-field').hide();
+                $('#acronym-field').hide();
+                $('#acronym-subject-field').hide();
+                $('#extension-county-field').hide();
+            } else if ($('#type-org-subject-2-2').is(':checked')) {
+                $('#organization-field').show();
+                $('#organization-second-line-field').show();
+                $('#subject-field').show();
+                $('#subject-second-line-field').show();
                 $('#acronym-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();

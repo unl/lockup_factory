@@ -1,5 +1,6 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
+    <h3 class="page-title">Manage Lockups</h3>
     <?php if (\Auth::$current_user->isAdmin()): ?>
         <table>
             <thead>
@@ -14,7 +15,7 @@
             <?php foreach ($context->all_lockups as $lockup): ?>
                 <tr>
                     <td><?php echo $lockup->id ?></td>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
@@ -32,7 +33,7 @@
             <tbody>
             <?php foreach ($context->my_lockups as $lockup): ?>
                 <tr>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -50,7 +51,7 @@
             <tbody>
             <?php foreach ($context->approver_lockups as $lockup): ?>
                 <tr>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -69,7 +70,7 @@
             <tbody>
             <?php foreach ($context->approver_lockups as $lockup): ?>
                 <tr>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->organization; ?></a></td>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>

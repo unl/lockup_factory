@@ -199,6 +199,33 @@ class SvgGenerator {
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width) + 44);
 					}
 					break;
+				case 'org_subject_2_2':
+					$svg->setFontSVG(self::TUNGSTEN);
+					$svg->setLetterSpacing(0.05);
+					$svg->setFontSize(12);
+					$svg->setFontColor($main_text_color);
+					$svg->addText($lockup->org_name, 44, -5.8);
+					$main_text_width = $svg->textDimensions($lockup->org_name)[0];
+
+					$svg->addText($lockup->org_second_line, 44, 5.2);
+					$third_width = $svg->textDimensions($lockup->org_second_line)[0];
+
+					$svg->setFontSVG(self::MERCURY);
+					$svg->setLetterSpacing(0);
+					$svg->setFontSize(8.125);
+					$svg->setFontColor($secondary_text_color);
+					$svg->addText($lockup->subject, 44, 17);
+					$secondary_text_width = $svg->textDimensions($lockup->subject)[0];
+
+					$svg->addText($lockup->subject_second_line, 44, 26);
+					$fourth_width = $svg->textDimensions($lockup->subject_second_line)[0];
+
+					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44) . " 38");
+					if (!$preview) {
+						$svg->addAttribute('height', 38);
+						$svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44);
+					}
+					break;
 				case 'acronym':
 					$svg->setFontSVG(self::TUNGSTEN);
 					$svg->setLetterSpacing(0.05);
@@ -326,6 +353,25 @@ class SvgGenerator {
 					$text_width = $svg->textDimensions($lockup->subject)[0];
 					$svg->addText($lockup->subject, 100 - ($text_width / 2), 66);
 					break;
+				case 'org_subject_2_2':
+					$svg->setFontSVG(self::TUNGSTEN);
+					$svg->setFontSize(12);
+					$svg->setFontColor($main_text_color);
+					$text_width = $svg->textDimensions($lockup->org_name)[0];
+					$svg->addText($lockup->org_name, 100 - ($text_width / 2), 37);
+
+					$text_width = $svg->textDimensions($lockup->org_second_line)[0];
+					$svg->addText($lockup->org_second_line, 100 - ($text_width / 2), 48);
+
+					$svg->setFontSVG(self::MERCURY);
+					$svg->setFontSize(8.125);
+					$svg->setFontColor($secondary_text_color);
+					$text_width = $svg->textDimensions($lockup->subject)[0];
+					$svg->addText($lockup->subject, 100 - ($text_width / 2), 61);
+
+					$text_width = $svg->textDimensions($lockup->subject_second_line)[0];
+					$svg->addText($lockup->subject_second_line, 100 - ($text_width / 2), 70);
+					break;
 				case 'acronym':
 					$svg->setFontSVG(self::TUNGSTEN);
 					$svg->setFontSize(22);
@@ -360,9 +406,11 @@ class SvgGenerator {
 					break;
 			}
 
-			$svg->addAttribute('viewBox', "0 0 200 80");
+			$height = $template == 'org_subject_2_2' ? 88 : 80;
+
+			$svg->addAttribute('viewBox', "0 0 200 " . $height);
 			if (!$preview) {
-				$svg->addAttribute('height', 80);
+				$svg->addAttribute('height', $height);
 				$svg->addAttribute('width', 200);
 			}
 

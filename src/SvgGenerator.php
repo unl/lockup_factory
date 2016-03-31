@@ -331,32 +331,32 @@ class SvgGenerator {
 					$svg->setFontSize(22);
 					$svg->setFontColor($main_text_color);
 					$text_width = $svg->textDimensions($lockup->acronym)[0];
-					$svg->addText($lockup->acronym, 100 - ($text_width / 2), 30);
+					$svg->addText($lockup->acronym, 100 - ($text_width / 2), 32);
 					break;
 				case 'acronym_subject':
 					$svg->setFontSVG(self::TUNGSTEN);
 					$svg->setFontSize(22);
 					$svg->setFontColor($main_text_color);
 					$text_width = $svg->textDimensions($lockup->acronym)[0];
-					$svg->addText($lockup->acronym, 100 - ($text_width / 2), 30);
+					$svg->addText($lockup->acronym, 100 - ($text_width / 2), 32);
 
 					$svg->setFontSize(16.25);
 					$svg->setFontColor($secondary_text_color);
 					$text_width = $svg->textDimensions($lockup->acronym_subject)[0];
-					$svg->addText($lockup->acronym_subject, 100 - ($text_width / 2), 54.25);
+					$svg->addText($lockup->acronym_subject, 100 - ($text_width / 2), 56.25);
 					break;
 				case 'extension':
 					$svg->setFontSVG(self::TUNGSTEN);
 					$svg->setFontSize(22);
 					$svg->setFontColor($main_text_color);
 					$text_width = $svg->textDimensions('EXTENSION')[0];
-					$svg->addText('EXTENSION', 100 - ($text_width / 2), 30);
+					$svg->addText('EXTENSION', 100 - ($text_width / 2), 32);
 
 					$svg->setFontSVG(self::MERCURY);
 					$svg->setFontSize(8.125);
 					$svg->setFontColor($secondary_text_color);
 					$text_width = $svg->textDimensions($lockup->extension_county)[0];
-					$svg->addText($lockup->extension_county, 100 - ($text_width / 2), 58);
+					$svg->addText($lockup->extension_county, 100 - ($text_width / 2), 60);
 					break;
 			}
 

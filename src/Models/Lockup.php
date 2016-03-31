@@ -133,6 +133,9 @@ class Lockup extends \ActiveRecord\Model {
 			}
 		}
 
+		# clean up the temp svg
+		unlink($this->getStartingSVGPath());
+
 		return array();
 	}
 

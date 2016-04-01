@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
 	var lessDir = 'less';
-	var cssDir = 'www/css';
+	var cssDir = 'public/css';
 
 	var cssFiles = [
 		'main'

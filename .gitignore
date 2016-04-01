@@ -1,8 +1,8 @@
 /config.inc.php
-/www/.htaccess
+/public/.htaccess
 /.project
 /.settings
-/www/wdn
+/public/wdn
 /.buildpath
 /node_modules
 /vendor/composer

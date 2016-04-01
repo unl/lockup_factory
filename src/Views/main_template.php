@@ -5,7 +5,7 @@ $page = Templates::factory('Fixed', Templates::VERSION_4_1);
 
 # this should be the server root, that is, the public directory of where static files come from.
 # the templates library will stick /wdn/templates_4.1 on there for you
-$wdn_include_path = \Core::ROOT . '/www';
+$wdn_include_path = \Core::ROOT . '/public';
 if (file_exists($wdn_include_path)) {
     $page->setLocalIncludePath($wdn_include_path);
 }

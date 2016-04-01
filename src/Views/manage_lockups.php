@@ -45,6 +45,7 @@
             <thead>
                 <tr>
                     <th>Lockups Needing Communicator Approval</th>
+                    <th>Submitter</th>
                     <th>Status</th>
                 </tr>   
             </thead>
@@ -52,6 +53,7 @@
             <?php foreach ($context->approver_lockups as $lockup): ?>
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -64,6 +66,7 @@
             <thead>
                 <tr>
                     <th>Lockups Needing Creative Approval</th>
+                    <th>Submitter</th>
                     <th>Status</th>
                 </tr>   
             </thead>
@@ -71,6 +74,7 @@
             <?php foreach ($context->approver_lockups as $lockup): ?>
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>

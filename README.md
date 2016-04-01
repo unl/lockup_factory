@@ -6,9 +6,10 @@
 3. Install Inkscape on the VM `sudo yum --disablerepo=repoforgeextras install inkscape` 
 4. Install ImageMagick on the VM. `yum install -y ImageMagick ImageMagick-devel`
 5. Create a config file for yourself. In the root, `cp config.sample.php config.inc.php` and edit as necessary.
-6. You will need a database. Run the script `create_database.sql`, found in `/db`, on your SQL DB. 
-7. This creates several users, including the approvers. You will likely want to create a user for yourself in the users table with role `admin`.
-8. The server should now be running at `localhost:8009`.
+6. Create a htaccess file for yourself. In the root, `cp www/sample.htaccess www/.htaccess` and edit as necessary.
+7. You will need a database. Run the script `create_database.sql`, found in `/db`, on your SQL DB. 
+8. This creates several users, including the approvers. You will likely want to create a user for yourself in the users table with role `admin`.
+9. The server should now be running at `localhost:8009`.
 
 ** Usage **
 -----------

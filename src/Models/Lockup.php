@@ -215,7 +215,8 @@ class Lockup extends \ActiveRecord\Model {
 			));
 			fclose($file);
 
-			exec('convert ' . $new_png . ' ' . $new_jpg . ' 2>&1', $backend_output, $return_var);
+			$bg = $rev ? '-background "#000000" -flatten ' : '';
+			exec('convert ' . $bg . $new_png . ' ' . $new_jpg . ' 2>&1', $backend_output, $return_var);
 			LockupFile::create(array(
 				'lockup_id' => $this->id,
 				'type' => 'jpg',

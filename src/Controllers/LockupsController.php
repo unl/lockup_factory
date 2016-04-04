@@ -49,7 +49,7 @@ class LockupsController extends Controller {
 			'date_created' => 				date('Y-m-d H:i:s'),
 			'preview_svg' => 				$svg_text,
 			'vert_preview_svg' => 			$vert_svg_text,
-			'approver_id' => 				$post_params['approver'],
+			'approver_id' => 				empty($post_params['approver']) ? NULL : $post_params['approver'],
 			'file_organization' =>			$post_params['file_organization'],
 			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
 			'file_department' => 			$post_params['file_department'],
@@ -91,7 +91,12 @@ class LockupsController extends Controller {
 			if (\Auth::$current_user->isAdmin()) {
 				$lockup->status = Lockup::READY_TO_GENERATE;
 			} else if (\Auth::$current_user->isCreative()) {
-				if ($lockup->status == Lockup::AWAITING_APPROVAL) {
+				if ($lockup->user->id == \Auth::$current_user->id) {
+					// creative users can full approve their own lockups
+					$lockup->status = Lockup::READY_TO_GENERATE;
+					// if they do so, remove the approver
+					$lockup->approver_id = NULL;
+				} else if ($lockup->status == Lockup::AWAITING_APPROVAL) {
 					$lockup->status = Lockup::CREATIVE_APPROVED;
 				} else if ($lockup->status == Lockup::COMMUNICATOR_APPROVED) {
 					$lockup->status = Lockup::READY_TO_GENERATE;

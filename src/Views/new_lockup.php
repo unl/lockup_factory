@@ -40,6 +40,7 @@
                     <?php foreach ($context->approvers as $user): ?>
                         <option value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
                     <?php endforeach; ?>
+                        <option value="">I'm not sure / not listed / N/A</option>
                 </select>
             </fieldset>
 

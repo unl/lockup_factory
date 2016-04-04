@@ -8,6 +8,7 @@
                     <th>ID</th>
                     <th>All Lockups</th>
                     <th>Submitter</th>
+                    <th>Approver</th>
                     <th>Status</th>
                 </tr>   
             </thead>

@@ -5,13 +5,14 @@
 2. `vagrant ssh` in the vagrant/dev folder to go into the VM (INSIDE the computer!)
 3. Install Inkscape on the VM `sudo yum --disablerepo=repoforgeextras install inkscape` 
 4. Install ImageMagick on the VM. `yum install -y ImageMagick ImageMagick-devel`
-4. Sync WDN Templates. 
-5. Create a config file for yourself. In the root, `cp config.sample.php config.inc.php` and edit as necessary.
-6. Create a htaccess file for yourself. In the root, `cp public/sample.htaccess public/.htaccess` and edit as necessary.
-7. `composer install`
-8. You will need a database. Run the script `create_database.sql`, found in `/db`, on your SQL DB. 
-9. This creates several users, including the approvers. You will likely want to create a user for yourself in the users table with role `admin`.
-10. The server should now be running at `localhost:8009`.
+5. Sync WDN Templates. 
+6. Create a config file for yourself. In the root, `cp config.sample.php config.inc.php` and edit as necessary.
+7. Create a htaccess file for yourself. In the root, `cp public/sample.htaccess public/.htaccess` and edit as necessary.
+8. `composer install`
+9. You will need a database. Run the script `create_database.sql`, found in `/db`, on your SQL DB. 
+10. This creates several users, including the approvers. You will likely want to create a user for yourself in the users table with role `admin`.
+11. This project uses `/public` instead of `/www` for its DocumentRoot, you may have to go into your httpd.conf files and change this. Look in `/etc/httpd/conf.d/` for a number-prefixed conf file.
+12. The server should now be running at `localhost:8009`.
 
 ** Usage **
 -----------
@@ -26,5 +27,7 @@ The workflow is this:
 ** Upcoming Features **
 -----------------------
 * Edit lockups before and after approval.
-* Regenerate files
+* Regenerate files.
 * Select more than one style at a time.
+* Delete lockups.
+* Lockup library of available options that have been approved.

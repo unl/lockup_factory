@@ -45,6 +45,15 @@ class Lockup extends \ActiveRecord\Model {
 		return 'N_' . $this->getFolderName() . '_lockups.zip';
 	}
 
+	public function getApproverName() {
+		$user = User::find(array('id' => $this->approver_id));
+		if ($user) {
+			return $user->name . '-' . $user->username;
+		} else {
+			return NULL;
+		}
+	}
+
 	public function getPNGDownloadURL() {
 		foreach ($this->files as $file) {
 			if ($file->type == 'png' && $file->color == 'RGB' && $file->orientation == 'horiz') {
@@ -55,11 +64,11 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getOrganizationFilename() {
-		return str_replace(' ', '_', $this->file_organization . '_' . $this->file_department_acronym);
+		return str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_organization . '_' . $this->file_department_acronym)));
 	}
 
 	public function getDepartmentFilename() {
-		return str_replace(' ', '_', $this->file_department . '_' .  $this->file_organization_acronym . '_' . $this->file_department_acronym);
+		return str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_department . '_' .  $this->file_organization_acronym . '_' . $this->file_department_acronym)));
 	}
 
 	public function getFolderName() {
@@ -107,31 +116,31 @@ class Lockup extends \ActiveRecord\Model {
 		$styles = array('RGB', 'pms186cp', '4c', 'blk');
 		foreach ($orients as $orient) {
 			foreach ($styles as $style) {
-				$svg_text = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
+				$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
 				# write this to a temp file
 				$filename = $this->getStartingSVGPath();
 
 				$file = fopen($filename, 'w');
-				fwrite($file, $svg_text);
+				fwrite($file, $svg_file->svg_text);
 				fclose($file);
 
 				$prefix = 'N' . substr($orient,0,1) . '_';
 				$suffix = '_' . $style . '_';
 
-				$this->generateFiles($prefix, $suffix, $orient, $style, FALSE);
+				$this->generateFiles($prefix, $suffix, $orient, $style, FALSE, $svg_file->height, $svg_file->width);
 
-				$svg_text = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
+				$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
 				# write this to a temp file
 				$filename = $this->getStartingSVGPath();
 
 				$file = fopen($filename, 'w');
-				fwrite($file, $svg_text);
+				fwrite($file, $svg_file->svg_text);
 				fclose($file);
 
 				$prefix = 'N' . substr($orient,0,1) . '_';
 				$suffix = '_' . $style . '_rev_';
 
-				$this->generateFiles($prefix, $suffix, $orient, $style, TRUE);
+				$this->generateFiles($prefix, $suffix, $orient, $style, TRUE, $svg_file->height, $svg_file->width);
 			}
 		}
 
@@ -141,8 +150,9 @@ class Lockup extends \ActiveRecord\Model {
 		return array();
 	}
 
-	public function generateFiles($prefix, $suffix, $orient, $color, $rev) {
+	public function generateFiles($prefix, $suffix, $orient, $color, $rev, $height = 200, $width = 80) {
 		$starting_svg = $this->getStartingSVGPath();
+		$new_ai = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.ai';
 		$new_pdf = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.pdf';
 		$new_svg = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.svg';
 		$new_png = \Core::ROOT . '/tmp/' . $prefix . $this->getOrganizationFilename() . $suffix . $this->id . '.png';
@@ -185,20 +195,10 @@ class Lockup extends \ActiveRecord\Model {
 				'data' => fread($file, filesize($new_svg))
 			));
 			fclose($file);
-			$file = fopen($new_svg, 'r');
-			LockupFile::create(array(
-				'lockup_id' => $this->id,
-				'type' => 'ai',
-				'orientation' => $orient,
-				'color' => $color,
-				'reverse' => $rev,
-				'data' => fread($file, filesize($new_svg))
-			));
-			fclose($file);
 
-			$frontend_output[] = 'SVG/AI created.';
+			$frontend_output[] = 'SVG created.';
 		} else {
-			$frontend_output[] = 'Error creating SVG/AI.';
+			$frontend_output[] = 'Error creating SVG.';
 		}
 
 		exec('inkscape -h200 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
@@ -231,7 +231,7 @@ class Lockup extends \ActiveRecord\Model {
 			$frontend_output[] = 'Error creating 200px PNG/JPG.';
 		}
 		
-		exec('inkscape --export-eps=' . $new_eps . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		exec('inkscape -C -h' . $height . ' -w' . $width . ' --export-eps=' . $new_eps . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
 		if ($return_var == 0) {
 			# attempt to write this to the DB
 			$file = fopen($new_eps, 'r');
@@ -245,9 +245,20 @@ class Lockup extends \ActiveRecord\Model {
 			));
 			fclose($file);
 
-			$frontend_output[] = 'EPS created.';
+			$file = fopen($new_eps, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $this->id,
+				'type' => 'ai',
+				'orientation' => $orient,
+				'color' => $color,
+				'reverse' => $rev,
+				'data' => fread($file, filesize($new_eps))
+			));
+			fclose($file);
+
+			$frontend_output[] = 'EPS/AI created.';
 		} else {
-			$frontend_output[] = 'Error creating EPS.';
+			$frontend_output[] = 'Error creating EPS/AI.';
 		}
 		
 		# cleanup these files

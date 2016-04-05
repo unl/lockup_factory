@@ -1,5 +1,6 @@
 <?php
 use Models\Lockup;
+use \SvgFile;
 
 class SvgGenerator {
 	const SCARLET = '#d00000';
@@ -95,7 +96,9 @@ class SvgGenerator {
 
 		if ($preview) {
 			$svg->addAttribute("class", "preview");
-		} 
+		}
+
+		$svg_file = new SvgFile;
 
 		if ($orient == 'horiz') {
 			switch ($template) {
@@ -108,6 +111,8 @@ class SvgGenerator {
 					$text_width = $svg->textDimensions($lockup->org_name)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . ($text_width + 44) . " 36");
+					$svg_file->height = 36;
+					$svg_file->width = $text_width + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 36);
 						$svg->addAttribute('width', $text_width + 44);
@@ -125,6 +130,8 @@ class SvgGenerator {
 					$secondary_text_width = $svg->textDimensions($lockup->org_second_line)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 36");
+					$svg_file->height = 36;
+					$svg_file->width = max($main_text_width, $secondary_text_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 36);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
@@ -146,6 +153,8 @@ class SvgGenerator {
 					$secondary_text_width = $svg->textDimensions($lockup->subject)[0];
 					
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 38);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
@@ -170,6 +179,8 @@ class SvgGenerator {
 					$third_width = $svg->textDimensions($lockup->subject_second_line)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width, $third_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 38);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width) + 44);
@@ -194,6 +205,8 @@ class SvgGenerator {
 					$secondary_text_width = $svg->textDimensions($lockup->subject)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width, $third_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 38);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width) + 44);
@@ -221,6 +234,8 @@ class SvgGenerator {
 					$fourth_width = $svg->textDimensions($lockup->subject_second_line)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 38);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44);
@@ -235,6 +250,8 @@ class SvgGenerator {
 					$text_width = $svg->textDimensions($lockup->acronym)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . ($text_width + 44) . " 36");
+					$svg_file->height = 38;
+					$svg_file->width = $text_width + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 36);
 						$svg->addAttribute('width', $text_width + 44);
@@ -254,6 +271,8 @@ class SvgGenerator {
 					$secondary_text_width = $svg->textDimensions($lockup->acronym_subject)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 40");
+					$svg_file->height = 40;
+					$svg_file->width = max($main_text_width, $secondary_text_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 40);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
@@ -275,6 +294,8 @@ class SvgGenerator {
 					$secondary_text_width = $svg->textDimensions($lockup->extension_county)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width) + 44;
 					if (!$preview) {
 						$svg->addAttribute('height', 38);
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
@@ -409,6 +430,8 @@ class SvgGenerator {
 			$height = $template == 'org_subject_2_2' ? 88 : 80;
 
 			$svg->addAttribute('viewBox', "0 0 200 " . $height);
+			$svg_file->height = $height;
+			$svg_file->width = 200;
 			if (!$preview) {
 				$svg->addAttribute('height', $height);
 				$svg->addAttribute('width', 200);
@@ -422,8 +445,10 @@ class SvgGenerator {
 			$svg->addPath(self::VERT_N_FILL, array('fill' => $n_main_color));
 			$svg->addPath(self::VERT_N_OUTLINE_R, array('fill' => $n_main_color));
 		}
+		
+		$svg_file->svg_text = $svg->asXML();
 
-		return $svg->asXML();
+		return $svg_file;
 	}
 
 }

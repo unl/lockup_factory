@@ -33,8 +33,8 @@ class LockupsController extends Controller {
 		# set preview to true
 		$lockup->preview = TRUE;
 
-		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup);
-		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert');
+		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup)->svg_text;
+		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert')->svg_text;
 		
 		$model = Lockup::create(array(
 			'organization' => 				strtoupper($post_params['organization']),

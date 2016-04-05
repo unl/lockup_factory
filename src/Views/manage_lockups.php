@@ -17,6 +17,7 @@
                 <tr>
                     <td><?php echo $lockup->id ?></td>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>

@@ -93,4 +93,6 @@ VALUES
   (11, 'awolff2', '2016-03-17 15:07:40', 'approver', 'Amber Wolff', 'College of Law', 'LAW'),
   (12, 'kandersen1', '2016-03-17 15:07:40', 'approver', 'Kathe Andersen', 'Hixson-Lied College of Fine and Performing Arts', 'FPA'),
   (14, 'srosso3', '2016-03-17 15:07:40', 'approver', 'Shari Rosso', 'University Housing', 'UH'),
-  (15, 'mplioplis2', '2016-03-17 15:07:40', 'creative', 'Marcelo Plioplis', NULL, NULL);
+  (15, 'mplioplis2', '2016-03-17 15:07:40', 'creative', 'Marcelo Plioplis', NULL, NULL),
+  (16, 'lkliment2', '2016-03-17 15:07:40', 'approver', 'Lonna Kliment', 'Athletics', 'ATH'),
+  (17, 'khassler2', '2016-03-17 15:07:40', 'approver', 'Katie Williams', 'Alumni Association', 'ALUM');

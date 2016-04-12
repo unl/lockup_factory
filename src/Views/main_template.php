@@ -43,6 +43,7 @@ $page->navlinks = '
 <ul>
 <li><a href="/lockups/create/">New Lockup</a></li>
 <li><a href="/lockups/manage/">Manage Lockups</a></li>
+<li><a href="/lockups/library/">Lockup Library</a></li>
 </ul>'
 ;
 

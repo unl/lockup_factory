@@ -17,8 +17,8 @@
                 <tr>
                     <td><?php echo $lockup->id ?></td>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
-                    <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->user->username ?></td>
+                    <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -29,6 +29,7 @@
             <thead>
                 <tr>
                     <th>My Lockups</th>
+                    <th>Approver</th>
                     <th>Status</th>
                 </tr>   
             </thead>
@@ -36,6 +37,7 @@
             <?php foreach ($context->my_lockups as $lockup): ?>
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->status; ?></td>
                 </tr>
             <?php endforeach; ?>

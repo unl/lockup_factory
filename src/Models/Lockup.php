@@ -8,8 +8,10 @@ class Lockup extends \ActiveRecord\Model {
 	);
 
 	static $belongs_to = array(
-		array('user')
+		array('user'),
+		array('approver', 'class_name' => 'User', 'foreign_key' => 'approver_id')
 	);
+
 
 	# status flows like this:
 	# ######## awaiting_approval #########
@@ -215,7 +217,7 @@ class Lockup extends \ActiveRecord\Model {
 			));
 			fclose($file);
 
-			$bg = $rev ? '-background "#000000" -flatten ' : '';
+			$bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
 			exec('convert ' . $bg . $new_png . ' ' . $new_jpg . ' 2>&1', $backend_output, $return_var);
 			LockupFile::create(array(
 				'lockup_id' => $this->id,

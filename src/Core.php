@@ -36,6 +36,15 @@ class Core {
         }
 	}
 
+	public static function notFound($message = 'That content could not be found.') {
+		http_response_code(404);
+
+		$context = new \stdClass;
+		$context->message = $message;
+		self::renderPage(\Controllers\Controller::renderView('not_found', $context));
+		exit();
+	}
+
 	# redirect back to where the user came from
 	public static function redirectBack($exit = TRUE) {
 		header('Location: ' . $_SERVER['HTTP_REFERER']);

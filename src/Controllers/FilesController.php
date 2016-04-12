@@ -5,22 +5,28 @@ use Models\LockupFile;
 
 class FilesController extends Controller {
 	public static function downloadAction($get_params) {
-		$id = $get_params['id'];
-		$lockup_file = LockupFile::find($id, array('include' => array('lockup')));
-
-		if (empty($id) || empty($lockup_file)) {
-			// error
-		} else {
-			self::sendLockupFile($lockup_file);
+		if (empty($get_params['id'])) {
+			\Core::notFound();
 		}
+		$id = $get_params['id'];
+		try {
+			$lockup_file = LockupFile::find($id, array('include' => array('lockup')));
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		self::sendLockupFile($lockup_file);
 	}
 
 	public static function zipdownloadAction($get_params) {
+		if (empty($get_params['id'])) {
+			\Core::notFound();
+		}
 		$id = $get_params['id'];
-		$lockup = Lockup::find($id, array('include' => array('files', 'user')));
-
-		if (empty($id) || empty($lockup)) {
-			// error
+		try {
+			$lockup = Lockup::find($id, array('include' => array('files', 'user')));
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
 		}
 
 		$color_map = array(

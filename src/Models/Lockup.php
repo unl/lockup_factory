@@ -39,6 +39,10 @@ class Lockup extends \ActiveRecord\Model {
 		return '/lockups/download/id/' . $this->id . '/';
 	}
 
+	public function getDeleteURL() {
+		return '/lockups/delete/';
+	}
+
 	public function getZIPDownloadLink() {
 		return '/files/zipdownload/id/' . $this->id . '/';
 	}

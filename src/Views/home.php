@@ -16,8 +16,8 @@
         <div class="bp2-wdn-grid-set-halves wdn-center">
             <div class="wdn-col" style="margin-bottom: 10px;">
                 <a href="/lockups/create/">
-                    <div class="featured-icon" style="padding-top: 32px; color: white;">
-                    <span style="font-size: 48px; font-weight: 900;">+</span>
+                    <div class="featured-icon" style="padding-top: 0px; color: white;">
+                    <span style="font-size: 84px; font-weight: 900;">+</span>
                     </div>
                     <h2 class="wdn-brand caps" style="margin-top: 1em">Create New Lockup</h2>
                 </a>
@@ -45,12 +45,12 @@
 <div class="wdn-band">
     <div class="wdn-inner-wrapper">
         <h2>Using the Power of the Nebraska N</h2>
-                <p>
-                    Part of the goal of every University communication, regardless of the audience, is to 
-                    identify consistently and positively with the University. Using a Nebraska N icon lockup 
-                    is one way for any University department or unit to do just that. UNL Lockup Factory makes it easy to have an icon lockup created 
-                    so your unit can align with and take full advantage of the University’s strong brand.
-                </p>
+        <p>
+            Part of the goal of every University communication, regardless of the audience, is to 
+            identify consistently and positively with the University. Using a Nebraska N icon lockup 
+            is one way for any University department or unit to do just that. UNL Lockup Factory makes it easy to have an icon lockup created 
+            so your unit can align with and take full advantage of the University’s strong brand.
+        </p>
     </div>
 </div>
 

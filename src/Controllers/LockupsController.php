@@ -179,6 +179,31 @@ class LockupsController extends Controller {
 		return self::renderView('manage_lockups', $context);
 	}
 
+	public static function postDeleteAction($post_params) {
+		self::requireAuth();
+
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# the user must have submitted the lockup or be an admin to delete
+		if ($lockup->user_id != \Auth::$current_user->id && !(\Auth::$current_user->isAdmin())) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Unauthorized', 'Sorry, you are not allowed to delete that lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		$lockup->delete();
+		self::flashNotice(parent::NOTICE_LEVEL_SUCCESS, 'Lockup deleted', 'That lockup has been deleted.');
+		\Core::redirect('/lockups/manage/');
+	}
+
 	public static function libraryAction($get_params) {
 		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Lockup Library');

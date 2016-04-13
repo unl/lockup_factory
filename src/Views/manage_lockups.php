@@ -10,6 +10,7 @@
                     <th>Submitter</th>
                     <th>Approver</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>   
             </thead>
             <tbody>
@@ -20,6 +21,12 @@
                     <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->status; ?></td>
+                    <td>
+                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST">
+                            <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
+                            <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -31,6 +38,7 @@
                     <th>My Lockups</th>
                     <th>Approver</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>   
             </thead>
             <tbody>
@@ -39,6 +47,12 @@
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->status; ?></td>
+                    <td>
+                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST">
+                            <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
+                            <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

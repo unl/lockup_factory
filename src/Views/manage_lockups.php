@@ -89,7 +89,7 @@
                 </tr>   
             </thead>
             <tbody>
-            <?php foreach ($context->approver_lockups as $lockup): ?>
+            <?php foreach ($context->creative_approval_lockups as $lockup): ?>
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username ?></td>

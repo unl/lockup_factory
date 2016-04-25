@@ -1,3 +1,6 @@
+@import 'lib/colors';
+@import 'lib/fonts';
+
 label > input { /* HIDE RADIO */
 	visibility: hidden; /* Makes input not-clickable */
 	position: absolute; /* Remove input from document flow */
@@ -20,6 +23,10 @@ form legend {
 	font-size: 1.5em;
 }
 
+textarea {
+	resize: vertical;
+}
+
 .page-title {
 	margin-top: 0;
 }
@@ -34,6 +41,24 @@ div.center, section.center {
 
 div.right, section.right {
 	text-align: right;
+}
+
+.approval-bug {
+	text-align: center;
+	background: @light-triad;
+	border: 1px solid @triad;
+	border-radius: 1em;
+	padding: 1em;
+	color: @cream;
+	.sans-serif-font();
+	&.approved {
+		background: @light-complement;
+		border: 1px solid @complement;
+	}
+	&.denied {
+		background: lighten(@scarlet, 25%);
+		border: 1px solid @scarlet;
+	}
 }
 
 .wdn_notice {

@@ -13,24 +13,19 @@ class Lockup extends \ActiveRecord\Model {
 	);
 
 
-	# status flows like this:
-	# ######## awaiting_approval #########
-	#           /           \
-	#          /            \
-	#    comm_approved      creative_approved
-	#            \              /
-	#            \             /
-	#            ready_to_generate
-	#                    |
-	#                    |
-	#                generated
+	# there are two columns in the DB for status
+	# first is status: this is the communicator approval
+	# second is creative_status: this is just the creative approval
+	# when both status are at "approved", then the lockup can be generated.
+	# then both statuses will switch to generated, but of course only one needs to be checked
 
 	const AWAITING_APPROVAL = 'awaiting_approval';
-	const COMMUNICATOR_APPROVED = 'communicator_approved';
-	const CREATIVE_APPROVED = 'creative_approved';
-	const READY_TO_GENERATE = 'ready_to_generate';
+	const FEEDBACK_GIVEN = 'feedback_given';
+	const DENIED = 'denied';
+	const APPROVED = 'approved';
 	const GENERATED = 'generated';
 
+	/* URLS and filenames */
 	public function getPreviewURL() {
 		return '/lockups/preview/id/' . $this->id . '/';
 	}
@@ -47,19 +42,6 @@ class Lockup extends \ActiveRecord\Model {
 		return '/files/zipdownload/id/' . $this->id . '/';
 	}
 
-	public function getZIPDownloadName() {
-		return 'N_' . $this->getFolderName() . '_lockups.zip';
-	}
-
-	public function getApproverName() {
-		$user = User::find(array('id' => $this->approver_id));
-		if ($user) {
-			return $user->name . '-' . $user->username;
-		} else {
-			return NULL;
-		}
-	}
-
 	public function getPNGDownloadURL() {
 		foreach ($this->files as $file) {
 			if ($file->type == 'png' && $file->color == 'RGB' && $file->orientation == 'horiz') {
@@ -67,6 +49,10 @@ class Lockup extends \ActiveRecord\Model {
 			}
 		}
 		return NULL;
+	}
+
+	public function getZIPDownloadName() {
+		return 'N_' . $this->getFolderName() . '_lockups.zip';
 	}
 
 	public function getOrganizationFilename() {
@@ -84,6 +70,59 @@ class Lockup extends \ActiveRecord\Model {
 			return $this->getOrganizationFilename();
 		} else {
 			return str_replace(' ', '_', $this->getName());
+		}
+	}
+
+	/* status functions */
+	public function getFullStatusText() {
+		if ($this->isGenerated()) {
+			return 'Files Generated';
+		} else if ($this->isFullyApproved()) {
+			return 'Fully Approved';
+		} else {
+			return 'Communicator: ' . ucwords(join(explode('_', $this->status), ' ')) . '; Creative: ' . ucwords(join(explode('_', $this->creative_status), ' '));
+		}
+	}
+
+	public function isFullyApproved() {
+		return $this->isCommunicatorApproved() && $this->isCreativeApproved();
+	}
+
+	public function isCreativeApproved() {
+		return ($this->creative_status == self::APPROVED || $this->creative_status == self::GENERATED);
+	}
+
+	public function isCreativeFeedbackGiven() {
+		return ($this->creative_status == self::FEEDBACK_GIVEN);
+	}
+
+	public function isCreativeDenied() {
+		return ($this->creative_status == self::DENIED);
+	}
+
+	public function isCommunicatorApproved() {
+		return ($this->status == self::APPROVED || $this->status == self::GENERATED);
+	}
+
+	public function isCommunicatorFeedbackGiven() {
+		return ($this->status == self::FEEDBACK_GIVEN);
+	}
+
+	public function isCommunicatorDenied() {
+		return ($this->status == self::DENIED);
+	}
+
+	public function isGenerated() {
+		return $this->status == self::GENERATED;
+	}
+
+
+	public function getApproverName() {
+		$user = User::find(array('id' => $this->approver_id));
+		if ($user) {
+			return $user->name;
+		} else {
+			return NULL;
 		}
 	}
 

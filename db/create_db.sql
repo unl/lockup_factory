@@ -96,4 +96,9 @@ VALUES
   (15, 'mplioplis2', '2016-03-17 15:07:40', 'creative', 'Marcelo Plioplis', NULL, NULL),
   (16, 'lkliment2', '2016-03-17 15:07:40', 'approver', 'Lonna Kliment', 'Athletics', 'ATH'),
   (17, 'khassler2', '2016-03-17 15:07:40', 'approver', 'Katie Williams', 'Alumni Association', 'ALUM'),
-  (18, 'cboe2', '2016-03-17 15:07:40', 'approver', 'Charlotte Boe', 'Business & Finance', 'B&F');
+  (18, 'cboe2', '2016-03-17 15:07:40', 'approver', 'Charlotte Boe', 'Business & Finance', 'B&F'),
+  (319, 'kblack4', '2016-03-17 12:00:00', 'creative', 'Katie Black', NULL, NULL),
+  (320, 'tdemaro2', '2016-03-17 12:00:00', 'creative', 'Taylor DeMaro', NULL, NULL),
+  (321, 'azeiler2', NOW(), 'creative', 'Andrea Zeiler', NULL, NULL),
+  (322, 'sseverin2', NOW(), 'creative', 'Stephanie Severin', NULL, NULL),
+  (323, 'cchapman2', NOW(), 'creative', 'Clint Chapman', NULL, NULL);

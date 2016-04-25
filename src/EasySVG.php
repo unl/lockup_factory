@@ -213,6 +213,7 @@ class EasySVG {
         $horizAdvY = $this->font->ascent + $this->font->descent;
         $fontSize = floatval($this->font->size) / $this->font->unitsPerEm;
         $text = $this->_utf8ToUnicode($text);
+        error_log(print_r($text,1));
 
         for($i = 0; $i < count($text); $i++) {
 

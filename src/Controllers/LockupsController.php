@@ -99,24 +99,94 @@ class LockupsController extends Controller {
 		}
 
 		if (\Auth::$current_user->isAdmin()) {
-			$lockup->status = Lockup::READY_TO_GENERATE;
+			$lockup->status = Lockup::APPROVED;
+			$lockup->creative_status = Lockup::APPROVED;
+			$lockup->creative_feedback = $post_params['creative_feedback'];
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
 		} else if (\Auth::$current_user->isCreative()) {
+			$lockup->creative_feedback = $post_params['creative_feedback'];
 			if ($lockup->user->id == \Auth::$current_user->id) {
 				// creative users can full approve their own lockups
-				$lockup->status = Lockup::READY_TO_GENERATE;
+				$lockup->status = Lockup::APPROVED;
+				$lockup->creative_status = Lockup::APPROVED;
 				// if they do so, remove the approver
 				$lockup->approver_id = NULL;
-			} else if ($lockup->status == Lockup::AWAITING_APPROVAL) {
-				$lockup->status = Lockup::CREATIVE_APPROVED;
-			} else if ($lockup->status == Lockup::COMMUNICATOR_APPROVED) {
-				$lockup->status = Lockup::READY_TO_GENERATE;
+			} else {
+				$lockup->creative_status = Lockup::APPROVED;
 			}
 		} else if (\Auth::$current_user->isApprover() && $lockup->approver_id == \Auth::$current_user->id) {
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
+			$lockup->status = Lockup::APPROVED;
+		}
+		$lockup->save();
+
+		\Core::redirect($lockup->getPreviewURL());
+	}
+
+	public static function postFeedbackAction($post_params) {
+		self::requireAuth();
+		
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		if (\Auth::$current_user->isAdmin()) {
 			if ($lockup->status == Lockup::AWAITING_APPROVAL) {
-				$lockup->status = Lockup::COMMUNICATOR_APPROVED;
-			} else if ($lockup->status == Lockup::CREATIVE_APPROVED) {
-				$lockup->status = Lockup::READY_TO_GENERATE;
+				$lockup->status = Lockup::FEEDBACK_GIVEN;
 			}
+			if ($lockup->creative_status == Lockup::AWAITING_APPROVAL) {
+				$lockup->creative_status = Lockup::FEEDBACK_GIVEN;
+			}
+			$lockup->creative_feedback = $post_params['creative_feedback'];
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
+		} else if (\Auth::$current_user->isCreative()) {
+			$lockup->creative_feedback = $post_params['creative_feedback'];
+			if ($lockup->creative_status == Lockup::AWAITING_APPROVAL) {
+				$lockup->creative_status = Lockup::FEEDBACK_GIVEN;
+			}
+		} else if (\Auth::$current_user->isApprover() && $lockup->approver_id == \Auth::$current_user->id) {
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
+			if ($lockup->status == Lockup::AWAITING_APPROVAL) {
+				$lockup->status = Lockup::FEEDBACK_GIVEN;
+			}
+		}
+		$lockup->save();
+
+		\Core::redirect($lockup->getPreviewURL());
+	}
+
+	public static function postDenyAction($post_params) {
+		self::requireAuth();
+		
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		if (\Auth::$current_user->isAdmin()) {
+			$lockup->status = Lockup::DENIED;
+			$lockup->creative_status = Lockup::DENIED;
+			$lockup->creative_feedback = $post_params['creative_feedback'];
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
+		} else if (\Auth::$current_user->isCreative()) {
+			$lockup->creative_feedback = $post_params['creative_feedback'];
+			$lockup->creative_status = Lockup::DENIED;
+		} else if (\Auth::$current_user->isApprover() && $lockup->approver_id == \Auth::$current_user->id) {
+			$lockup->communicator_feedback = $post_params['communicator_feedback'];
+			$lockup->status = Lockup::DENIED;
 		}
 		$lockup->save();
 
@@ -173,8 +243,8 @@ class LockupsController extends Controller {
 		$context = new \stdClass;
 		$context->all_lockups = Lockup::all(array('include' => array('user')));
 		$context->my_lockups = \Auth::$current_user->lockups;
-		$context->approver_lockups = Lockup::all(array('conditions' => array('approver_id' => \Auth::$current_user->id)));
-		$context->creative_approval_lockups = Lockup::all(array('conditions' => array('status in (?)', array('awaiting_approval', 'communicator_approved'))));
+		$context->approver_lockups = Lockup::all(array('conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given'))));
+		$context->creative_approval_lockups = Lockup::all(array('conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given'))));
 
 		return self::renderView('manage_lockups', $context);
 	}

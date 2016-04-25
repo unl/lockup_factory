@@ -1,6 +1,5 @@
 <?php
 use Models\Lockup;
-use \SvgFile;
 
 class SvgGenerator {
 	const SCARLET = '#d00000';

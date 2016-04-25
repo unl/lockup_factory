@@ -20,7 +20,7 @@
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
-                    <td><?php echo $lockup->status; ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
                     <td>
                         <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST">
                             <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
@@ -46,7 +46,7 @@
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
-                    <td><?php echo $lockup->status; ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
                     <td>
                         <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST">
                             <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
@@ -57,7 +57,7 @@
             <?php endforeach; ?>
             </tbody>
         </table>
-
+        <br>
         <?php if (\Auth::$current_user->isApprover()): ?>
         <table>
             <thead>
@@ -72,13 +72,13 @@
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username ?></td>
-                    <td><?php echo $lockup->status; ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
         <?php endif; ?>
-
+        <br>
         <?php if (\Auth::$current_user->isCreative()): ?>
         <table>
             <thead>
@@ -93,7 +93,7 @@
                 <tr>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username ?></td>
-                    <td><?php echo $lockup->status; ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

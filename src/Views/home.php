@@ -58,14 +58,14 @@
     <div class="wdn-inner-wrapper right">
         <h2>What is an “Icon Lockup?"</h2>
         <div class="wdn-grid">
-                <p>
-                    An icon lockup combines the University's “Nebraska N" icon with text describing a university department 
-                    or unit into one scalable image. This allows the text to be "locked in" to the correct position and size 
-                    next to the "N" in order to keep design consistent across the University for our audiences. Lockup files 
-                    can then be laid out in print materials, sent to merchandisers or used in websites. UNL Lockup Factory generates 
-                    images and vectors in RGB, Pantone, CMYK, and Black colors and includes all necessary file types and reversed 
-                    versions for use on dark backgrounds.
-                </p>
+            <p>
+                An icon lockup combines the University's “Nebraska N" icon with text describing a university department 
+                or unit into one scalable image. This allows the text to be "locked in" to the correct position and size 
+                next to the "N" in order to keep design consistent across the University for our audiences. Lockup files 
+                can then be laid out in print materials, sent to merchandisers or used in websites. UNL Lockup Factory generates 
+                images and vectors in RGB, Pantone, CMYK, and Black colors and includes all necessary file types and reversed 
+                versions for use on dark backgrounds.
+            </p>
         </div>
     </div>
 </div>
@@ -75,11 +75,10 @@
         <div class="center" style="width: 70%; margin: 0 auto;">
             <h2>How do I begin?</h2>
             <p>
-                Click "Create a New Lockup" below. You'll need your UNL login credentials. 
+                Click "Create a New Lockup" above. You'll need your UNL login credentials. 
                 You'll then choose your lockup style and enter your text. You'll also want to know the "Communicator Contact" for your unit, 
                 as both he/she and University Communications will approve the icon lockup. Once that's done, you can generate the files and 
-                download a .zip package. Or, download individual files if you don't need them all. They will always be available here! You can get
-                started by clicking the navigation buttons above.
+                download a .zip package. Or, download individual files if you don't need them all. They will always be available here!
             </p>
         </div>
     </div>

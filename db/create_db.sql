@@ -85,7 +85,7 @@ VALUES
   (3, 'jbrown14', '2016-03-17 15:07:40', 'approver', 'Jill Brown', 'College of Agricultural Sciences and Natural Resources', 'CASNR & IANR'),
   (4, 'mriese3', '2016-03-17 15:07:40', 'approver', 'Michael Riese', 'Extension', 'EXT'),
   (5, 'kvondrak2', '2016-03-17 15:07:40', 'approver', 'Kerry McCullough-Vondrak', 'College of Architecture', 'ARCH'),
-  (6, 'toclock-pieper2', '2016-03-17 15:07:40', 'approver', 'Terri Pieper', 'College of Arts and Sciences', 'A&S'),
+  (6, 'toclock-pieper2', '2016-03-17 15:07:40', 'approver', 'Terri Pieper', 'College of Arts and Sciences', 'CAS'),
   (7, 'sirwingish2', '2016-03-17 15:07:40', 'approver', 'Sheri Irwin Gish', 'College of Business Administration', 'CBA'),
   (8, 'bstauffer2', '2016-03-17 15:07:40', 'approver', 'Brad Stauffer', 'College of Education and Human Sciences', 'CEHS'),
   (9, 'jengebretson2', '2016-03-17 15:07:40', 'approver', 'JS Engebretson', 'College of Engineering', 'ENG'),

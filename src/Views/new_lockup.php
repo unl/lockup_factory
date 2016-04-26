@@ -11,39 +11,6 @@
                 </fieldset>
             <?php endif; ?>
 
-            
-            <fieldset>
-                <legend>File Name Designations</legend>
-                <label class="explanation">These fields are for the system to determine file names for your created files, and do not affect the
-                actual text in the lockup.</label>
-                <div class="bp2-wdn-grid-set-halves">
-                    <div class="wdn-col">
-                        <label for="file-organization">College/Organization/Institution</label>
-                        <input type="text" id="file-organization" name="file_organization">
-                        <label for="file-organization-acronym">College/Organization/Institution Acronym</label>
-                        <input type="text" id="file-organization-acronym" name="file_organization_acronym">
-                    </div>
-                    <div class="wdn-col">
-                        <label for="file-department">Department</label>
-                        <input type="text" id="file-department" name="file_department">
-                        <label for="file-department-acronym">Department Acronym</label>
-                        <input type="text" id="file-department-acronym" name="file_department_acronym">
-                    </div>
-                </div>
-
-            </fieldset>
-
-            <fieldset>
-                <legend>Communicator Approval</legend>
-                <label for="approver">Select your Communicator Contact:</label>
-                <select id="approver" name="approver">
-                    <?php foreach ($context->approvers as $user): ?>
-                        <option value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
-                    <?php endforeach; ?>
-                        <option value="">I'm not sure / not listed / N/A</option>
-                </select>
-            </fieldset>
-
             <fieldset>
                 <legend>Style</legend>
                 <div>
@@ -52,9 +19,9 @@
                     <input type="radio" id="show-vert" name="show"><label for="show-vert">Show Vertical</label>
                 </div>
                 <br>
-        		<div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves wdn-center">
                     <div class="wdn-col">
-                    	<label>
+                        <label>
                             <input type="radio" name="type" value="org_only" id="type-org-only" checked="checked">
                             <img class="horiz" src="/images/org_only_example.png">
                             <img class="vert" style="display: none;" src="/images/org_only_vert_example.png">
@@ -76,7 +43,7 @@
                 </div>
                 <div class="bp2-wdn-grid-set-halves wdn-center">
                     <div class="wdn-col">
-                    	<label>
+                        <label>
                             <input type="radio" name="type" value="org_subject" id="type-org-subject">
                             <img class="horiz" src="/images/org_subject_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_vert_example.png">
@@ -153,6 +120,7 @@
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <legend>Lockup Text</legend>
                 <div id="organization-field">
@@ -223,13 +191,50 @@
                     <input type="text" name="extension_county" id="extension-county">
                     <br>
                 </div>
-                <br>
-                <?php if (\Auth::$current_user !== NULL): ?>
-                    <button type="submit" class="wdn-button wdn-button-brand">Submit Lockup</button>
-                <?php else: ?>
-                    <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
-                <?php endif; ?>
             </fieldset>
+            
+            <fieldset>
+                <legend>File Name Designations</legend>
+                <label class="explanation">
+                    The content entered in these fields does not affect the 
+                    actual text in the lockup. It is used to determine file names for lockups.
+                </label>
+                <div class="bp2-wdn-grid-set-halves">
+                    <div class="wdn-col">
+                        <label for="file-organization">College/Organization/Institution</label>
+                        <input type="text" id="file-organization" name="file_organization">
+                        <label for="file-organization-acronym">College/Organization/Institution Acronym</label>
+                        <input type="text" id="file-organization-acronym" name="file_organization_acronym">
+                    </div>
+                    <div class="wdn-col">
+                        <label for="file-department">Department</label>
+                        <input type="text" id="file-department" name="file_department">
+                        <label for="file-department-acronym">Department Acronym</label>
+                        <input type="text" id="file-department-acronym" name="file_department_acronym">
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>Communicator Approval</legend>
+                <label class="explanation">
+                    Lockup requests will be reviewed for approval by your designated Communicator Contact and University Communications.
+                </label><br>
+                <label for="approver">Select your Communicator Contact:</label>
+                <select id="approver" name="approver">
+                    <?php foreach ($context->approvers as $user): ?>
+                        <option value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
+                    <?php endforeach; ?>
+                        <option value="">I'm not sure / not listed / N/A</option>
+                </select>
+            </fieldset>
+            
+            <?php if (\Auth::$current_user !== NULL): ?>
+                <button type="submit" class="wdn-button wdn-button-brand">Submit Lockup</button>
+            <?php else: ?>
+                <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
+            <?php endif; ?>
         </form>
 	</div>
 </div>

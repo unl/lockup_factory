@@ -56,11 +56,11 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getOrganizationFilename() {
-		return str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_organization . '_' . $this->file_department_acronym)));
+		return str_replace('&', '', str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_organization . '_' . $this->file_department_acronym))));
 	}
 
 	public function getDepartmentFilename() {
-		return str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_department . '_' .  $this->file_organization_acronym . '_' . $this->file_department_acronym)));
+		return str_replace('&', '', str_replace('"', '', str_replace("'", '', str_replace(' ', '_', $this->file_department . '_' .  $this->file_organization_acronym . '_' . $this->file_department_acronym))));
 	}
 
 	public function getFolderName() {

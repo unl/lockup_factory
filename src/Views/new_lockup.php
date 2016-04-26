@@ -19,11 +19,11 @@
                     <input type="radio" id="show-vert" name="show"><label for="show-vert">Show Vertical</label>
                 </div>
                 <br>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_only" id="type-org-only" checked="checked">
-                            <img class="horiz" src="/images/org_only_example.png">
+                            <img class="horiz height-36" src="/images/org_only_example.png">
                             <img class="vert" style="display: none;" src="/images/org_only_vert_example.png">
                         </label><br>
                         <label for="type-org-only">
@@ -33,7 +33,7 @@
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_two_line" id="type-org-two-line">
-                            <img class="horiz" src="/images/org_two_line_example.png">
+                            <img class="horiz height-36" src="/images/org_two_line_example.png">
                             <img class="vert" style="display: none;" src="/images/org_two_line_vert_example.png">
                         </label><br>
                         <label for="type-org-two-line">
@@ -41,11 +41,11 @@
                         </label><br><br>
                     </div>
                 </div>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_subject" id="type-org-subject">
-                            <img class="horiz" src="/images/org_subject_example.png">
+                            <img class="horiz height-38" src="/images/org_subject_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_vert_example.png">
                         </label><br>
                         <label for="type-org-subject">
@@ -55,7 +55,7 @@
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_subject_1_2" id="type-org-subject-1-2">
-                            <img class="horiz" src="/images/org_subject_1-2_example.png">
+                            <img class="horiz height-38" src="/images/org_subject_1-2_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_1-2_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-1-2">
@@ -63,11 +63,11 @@
                         </label><br><br>
                     </div>
                 </div>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_subject_2_1" id="type-org-subject-2-1">
-                            <img class="horiz" src="/images/org_subject_2-1_example.png">
+                            <img class="horiz height-38" src="/images/org_subject_2-1_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_2-1_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-2-1">
@@ -77,7 +77,7 @@
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="org_subject_2_2" id="type-org-subject-2-2">
-                            <img class="horiz" src="/images/org_subject_2-2_example.png">
+                            <img class="horiz height-38" src="/images/org_subject_2-2_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_2-2_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-2-2">
@@ -85,11 +85,11 @@
                         </label><br><br>
                     </div>
                 </div>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="acronym" id="type-acronym">
-                            <img class="horiz" src="/images/acronym_example.png">
+                            <img class="horiz height-36" src="/images/acronym_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_vert_example.png">
                         </label><br>
                         <label for="type-acronym">
@@ -99,7 +99,7 @@
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="acronym_subject" id="type-acronym-subject">
-                            <img class="horiz" src="/images/acronym_subject_example.png">
+                            <img class="horiz height-40" src="/images/acronym_subject_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_subject_vert_example.png">
                         </label><br>
                         <label for="type-acronym-subject">
@@ -107,11 +107,11 @@
                         </label><br><br>
                     </div>
                 </div>
-                <div class="bp2-wdn-grid-set-halves wdn-center">
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="extension" id="type-extension">
-                            <img class="horiz" src="/images/extension_example.png">
+                            <img class="horiz height-38" src="/images/extension_example.png">
                             <img class="vert" style="display: none;" src="/images/extension_vert_example.png">
                         </label><br>
                         <label for="type-extension">
@@ -172,7 +172,7 @@
                     <br>
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
-                    <label for="acronym-subject">Acronym Subject</label>
+                    <label for="acronym-subject">Subject Acronym</label>
                     <div class="tooltip wdn-icon-info italic hang-right">
                         <div>
                             15 characters max

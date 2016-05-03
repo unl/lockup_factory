@@ -214,6 +214,10 @@ class LockupsController extends Controller {
 				$lockup->creative_status = Lockup::APPROVED;
 				// if they do so, remove the approver
 				$lockup->approver_id = NULL;
+			} else if (empty($lockup->approver_id)) {
+				// creative users can full approve lockups with no communicator
+				$lockup->status = Lockup::APPROVED;
+				$lockup->creative_status = Lockup::APPROVED;
 			} else {
 				$lockup->creative_status = Lockup::APPROVED;
 			}

@@ -31,15 +31,15 @@ textarea {
 	margin-top: 0;
 }
 
-div.left, section.left {
+div.left, section.left, td.left, th.left {
 	text-align: left;
 }
 
-div.center, section.center {
+div.center, section.center, td.center, th.center {
 	text-align: center;
 }
 
-div.right, section.right {
+div.right, section.right, td.right, th.right {
 	text-align: right;
 }
 
@@ -95,6 +95,18 @@ img.height-40 {
     &.blue {
     	background-color: #1B9AE8;
     }
+}
+
+.table-actions {
+	line-height: 1;
+	a, button {
+		vertical-align: middle;
+	}
+}
+
+.delete-form {
+    display: inline;
+    padding: 0;
 }
 
 svg.preview {

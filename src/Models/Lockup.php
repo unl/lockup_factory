@@ -30,6 +30,10 @@ class Lockup extends \ActiveRecord\Model {
 		return '/lockups/preview/id/' . $this->id . '/';
 	}
 
+	public function getEditURL() {
+		return '/lockups/edit/id/' . $this->id . '/';
+	}
+
 	public function getDownloadURL() {
 		return '/lockups/download/id/' . $this->id . '/';
 	}
@@ -114,6 +118,10 @@ class Lockup extends \ActiveRecord\Model {
 
 	public function isGenerated() {
 		return $this->status == self::GENERATED;
+	}
+
+	public function isEditable() {
+		return !$this->isGenerated();
 	}
 
 

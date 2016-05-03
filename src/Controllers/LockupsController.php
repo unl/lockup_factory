@@ -11,6 +11,40 @@ class LockupsController extends Controller {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');
 
 		$context = new \stdClass;
+		$context->lockup = new Lockup;
+		$context->approvers = User::find('all', array('conditions' => array('role' => 'approver')));
+		return self::renderView('new_lockup', $context);
+	}
+
+	public static function editAction($get_params) {
+		self::requireAuth();
+		\Core::$breadcrumbs[] = array('text' => 'Edit Lockup');
+
+		if (empty($get_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $get_params['id'];
+		try {
+			$lockup = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# the user must have submitted the lockup or be an admin to edit
+		if ($lockup->user_id != \Auth::$current_user->id && !(\Auth::$current_user->isAdmin())) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Unauthorized', 'Sorry, you are not allowed to edit that lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		# this lockup must not be generated
+		if ($lockup->status == Lockup::GENERATED) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Cannot Edit', 'Sorry, this lockup has been generated and cannot be edited. Please create a new lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		$context = new \stdClass;
+		$context->lockup = $lockup;
 		$context->approvers = User::find('all', array('conditions' => array('role' => 'approver')));
 		return self::renderView('new_lockup', $context);
 	}
@@ -57,6 +91,75 @@ class LockupsController extends Controller {
 		));
 
 		\Core::redirect($model->getPreviewURL());
+	}
+
+	public static function postEditAction($post_params) {
+		self::requireAuth();
+
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup_model = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# the user must have submitted the lockup or be an admin to edit
+		if ($lockup_model->user_id != \Auth::$current_user->id && !(\Auth::$current_user->isAdmin())) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Unauthorized', 'Sorry, you are not allowed to edit that lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		# this lockup must not be generated
+		if ($lockup_model->status == Lockup::GENERATED) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Cannot Edit', 'Sorry, this lockup has been generated and cannot be edited. Please create a new lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		# take the params and generate a base lockup from that template
+		$lockup = new \stdClass;
+
+		$lockup->org_name = 				strtoupper($post_params['organization']);
+		$lockup->org_second_line = 			strtoupper($post_params['organization_second_line']);
+		$lockup->subject = 					$post_params['subject'];
+		$lockup->subject_second_line = 		$post_params['subject_second_line'];
+		$lockup->acronym = 					strtoupper($post_params['acronym']);
+		$lockup->acronym_subject = 			strtoupper($post_params['acronym_subject']);
+		$lockup->extension_county = 		$post_params['extension_county'];
+		$lockup->style = 					$post_params['type'];
+
+		# set preview to true
+		$lockup->preview = TRUE;
+
+		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup)->svg_text;
+		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert')->svg_text;
+		
+		$lockup_model->update_attributes(array(
+			'organization' => 				strtoupper($post_params['organization']),
+			'organization_second_line' => 	strtoupper($post_params['organization_second_line']),
+			'subject' => 					$post_params['subject'],
+			'subject_second_line' => 		$post_params['subject_second_line'],
+			'acronym' => 					strtoupper($post_params['acronym']),
+			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
+			'extension_county' =>	 		$post_params['extension_county'],
+			'style' => 						$post_params['type'],
+			'user_id' => 					\Auth::$current_user->id,
+			'date_created' => 				date('Y-m-d H:i:s'),
+			'status' => 					Lockup::AWAITING_APPROVAL,
+			'creative_status' =>			Lockup::AWAITING_APPROVAL,
+			'preview_svg' => 				$svg_text,
+			'vert_preview_svg' => 			$vert_svg_text,
+			'approver_id' => 				empty($post_params['approver']) ? NULL : $post_params['approver'],
+			'file_organization' =>			$post_params['file_organization'],
+			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
+			'file_department' => 			$post_params['file_department'],
+			'file_department_acronym' =>	$post_params['file_department_acronym']
+		));
+
+		\Core::redirect($lockup_model->getPreviewURL());
 	}
 
 	public static function previewAction($get_params) {

@@ -3,6 +3,7 @@
         <h3 class="page-title">Create New Lockup</h3>
 
         <form method="POST" action="">
+            <input type="hidden" id="id" name="id" value="<?php echo $context->lockup->id; ?>">
             <?php if (\Auth::$current_user === NULL): ?>
                 <fieldset>
                     <legend>Log In</legend>
@@ -22,7 +23,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_only" id="type-org-only" checked="checked">
+                            <input type="radio" name="type" value="org_only" id="type-org-only" <?php if ($context->lockup->style == 'org_only') echo 'checked="checked"'; ?>>
                             <img class="horiz height-36" src="/images/org_only_example.png">
                             <img class="vert" style="display: none;" src="/images/org_only_vert_example.png">
                         </label><br>
@@ -32,7 +33,7 @@
                     </div>
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_two_line" id="type-org-two-line">
+                            <input type="radio" name="type" value="org_two_line" id="type-org-two-line" <?php if ($context->lockup->style == 'org_two_line') echo 'checked="checked"'; ?>>
                             <img class="horiz height-36" src="/images/org_two_line_example.png">
                             <img class="vert" style="display: none;" src="/images/org_two_line_vert_example.png">
                         </label><br>
@@ -44,7 +45,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_subject" id="type-org-subject">
+                            <input type="radio" name="type" value="org_subject" id="type-org-subject" <?php if ($context->lockup->style == 'org_subject') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/org_subject_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_vert_example.png">
                         </label><br>
@@ -54,7 +55,7 @@
                     </div>
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_subject_1_2" id="type-org-subject-1-2">
+                            <input type="radio" name="type" value="org_subject_1_2" id="type-org-subject-1-2" <?php if ($context->lockup->style == 'org_subject_1_2') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/org_subject_1-2_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_1-2_vert_example.png">
                         </label><br>
@@ -66,7 +67,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_subject_2_1" id="type-org-subject-2-1">
+                            <input type="radio" name="type" value="org_subject_2_1" id="type-org-subject-2-1" <?php if ($context->lockup->style == 'org_subject_2_1') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/org_subject_2-1_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_2-1_vert_example.png">
                         </label><br>
@@ -76,7 +77,7 @@
                     </div>
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_subject_2_2" id="type-org-subject-2-2">
+                            <input type="radio" name="type" value="org_subject_2_2" id="type-org-subject-2-2" <?php if ($context->lockup->style == 'org_subject_2_2') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/org_subject_2-2_example.png">
                             <img class="vert" style="display: none;" src="/images/org_subject_2-2_vert_example.png">
                         </label><br>
@@ -88,7 +89,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="acronym" id="type-acronym">
+                            <input type="radio" name="type" value="acronym" id="type-acronym" <?php if ($context->lockup->style == 'acronym') echo 'checked="checked"'; ?>>
                             <img class="horiz height-36" src="/images/acronym_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_vert_example.png">
                         </label><br>
@@ -98,7 +99,7 @@
                     </div>
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="acronym_subject" id="type-acronym-subject">
+                            <input type="radio" name="type" value="acronym_subject" id="type-acronym-subject" <?php if ($context->lockup->style == 'acronym_subject') echo 'checked="checked"'; ?>>
                             <img class="horiz height-40" src="/images/acronym_subject_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_subject_vert_example.png">
                         </label><br>
@@ -110,7 +111,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="extension" id="type-extension">
+                            <input type="radio" name="type" value="extension" id="type-extension" <?php if ($context->lockup->style == 'extension') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/extension_example.png">
                             <img class="vert" style="display: none;" src="/images/extension_vert_example.png">
                         </label><br>
@@ -130,7 +131,7 @@
                             30 characters max
                         </div>
                     </div>
-                    <input type="text" name="organization" id="organization">
+                    <input type="text" name="organization" id="organization" value="<?php echo $context->lockup->organization; ?>">
                 </div>
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
@@ -148,7 +149,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="subject" id="subject">
+                    <input type="text" name="subject" id="subject" value="<?php echo $context->lockup->subject; ?>">
                     <br>
                 </div>
                 <div id="subject-second-line-field" style="display: none;">
@@ -158,7 +159,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="subject_second_line" id="subject-second-line">
+                    <input type="text" name="subject_second_line" id="subject-second-line" value="<?php echo $context->lockup->subject_second_line; ?>">
                     <br>
                 </div>
                 <div id="acronym-field" style="display: none;">
@@ -168,7 +169,7 @@
                             10 characters max
                         </div>
                     </div>
-                    <input type="text" name="acronym" id="acronym">
+                    <input type="text" name="acronym" id="acronym" value="<?php echo $context->lockup->acronym; ?>">
                     <br>
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
@@ -178,7 +179,7 @@
                             15 characters max
                         </div>
                     </div>
-                    <input type="text" name="acronym_subject" id="acronym-subject">
+                    <input type="text" name="acronym_subject" id="acronym-subject" value="<?php echo $context->lockup->acronym_subject; ?>">
                     <br>
                 </div>
                 <div id="extension-county-field" style="display: none;">
@@ -188,7 +189,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="extension_county" id="extension-county">
+                    <input type="text" name="extension_county" id="extension-county" value="<?php echo $context->lockup->extension_county; ?>">
                     <br>
                 </div>
             </fieldset>
@@ -202,15 +203,15 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label for="file-organization">College/Organization/Institution</label>
-                        <input type="text" id="file-organization" name="file_organization">
+                        <input type="text" id="file-organization" name="file_organization" value="<?php echo $context->lockup->file_organization; ?>">
                         <label for="file-organization-acronym">College/Organization/Institution Acronym</label>
-                        <input type="text" id="file-organization-acronym" name="file_organization_acronym">
+                        <input type="text" id="file-organization-acronym" name="file_organization_acronym" value="<?php echo $context->lockup->file_organization_acronym; ?>">
                     </div>
                     <div class="wdn-col">
                         <label for="file-department">Department</label>
-                        <input type="text" id="file-department" name="file_department">
+                        <input type="text" id="file-department" name="file_department" value="<?php echo $context->lockup->file_department; ?>">
                         <label for="file-department-acronym">Department Acronym</label>
-                        <input type="text" id="file-department-acronym" name="file_department_acronym">
+                        <input type="text" id="file-department-acronym" name="file_department_acronym" value="<?php echo $context->lockup->file_department_acronym; ?>">
                     </div>
                 </div>
 
@@ -224,9 +225,9 @@
                 <label for="approver">Select your Communicator Contact:</label>
                 <select id="approver" name="approver">
                     <?php foreach ($context->approvers as $user): ?>
-                        <option value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
+                        <option <?php if ($context->lockup->approver_id == $user->id) echo 'checked="checked"'; ?> value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
                     <?php endforeach; ?>
-                        <option value="">I'm not sure / not listed / N/A</option>
+                        <option <?php if ($context->lockup->approver_id == '') echo 'checked="checked"'; ?> value="">I'm not sure / not listed / N/A</option>
                 </select>
             </fieldset>
             

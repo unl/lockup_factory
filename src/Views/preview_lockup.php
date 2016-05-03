@@ -58,7 +58,10 @@
 			<div class="vi-header">
 			Actions
 			</div>
-			<div class="tools">
+			<div class="tools wdn-center">
+				<?php if ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin()): ?>
+					<div><a class="wdn-button wdn-button-triad" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
+				<?php endif; ?>
 				<?php if ($context->lockup->isFullyApproved() && ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin())): ?>
 				<form method="POST" action="/lockups/generate/" id="generate" class="wdn-center">
 					<div><label>You have permission to generate this lockup. Click "Generate Files" below to begin.</label></div>

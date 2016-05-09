@@ -217,43 +217,6 @@ class Lockup extends \ActiveRecord\Model {
 
 		$return_var = NULL;
 		
-		exec('inkscape --export-pdf=' . $new_pdf . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
-		if ($return_var == 0) {
-			# attempt to write this to the DB
-			$file = fopen($new_pdf, 'r');
-			LockupFile::create(array(
-				'lockup_id' => $this->id,
-				'type' => 'pdf',
-				'orientation' => $orient,
-				'color' => $color,
-				'reverse' => $rev,
-				'data' => fread($file, filesize($new_pdf))
-			));
-			fclose($file);
-
-			$frontend_output[] = 'PDF created.';
-		} else {
-			$frontend_output[] = 'Error creating PDF.';
-		}
-		exec('inkscape --export-plain-svg=' . $new_svg . ' ' . $new_pdf . ' 2>&1', $backend_output, $return_var);
-		if ($return_var == 0) {
-			# attempt to write this to the DB
-			$file = fopen($new_svg, 'r');
-			LockupFile::create(array(
-				'lockup_id' => $this->id,
-				'type' => 'svg',
-				'orientation' => $orient,
-				'color' => $color,
-				'reverse' => $rev,
-				'data' => fread($file, filesize($new_svg))
-			));
-			fclose($file);
-
-			$frontend_output[] = 'SVG created.';
-		} else {
-			$frontend_output[] = 'Error creating SVG.';
-		}
-
 		exec('inkscape -h200 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
 		if ($return_var == 0) {
 			# attempt to write this to the DB
@@ -284,8 +247,22 @@ class Lockup extends \ActiveRecord\Model {
 			$frontend_output[] = 'Error creating 200px PNG/JPG.';
 		}
 		
-		exec('inkscape -C -h' . $height . ' -w' . $width . ' --export-eps=' . $new_eps . ' ' . $new_svg . ' 2>&1', $backend_output, $return_var);
+		exec('inkscape -C -h' . $height . ' -w' . $width . ' --export-eps=' . $new_eps . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
 		if ($return_var == 0) {
+
+			# POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
+			if ($color == '4c') {
+				$file = fopen($new_eps, 'r');
+				$data = fread($file, filesize($new_eps));
+				$data = str_replace('setrgbcolor', 'setcmykcolor', $data);
+				$data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data);
+				fclose($file);
+
+				$file = fopen($new_eps, 'w');
+				fwrite($file, $data);
+				fclose($file);
+			}
+
 			# attempt to write this to the DB
 			$file = fopen($new_eps, 'r');
 			LockupFile::create(array(
@@ -313,7 +290,49 @@ class Lockup extends \ActiveRecord\Model {
 		} else {
 			$frontend_output[] = 'Error creating EPS/AI.';
 		}
-		
+
+		$options = '';
+		if ($color == '4c') {
+			$options = '-dProcessColorModel=/DeviceCMYK ';
+		}
+		exec('ps2pdf ' . $options . $new_eps . ' ' . $new_pdf . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_pdf, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $this->id,
+				'type' => 'pdf',
+				'orientation' => $orient,
+				'color' => $color,
+				'reverse' => $rev,
+				'data' => fread($file, filesize($new_pdf))
+			));
+			fclose($file);
+
+			$frontend_output[] = 'PDF created.';
+		} else {
+			$frontend_output[] = 'Error creating PDF.';
+		}
+
+		exec('inkscape -h' . $height . ' -w' . $width . ' --export-plain-svg=' . $new_svg . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
+		if ($return_var == 0) {
+			# attempt to write this to the DB
+			$file = fopen($new_svg, 'r');
+			LockupFile::create(array(
+				'lockup_id' => $this->id,
+				'type' => 'svg',
+				'orientation' => $orient,
+				'color' => $color,
+				'reverse' => $rev,
+				'data' => fread($file, filesize($new_svg))
+			));
+			fclose($file);
+
+			$frontend_output[] = 'SVG created.';
+		} else {
+			$frontend_output[] = 'Error creating SVG.';
+		}
+
 		# cleanup these files
 		unlink($new_jpg);
 		unlink($new_pdf);

@@ -5,8 +5,8 @@ class SvgGenerator {
 	const SCARLET = '#d00000';
 	const WHITE = '#ffffff';
 	const BLACK = '#000000';
-	const PANTONE_RED = '#da1a32'; //cf0a2c?
-	const CMYK_RED = '#da1a32 device-cmyk(0.02, 1.00, 0.85, 0.06)'; // da1a32 for ai/eps
+	const PANTONE_RED = '#cf0a2c';
+	const CMYK_RED = '#da1a32 device-cmyk(0.02, 1.00, 0.85, 0.06)';
 
 	const TUNGSTEN = \Core::ROOT . '/src/SVGFonts/Tungsten-Semibold.svg';
 	const MERCURY = \Core::ROOT . '/src/SVGFonts/MercuryDisplay-SemIta.svg';

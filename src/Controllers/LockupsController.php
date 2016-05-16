@@ -7,6 +7,8 @@ use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
 
+	const LOCKUP_VERSION = '1.1';
+
 	public static function createAction() {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');
 
@@ -87,7 +89,8 @@ class LockupsController extends Controller {
 			'file_organization' =>			$post_params['file_organization'],
 			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
 			'file_department' => 			$post_params['file_department'],
-			'file_department_acronym' =>	$post_params['file_department_acronym']
+			'file_department_acronym' =>	$post_params['file_department_acronym'],
+			'version' => 					NULL
 		));
 
 		\Core::redirect($model->getPreviewURL());
@@ -314,10 +317,46 @@ class LockupsController extends Controller {
 			\Core::notFound('That lockup could not be found.');
 		}
 
+		# need to check that this is not already generated
+		if ($lockup_model->status == Lockup::GENERATED) {
+			\Core::notFound('That lockup has already been generated.');
+		}
+
 		$frontend_output = $lockup_model->createAllVersions();
 		self::storeGenerateOutput(join($frontend_output, '&#013; &#010;'));
 
 		$lockup_model->status = Lockup::GENERATED;
+		$lockup_model->creative_status = Lockup::GENERATED;
+		$lockup_model->version = self::LOCKUP_VERSION;
+		$lockup_model->save();
+
+		\Core::redirect($lockup_model->getDownloadURL());
+	}
+
+	public static function postRegenerateAction($post_params) {
+		self::requireAuth();
+
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup_model = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# remove all lockup files from this lockup
+		foreach ($lockup_model->files as $file) {
+			$file->delete();
+		}
+
+		# then run the generate functionality again
+		$frontend_output = $lockup_model->createAllVersions();
+		self::storeGenerateOutput(join($frontend_output, '&#013; &#010;'));
+
+		$lockup_model->version = self::LOCKUP_VERSION;
 		$lockup_model->save();
 
 		\Core::redirect($lockup_model->getDownloadURL());
@@ -339,6 +378,10 @@ class LockupsController extends Controller {
 
 		$context = new \stdClass;
 		$context->lockup = $lockup;
+
+		if ($lockup->version != self::LOCKUP_VERSION) {
+			return self::renderView('regenerate', $context);
+		}
 
 		return self::renderView('download_lockup_files', $context);
 	}

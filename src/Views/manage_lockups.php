@@ -10,6 +10,7 @@
                     <th>Submitter</th>
                     <th>Approver</th>
                     <th>Status</th>
+                    <th>Version</th>
                     <th class="right">Actions</th>
                 </tr>   
             </thead>
@@ -21,6 +22,7 @@
                     <td><?php echo $lockup->user->username ?></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->getFullStatusText(); ?></td>
+                    <td><?php echo $lockup->version; ?></td>
                     <td class="table-actions right" style="min-width: 200px;">
                         <?php if ($lockup->isEditable()): ?>
                             <a class="wdn-button wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>

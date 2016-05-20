@@ -226,9 +226,9 @@
                 <select id="approver" name="approver">
                         <option value="">Select your Communicator Contact</option>
                     <?php foreach ($context->approvers as $user): ?>
-                        <option <?php if ($context->lockup->approver_id == $user->id) echo 'checked="checked"'; ?> value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
+                        <option <?php if ($context->lockup->approver_id == $user->id) echo 'selected="selected"'; ?> value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
                     <?php endforeach; ?>
-                        <option <?php if ($context->lockup->approver_id == '') echo 'checked="checked"'; ?> value="">I'm not sure / not listed / N/A</option>
+                        <option <?php if ($context->lockup->approver_id == '') echo 'selected="selected"'; ?> value="">I'm not sure / not listed / N/A</option>
                 </select>
             </fieldset>
             

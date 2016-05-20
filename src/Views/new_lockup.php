@@ -23,7 +23,7 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
-                            <input type="radio" name="type" value="org_only" id="type-org-only" <?php if ($context->lockup->style == 'org_only') echo 'checked="checked"'; ?>>
+                            <input type="radio" name="type" value="org_only" id="type-org-only" <?php if ($context->lockup->style == 'org_only' || empty($context->lockup->style)) echo 'checked="checked"'; ?>>
                             <img class="horiz height-36" src="/images/org_only_example.png">
                             <img class="vert" style="display: none;" src="/images/org_only_vert_example.png">
                         </label><br>

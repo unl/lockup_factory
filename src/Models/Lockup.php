@@ -135,13 +135,18 @@ class Lockup extends \ActiveRecord\Model {
 	}
 
 	public function getName() {
+		$name = 'Lockup';
 		if (strpos($this->style, 'org') === 0) {
-			return $this->organization . ' ' . $this->organization_second_line . ' ' . $this->subject . ' ' . $this->subject_second_line;
+			$name = $this->organization . ' ' . $this->organization_second_line . ' ' . $this->subject . ' ' . $this->subject_second_line;
 		} else if (strrpos($this->style, 'acronym') === 0) {
-			return $this->acronym . ' ' . $this->acronym_subject;
+			$name = $this->acronym . ' ' . $this->acronym_subject;
 		} else if ($this->style == 'extension') {
-			return 'EXTENSION ' . $this->extension_county;
+			$name = 'EXTENSION ' . $this->extension_county;
 		}
+		if (empty(str_replace(' ', '', $name))) {
+			$name = "Lockup";
+		}
+		return $name;
 	}
 
 	public function getStartingSVGPath() {

@@ -101,4 +101,7 @@ VALUES
   (320, 'tdemaro2', '2016-03-17 12:00:00', 'creative', 'Taylor DeMaro', NULL, NULL),
   (321, 'azeiler2', NOW(), 'creative', 'Andrea Zeiler', NULL, NULL),
   (322, 'sseverin2', NOW(), 'creative', 'Stephanie Severin', NULL, NULL),
-  (323, 'cchapman2', NOW(), 'creative', 'Clint Chapman', NULL, NULL);
+  (323, 'cchapman2', NOW(), 'creative', 'Clint Chapman', NULL, NULL),
+  (424, 'lgayer2', NOW(), 'approver', 'Lauren Gayer', 'Student Affairs', 'Student Affairs'),
+  (425, 'jbarnes3', NOW(), 'approver', 'Joan Barnes', 'University Libraries', 'Libraries'),
+  (426, 'jwilson12', NOW(), 'approver', 'Jon Wilson', 'Information Technology Services', 'ITS');

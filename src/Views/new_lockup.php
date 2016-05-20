@@ -224,6 +224,7 @@
                 </label><br>
                 <label for="approver">Select your Communicator Contact:</label>
                 <select id="approver" name="approver">
+                        <option value="">Select your Communicator Contact</option>
                     <?php foreach ($context->approvers as $user): ?>
                         <option <?php if ($context->lockup->approver_id == $user->id) echo 'checked="checked"'; ?> value="<?php echo $user->id ?>"><?php echo $user->name ?> (<?php echo $user->organization_acronym ?>)</option>
                     <?php endforeach; ?>

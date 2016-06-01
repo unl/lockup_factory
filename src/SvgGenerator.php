@@ -219,17 +219,17 @@ class SvgGenerator {
 					$svg->addText($lockup->org_name, 44, -5.8);
 					$main_text_width = $svg->textDimensions($lockup->org_name)[0];
 
-					$svg->addText($lockup->org_second_line, 44, 5.2);
+					$svg->addText($lockup->org_second_line, 44, 4.2);
 					$third_width = $svg->textDimensions($lockup->org_second_line)[0];
 
 					$svg->setFontSVG(self::MERCURY);
 					$svg->setLetterSpacing(0);
-					$svg->setFontSize(8.125);
+					$svg->setFontSize(7);
 					$svg->setFontColor($secondary_text_color);
-					$svg->addText($lockup->subject, 44, 17);
+					$svg->addText($lockup->subject, 44, 19);
 					$secondary_text_width = $svg->textDimensions($lockup->subject)[0];
 
-					$svg->addText($lockup->subject_second_line, 44, 26);
+					$svg->addText($lockup->subject_second_line, 44, 27);
 					$fourth_width = $svg->textDimensions($lockup->subject_second_line)[0];
 
 					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44) . " 38");
@@ -411,6 +411,20 @@ class SvgGenerator {
 					$text_width = $svg->textDimensions($lockup->acronym_subject)[0];
 					$svg->addText($lockup->acronym_subject, 100 - ($text_width / 2), 56.25);
 					break;
+				case 'acronym_subject_2_1':
+					$svg->setFontSVG(self::TUNGSTEN);
+					$svg->setFontSize(22);
+					$svg->setFontColor($main_text_color);
+					$text_width = $svg->textDimensions($lockup->acronym)[0];
+					$svg->addText($lockup->acronym, 100 - ($text_width / 2), 32);
+					$text_width = $svg->textDimensions($lockup->acronym_second_line)[0];
+					$svg->addText($lockup->acronym_second_line, 100 - ($text_width / 2), 52);
+
+					$svg->setFontSize(16.25);
+					$svg->setFontColor($secondary_text_color);
+					$text_width = $svg->textDimensions($lockup->acronym_subject)[0];
+					$svg->addText($lockup->acronym_subject, 100 - ($text_width / 2), 80);
+					break;
 				case 'extension':
 					$svg->setFontSVG(self::TUNGSTEN);
 					$svg->setFontSize(22);
@@ -426,7 +440,15 @@ class SvgGenerator {
 					break;
 			}
 
-			$height = $template == 'org_subject_2_2' ? 88 : 80;
+			$height = 80;
+			switch ($template) {
+				case 'org_subject_2_2':
+					$height = 88;
+					break;
+				case 'acronym_subject_2_1':
+					$height = 104;
+					break;
+			}
 
 			$svg->addAttribute('viewBox', "0 0 200 " . $height);
 			$svg_file->height = $height;

@@ -7,7 +7,7 @@ use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
 
-	const LOCKUP_VERSION = '1.1';
+	const LOCKUP_VERSION = '1.2';
 
 	public static function createAction() {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');
@@ -40,7 +40,7 @@ class LockupsController extends Controller {
 		}
 
 		# this lockup must not be generated
-		if ($lockup->status == Lockup::GENERATED) {
+		if ($lockup->isGenerated()) {
 			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Cannot Edit', 'Sorry, this lockup has been generated and cannot be edited. Please create a new lockup.');
 			\Core::redirect('/lockups/manage/');
 		}
@@ -62,6 +62,7 @@ class LockupsController extends Controller {
 		$lockup->subject = 					$post_params['subject'];
 		$lockup->subject_second_line = 		$post_params['subject_second_line'];
 		$lockup->acronym = 					strtoupper($post_params['acronym']);
+		$lockup->acronym_second_line = 		strtoupper($post_params['acronym_second_line']);
 		$lockup->acronym_subject = 			strtoupper($post_params['acronym_subject']);
 		$lockup->extension_county = 		$post_params['extension_county'];
 		$lockup->style = 					$post_params['type'];
@@ -78,6 +79,7 @@ class LockupsController extends Controller {
 			'subject' => 					$post_params['subject'],
 			'subject_second_line' => 		$post_params['subject_second_line'],
 			'acronym' => 					strtoupper($post_params['acronym']),
+			'acronym_second_line' =>		strtoupper($post_params['acronym_second_line']),
 			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
 			'extension_county' =>	 		$post_params['extension_county'],
 			'style' => 						$post_params['type'],
@@ -117,7 +119,7 @@ class LockupsController extends Controller {
 		}
 
 		# this lockup must not be generated
-		if ($lockup_model->status == Lockup::GENERATED) {
+		if ($lockup_model->isGenerated()) {
 			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Cannot Edit', 'Sorry, this lockup has been generated and cannot be edited. Please create a new lockup.');
 			\Core::redirect('/lockups/manage/');
 		}
@@ -146,6 +148,7 @@ class LockupsController extends Controller {
 			'subject' => 					$post_params['subject'],
 			'subject_second_line' => 		$post_params['subject_second_line'],
 			'acronym' => 					strtoupper($post_params['acronym']),
+			'acronym_second_line' => 		strtoupper($post_params['acronym_second_line']),
 			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
 			'extension_county' =>	 		$post_params['extension_county'],
 			'style' => 						$post_params['type'],
@@ -180,7 +183,7 @@ class LockupsController extends Controller {
 			\Core::notFound('That lockup could not be found.');
 		}
 
-		if ($lockup->status == Lockup::GENERATED) {
+		if ($lockup->isGenerated()) {
 			\Core::redirect($lockup->getDownloadURL());
 		}
 
@@ -318,7 +321,7 @@ class LockupsController extends Controller {
 		}
 
 		# need to check that this is not already generated
-		if ($lockup_model->status == Lockup::GENERATED) {
+		if ($lockup_model->isGenerated()) {
 			\Core::notFound('That lockup has already been generated.');
 		}
 

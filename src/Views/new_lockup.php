@@ -111,6 +111,16 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
+                            <input type="radio" name="type" value="acronym_subject_2_1" id="type-acronym-subject-2-1" <?php if ($context->lockup->style == 'acronym_subject_2_1') echo 'checked="checked"'; ?>>
+                            <img class="horiz height-38" src="/images/no_horiz_style.png">
+                            <img class="vert" style="display: none;" src="/images/acronym_subject_2-1_vert_example.png">
+                        </label><br>
+                        <label for="type-acronym-subject-2-1">
+                            Casual/embroidery option (Vertical Styles only).
+                        </label><br><br>
+                    </div>
+                    <div class="wdn-col">
+                        <label>
                             <input type="radio" name="type" value="extension" id="type-extension" <?php if ($context->lockup->style == 'extension') echo 'checked="checked"'; ?>>
                             <img class="horiz height-38" src="/images/extension_example.png">
                             <img class="vert" style="display: none;" src="/images/extension_vert_example.png">
@@ -170,6 +180,16 @@
                         </div>
                     </div>
                     <input type="text" name="acronym" id="acronym" value="<?php echo $context->lockup->acronym; ?>">
+                    <br>
+                </div>
+                <div id="acronym-second-line-field" style="display: none;">
+                    <label for="acronym-second-line">Acronym Second Line</label>
+                    <div class="tooltip wdn-icon-info italic hang-right">
+                        <div>
+                            10 characters max
+                        </div>
+                    </div>
+                    <input type="text" name="acronym_second_line" id="acronym-second-line" value="<?php echo $context->lockup->acronym_second_line; ?>">
                     <br>
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
@@ -251,6 +271,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').hide();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-org-two-line').is(':checked')) {
@@ -259,6 +280,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').hide();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-org-subject').is(':checked')) {
@@ -267,6 +289,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').show();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-org-subject-1-2').is(':checked')) {
@@ -275,6 +298,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').show();
                 $('#subject-second-line-field').show();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-org-subject-2-1').is(':checked')) {
@@ -283,6 +307,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').show();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-org-subject-2-2').is(':checked')) {
@@ -291,6 +316,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').show();
                 $('#subject-second-line-field').show();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-acronym').is(':checked')) {
@@ -299,6 +325,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').hide();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').show();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').hide();
             } else if ($('#type-acronym-subject').is(':checked')) {
@@ -307,6 +334,16 @@ require(['jquery'], function ($) {
                 $('#subject-field').hide();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').show();
+                $('#acronym-second-line-field').hide();
+                $('#acronym-subject-field').show();
+                $('#extension-county-field').hide();
+            } else if ($('#type-acronym-subject-2-1').is(':checked')) {
+                $('#organization-field').hide();
+                $('#organization-second-line-field').hide();
+                $('#subject-field').hide();
+                $('#subject-second-line-field').hide();
+                $('#acronym-field').show();
+                $('#acronym-second-line-field').show();
                 $('#acronym-subject-field').show();
                 $('#extension-county-field').hide();
             } else if ($('#type-extension').is(':checked')) {
@@ -315,6 +352,7 @@ require(['jquery'], function ($) {
                 $('#subject-field').hide();
                 $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').show();
             } 

@@ -48,7 +48,7 @@ class Lockup extends \ActiveRecord\Model {
 
 	public function getPNGDownloadURL() {
 		foreach ($this->files as $file) {
-			if ($file->type == 'png' && $file->color == 'RGB' && $file->orientation == 'horiz') {
+			if ($file->type == 'png' && $file->color == 'RGB' && $file->orientation == 'vert') {
 				return $file->downloadLink();
 			}
 		}
@@ -164,6 +164,7 @@ class Lockup extends \ActiveRecord\Model {
 		$lockup->subject = 					$this->subject;
 		$lockup->subject_second_line = 		$this->subject_second_line;
 		$lockup->acronym = 					$this->acronym;
+		$lockup->acronym_second_line = 		$this->acronym_second_line;
 		$lockup->acronym_subject = 			$this->acronym_subject;
 		$lockup->extension_county = 		$this->extension_county;
 		$lockup->style = 					$this->style;
@@ -173,32 +174,34 @@ class Lockup extends \ActiveRecord\Model {
 		$orients = array('horiz', 'vert');
 		$styles = array('RGB', 'pms186cp', '4c', 'blk');
 		foreach ($orients as $orient) {
-			foreach ($styles as $style) {
-				$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
-				# write this to a temp file
-				$filename = $this->getStartingSVGPath();
+			if (!($lockup->style == 'acronym_subject_2_1' && $orient == 'horiz')) { // no horizontal for this style
+				foreach ($styles as $style) {
+					$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
+					# write this to a temp file
+					$filename = $this->getStartingSVGPath();
 
-				$file = fopen($filename, 'w');
-				fwrite($file, $svg_file->svg_text);
-				fclose($file);
+					$file = fopen($filename, 'w');
+					fwrite($file, $svg_file->svg_text);
+					fclose($file);
 
-				$prefix = 'N' . substr($orient,0,1) . '_';
-				$suffix = '_' . $style . '_';
+					$prefix = 'N' . substr($orient,0,1) . '_';
+					$suffix = '_' . $style . '_';
 
-				$this->generateFiles($prefix, $suffix, $orient, $style, FALSE, $svg_file->height, $svg_file->width);
+					$this->generateFiles($prefix, $suffix, $orient, $style, FALSE, $svg_file->height, $svg_file->width);
 
-				$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
-				# write this to a temp file
-				$filename = $this->getStartingSVGPath();
+					$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
+					# write this to a temp file
+					$filename = $this->getStartingSVGPath();
 
-				$file = fopen($filename, 'w');
-				fwrite($file, $svg_file->svg_text);
-				fclose($file);
+					$file = fopen($filename, 'w');
+					fwrite($file, $svg_file->svg_text);
+					fclose($file);
 
-				$prefix = 'N' . substr($orient,0,1) . '_';
-				$suffix = '_' . $style . '_rev_';
+					$prefix = 'N' . substr($orient,0,1) . '_';
+					$suffix = '_' . $style . '_rev_';
 
-				$this->generateFiles($prefix, $suffix, $orient, $style, TRUE, $svg_file->height, $svg_file->width);
+					$this->generateFiles($prefix, $suffix, $orient, $style, TRUE, $svg_file->height, $svg_file->width);
+				}
 			}
 		}
 

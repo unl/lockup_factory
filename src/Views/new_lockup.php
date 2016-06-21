@@ -28,7 +28,7 @@
                             <img class="vert" style="display: none;" src="/images/org_only_vert_example.png">
                         </label><br>
                         <label for="type-org-only">
-                            Organization-only lockup.
+                            Primary ID lockup (A): primary hierarchy for your full College, Department, Unit or Subject name in a single line design.
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -38,7 +38,8 @@
                             <img class="vert" style="display: none;" src="/images/org_two_line_vert_example.png">
                         </label><br>
                         <label for="type-org-two-line">
-                            Organization-only lockup, with two lines. The lines are vertically centered in the horizontal version.
+                            Primary ID lockup (B): primary hierarchy for your full College, Department, Unit or Subject name in a two-line design.
+                            <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
                         </label><br><br>
                     </div>
                 </div>
@@ -50,7 +51,7 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_vert_example.png">
                         </label><br>
                         <label for="type-org-subject">
-                            Organization and subject lockup. 
+                            Primary and Secondary ID lockup (A): primary and secondary hierarchy for your full College, Department, Unit or Subject name in a single line design.
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -60,7 +61,8 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_1-2_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-1-2">
-                            Organization and subject lockup. Two lines for the subject, for extra detail when necessary.
+                            Primary and Secondary ID lockup (B): primary hierarchy for your full College, Department, Unit or Subject name in one line and secondary hierarchy in a two-line design.
+                            <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
                         </label><br><br>
                     </div>
                 </div>
@@ -72,7 +74,8 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_2-1_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-2-1">
-                            Organization and subject lockup. Two lines for the organization.
+                            Primary and Secondary ID lockup (C): primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a single line design.
+                            <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -82,7 +85,8 @@
                             <img class="vert" style="display: none;" src="/images/org_subject_2-2_vert_example.png">
                         </label><br>
                         <label for="type-org-subject-2-2">
-                            Organization and subject lockup. Two lines for the organization, two lines for the subject.
+                            Primary and Secondary ID lockup (D): primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a two-line design.
+                            <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
                         </label><br><br>
                     </div>
                 </div>
@@ -94,7 +98,8 @@
                             <img class="vert" style="display: none;" src="/images/acronym_vert_example.png">
                         </label><br>
                         <label for="type-acronym">
-                            Larger main text, for use with acronyms. This is intended only for merchandise.
+                            Merchandise lockup* (A): primary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design. Use this version also to create casual lockups for social media. i.e. CASNR, IANR, COJMC.
+                            <br><em>*Restricted to merchandise and social media use only.</em>
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -104,7 +109,7 @@
                             <img class="vert" style="display: none;" src="/images/acronym_subject_vert_example.png">
                         </label><br>
                         <label for="type-acronym-subject">
-                            Larger main text, for use with acronyms. Secondary line included. This is intended only for merchandise.
+                            Merchandise lockup (B): primary and secondary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design. Restricted to merchandise use only. i.e. CASNR/ALEC, CEHS/CYFS.
                         </label><br><br>
                     </div>
                 </div>
@@ -116,7 +121,8 @@
                             <img class="vert" style="display: none;" src="/images/acronym_subject_2-1_vert_example.png">
                         </label><br>
                         <label for="type-acronym-subject-2-1">
-                            Casual/embroidery option (Vertical Styles only).
+                            Embroidery lockup: primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a single and optional two-line design.*
+                            <br><em>*Embroidery requires larger text, so we recommend keeping text to a minimum and less lines of text as possible.</em>
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -126,7 +132,7 @@
                             <img class="vert" style="display: none;" src="/images/extension_vert_example.png">
                         </label><br>
                         <label for="type-extension">
-                            Extension-specific lockup with county included.
+                            Extension lockup: primary hierarchy for Extension and secondary hierarchy for the counties in a single line design.
                         </label><br><br>
                     </div>
                 </div>

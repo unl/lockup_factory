@@ -11,7 +11,7 @@ class LockupFile extends \ActiveRecord\Model {
 	}
 
 	public function isMerchandise() {
-		return strpos($this->lockup->style, 'acronym') === 0;
+		return (strpos($this->lockup->style, 'acronym') === 0) && ($this->lockup->style != 'acronym_social');
 	}
 
 	public function getName() {

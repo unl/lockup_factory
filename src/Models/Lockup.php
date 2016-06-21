@@ -173,8 +173,12 @@ class Lockup extends \ActiveRecord\Model {
 
 		$orients = array('horiz', 'vert');
 		$styles = array('RGB', 'pms186cp', '4c', 'blk');
+		if ($lockup->style == 'acronym_social') {
+			$styles = array('RGB');
+		}
+
 		foreach ($orients as $orient) {
-			if (!($lockup->style == 'acronym_subject_2_1' && $orient == 'horiz')) { // no horizontal for this style
+			if (!(($lockup->style == 'acronym_subject_2_1' || $lockup->style == 'acronym_social') && $orient == 'horiz')) { // no horizontal for this style
 				foreach ($styles as $style) {
 					$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
 					# write this to a temp file
@@ -189,18 +193,20 @@ class Lockup extends \ActiveRecord\Model {
 
 					$this->generateFiles($prefix, $suffix, $orient, $style, FALSE, $svg_file->height, $svg_file->width);
 
-					$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
-					# write this to a temp file
-					$filename = $this->getStartingSVGPath();
+					if ($lockup->style != 'acronym_social') { // no rev for this style
+						$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, TRUE);
+						# write this to a temp file
+						$filename = $this->getStartingSVGPath();
 
-					$file = fopen($filename, 'w');
-					fwrite($file, $svg_file->svg_text);
-					fclose($file);
+						$file = fopen($filename, 'w');
+						fwrite($file, $svg_file->svg_text);
+						fclose($file);
 
-					$prefix = 'N' . substr($orient,0,1) . '_';
-					$suffix = '_' . $style . '_rev_';
+						$prefix = 'N' . substr($orient,0,1) . '_';
+						$suffix = '_' . $style . '_rev_';
 
-					$this->generateFiles($prefix, $suffix, $orient, $style, TRUE, $svg_file->height, $svg_file->width);
+						$this->generateFiles($prefix, $suffix, $orient, $style, TRUE, $svg_file->height, $svg_file->width);
+					}
 				}
 			}
 		}

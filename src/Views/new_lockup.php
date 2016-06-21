@@ -117,12 +117,13 @@
                     <div class="wdn-col">
                         <label>
                             <input type="radio" name="type" value="acronym_subject_2_1" id="type-acronym-subject-2-1" <?php if ($context->lockup->style == 'acronym_subject_2_1') echo 'checked="checked"'; ?>>
-                            <img class="horiz height-38" src="/images/no_horiz_style.png">
+                            <img class="horiz" src="/images/acronym_subject_2-1_vert_example.png">
                             <img class="vert" style="display: none;" src="/images/acronym_subject_2-1_vert_example.png">
                         </label><br>
                         <label for="type-acronym-subject-2-1">
                             Embroidery lockup: primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a single and optional two-line design.*
-                            <br><em>*Embroidery requires larger text, so we recommend keeping text to a minimum and less lines of text as possible.</em>
+                            <br><em>*Embroidery requires larger text, so we recommend keeping text to a minimum and as few lines of text as possible.</em>
+                            <br><em>**This lockup is vertical style ONLY.</em>
                         </label><br><br>
                     </div>
                     <div class="wdn-col">
@@ -133,6 +134,19 @@
                         </label><br>
                         <label for="type-extension">
                             Extension lockup: primary hierarchy for Extension and secondary hierarchy for the counties in a single line design.
+                        </label><br><br>
+                    </div>
+                </div>
+                <div class="bp2-wdn-grid-set-halves">
+                    <div class="wdn-col">
+                        <label class="center">
+                            <input type="radio" name="type" value="acronym_social" id="type-acronym-social" <?php if ($context->lockup->style == 'acronym_social') echo 'checked="checked"'; ?>>
+                            <img class="horiz" src="/images/acronym_social_vert_example.png">
+                            <img class="vert" style="display: none;" src="/images/acronym_social_vert_example.png">
+                        </label><br>
+                        <label for="type-acronym-social">
+                            Social lockup: primary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design.
+                            <br><em>*This lockup is vertical style ONLY.</em>
                         </label><br><br>
                     </div>
                 </div>
@@ -361,7 +375,16 @@ require(['jquery'], function ($) {
                 $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').show();
-            } 
+            } else if ($('#type-acronym-social').is(':checked')) {
+                $('#organization-field').hide();
+                $('#organization-second-line-field').hide();
+                $('#subject-field').hide();
+                $('#subject-second-line-field').hide();
+                $('#acronym-field').show();
+                $('#acronym-second-line-field').hide();
+                $('#acronym-subject-field').hide();
+                $('#extension-county-field').hide();
+            }
         }).change();
         $('#show-horiz, #show-vert').change(function (change) {
             if ($('#show-horiz').is(':checked')) {

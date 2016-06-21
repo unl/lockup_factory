@@ -7,7 +7,7 @@ use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
 
-	const LOCKUP_VERSION = '1.2';
+	const LOCKUP_VERSION = '1.3';
 
 	public static function createAction() {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');

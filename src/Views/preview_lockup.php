@@ -3,7 +3,7 @@
 		<h3 class="page-title">Preview for "<?php echo $context->lockup->getName() ?>" Lockup</h3>
 		<div class="bp2-wdn-grid-set-halves wdn-center">
             <div class="wdn-col center">
-            	<?php if ($context->lockup->style != 'acronym_subject_2_1'): ?>
+            	<?php if ($context->lockup->style != 'acronym_subject_2_1' && $context->lockup->style != 'acronym_social'): ?>
 					<?php echo $context->lockup->preview_svg; ?>
 				<?php else: ?>
 					No horizontal version of this lockup.

@@ -1,12 +1,13 @@
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
-		<h3 class="page-title">This Lockup is out of date!
+		<h3 class="page-title">Please Regenerate This Lockup
 			<small class="wdn-subhead"><?php echo $context->lockup->getName(); ?></small>
 		</h3>
 		<div id="explanation">
 			<p>
-				We've updated our lockup generation software and we know you'll want to have the latest and greatest. If you created this lockup, you can
-				regenerate its files below.
+				We've updated our lockup generation software with new tools or styles; 
+				this lockup may or may not have changed but we know you'll want to have the latest and greatest.
+				You can regenerate this lockup by clicking "Regenerate" below. You'll then be able to download its files.
 			</p>
 		</div>
 
@@ -15,9 +16,7 @@
 				Actions
 			</div>
 			<div class="tools wdn-center">
-				<?php if ($context->lockup->isFullyApproved() && ($context->lockup->user_id == \Auth::$current_user->id 
-				|| \Auth::$current_user->isCreative()
-				|| \Auth::$current_user->isAdmin())): ?>
+				<?php if ($context->lockup->isFullyApproved()): ?>
 				<form method="POST" action="/lockups/regenerate/" id="regenerate" class="wdn-center">
 					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
 					<button type="submit" class="wdn-button wdn-button-triad" id="submit-regenerate">Regenerate Files</button>

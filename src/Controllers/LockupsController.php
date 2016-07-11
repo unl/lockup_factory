@@ -358,7 +358,7 @@ If you can\'t see your lockups or if there are issues with any versions, please 
 <br><br>
 UNL Lockup Factory';
 
-		Emailer::sendMail($lockup->user->email, "Lockup Feedback Given", $body);
+		Emailer::sendMail($lockup->user->email, "Lockup Denied", $body);
 
 		\Core::redirect($lockup->getPreviewURL());
 	}

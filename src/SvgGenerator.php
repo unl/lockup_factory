@@ -485,10 +485,10 @@ class SvgGenerator {
 					$height = 104;
 					break;
 				case 'acronym_social':
-					$height = 80;
-					$width = 80;
-					$y = -7.5;
-					$x = 60;
+					$height = 100;
+					$width = 100;
+					$y = -20;
+					$x = 50;
 					break;
 			}
 

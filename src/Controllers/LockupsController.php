@@ -239,7 +239,7 @@ class LockupsController extends Controller {
 			$body = '
 Your lockup, ' . $lockup->getName() . ', has been approved and is ready to generate.
 <br><br>
-Please visit <a href="http://lockups.unl.edu/' . $lockup->getPreviewURL() . '">http://lockups.unl.edu/' . $lockup->getPreviewURL() . '</a> to generate its files.
+Please visit <a href="http://lockups.unl.edu' . $lockup->getPreviewURL() . '">http://lockups.unl.edu' . $lockup->getPreviewURL() . '</a> to generate its files.
 <br><br>
 CREATIVE FEEDBACK:
 ' . $lockup->creative_feedback . '
@@ -297,7 +297,7 @@ UNL Lockup Factory';
 		$body = '
 Feedback has been left on your lockup, ' . $lockup->getName() . '.
 <br><br>
-Please visit <a href="http://lockups.unl.edu/' . $lockup->getPreviewURL() . '">http://lockups.unl.edu/' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
+Please visit <a href="http://lockups.unl.edu' . $lockup->getPreviewURL() . '">http://lockups.unl.edu' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
 <br><br>
 CREATIVE FEEDBACK:
 ' . $lockup->creative_feedback . '
@@ -346,7 +346,7 @@ UNL Lockup Factory';
 		$body = '
 Your lockup, ' . $lockup->getName() . ', has been denied.
 <br><br>
-Please visit <a href="http://lockups.unl.edu/' . $lockup->getPreviewURL() . '">http://lockups.unl.edu/' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
+Please visit <a href="http://lockups.unl.edu' . $lockup->getPreviewURL() . '">http://lockups.unl.edu' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
 <br><br>
 CREATIVE FEEDBACK:
 ' . $lockup->creative_feedback . '

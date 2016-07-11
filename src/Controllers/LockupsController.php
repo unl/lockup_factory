@@ -3,6 +3,7 @@ namespace Controllers;
 use Models\Lockup;
 use Models\LockupFile;
 use Models\User;
+use \Emailer as Emailer;
 use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
@@ -233,6 +234,25 @@ class LockupsController extends Controller {
 		}
 		$lockup->save();
 
+		# send an email
+		if ($lockup->status == Lockup::APPROVED && $lockup->creative_status == Lockup::APPROVED) {
+			$body = '
+Your lockup, ' . $lockup->getName() . ', has been approved and is ready to generate.
+Please visit <a href="' . $lockup->getPreviewURL() . '">' . $lockup->getPreviewURL() . '</a> to generate its files.
+
+CREATIVE FEEDBACK:
+' . $lockup->creative_feedback . '
+
+COMMUNICATOR FEEDBACK:
+' . $lockup->communicator_feedback . '
+
+If you can’t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or Tyler Lemburg at 2-7031 or lemburg@unl.edu
+
+UNL Lockup Factory';
+
+			Emailer::sendMail($lockup->user->email, "Lockup Approved", $body);
+		}
+
 		\Core::redirect($lockup->getPreviewURL());
 	}
 
@@ -272,6 +292,23 @@ class LockupsController extends Controller {
 		}
 		$lockup->save();
 
+		# send an email
+		$body = '
+Feedback has been left on your lockup, ' . $lockup->getName() . '.
+Please visit <a href="' . $lockup->getPreviewURL() . '">' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
+
+CREATIVE FEEDBACK:
+' . $lockup->creative_feedback . '
+
+COMMUNICATOR FEEDBACK:
+' . $lockup->communicator_feedback . '
+
+If you can’t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or Tyler Lemburg at 2-7031 or lemburg@unl.edu
+
+UNL Lockup Factory';
+
+		Emailer::sendMail($lockup->user->email, "Lockup Feedback Given", $body);
+
 		\Core::redirect($lockup->getPreviewURL());
 	}
 
@@ -302,6 +339,23 @@ class LockupsController extends Controller {
 			$lockup->status = Lockup::DENIED;
 		}
 		$lockup->save();
+
+		# send an email
+		$body = '
+Your lockup, ' . $lockup->getName() . ', has been denied.
+Please visit <a href="' . $lockup->getPreviewURL() . '">' . $lockup->getPreviewURL() . '</a> to view your lockup, and edit it if necessary.
+
+CREATIVE FEEDBACK:
+' . $lockup->creative_feedback . '
+
+COMMUNICATOR FEEDBACK:
+' . $lockup->communicator_feedback . '
+
+If you can’t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or Tyler Lemburg at 2-7031 or lemburg@unl.edu
+
+UNL Lockup Factory';
+
+		Emailer::sendMail($lockup->user->email, "Lockup Feedback Given", $body);
 
 		\Core::redirect($lockup->getPreviewURL());
 	}

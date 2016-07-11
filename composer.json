@@ -10,7 +10,8 @@
         "unl/php-wdn-templates": "^4.1",
         "unl/unl_cache_lite": "0.1.*",
         "php-activerecord/php-activerecord": "^1.1",
-        "altorouter/altorouter": "1.1.0"
+        "altorouter/altorouter": "1.1.0",
+        "phpmailer/phpmailer": "^5.2"
     },
     "repositories": [
         {

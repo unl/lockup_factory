@@ -83,15 +83,55 @@ class Auth
         $user = User::find(array('username' => $username));
         if ($user) {
             # they exist, no worries
+            # if they don't have an email, they were created before we had emails in teh system
+            if (empty($user->email)) {
+                $info = self::getUserInfo($username);
+                $user->email = $info['email'];
+                $user->save();
+            }
         } else {
+            $info = self::getUserInfo($username);
             # Create a new user
             $user = User::create(array(
                 'username' => $username,
-                'date_created' => date('Y-m-d H:i:s')
+                'date_created' => date('Y-m-d H:i:s'),
+                'email' => $info['email']
             ));
         }
 
         return $user;
+    }
+
+    /**
+     * Get a user's information from directory.unl.edu
+     * 
+     * @param string $uid
+     * @return array
+     */
+    public static function getUserInfo($uid) {
+        $info = array();
+        
+        if (!$json = @file_get_contents(self::$directory_url . '?uid=' . $uid . '&format=json')) {
+            return $info;
+        }
+        
+        if (!$json = json_decode($json, true)) {
+            return $info;
+        }
+        
+        $map = array(
+            'givenName' => 'first_name',
+            'sn' => 'last_name',
+            'mail' => 'email'
+        );
+        
+        foreach ($map as $from => $to) {
+            if (isset($json[$from][0])) {
+                $info[$to] = $json[$from][0];
+            }
+        }
+        
+        return $info;
     }
     
     /**

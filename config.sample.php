@@ -1,5 +1,7 @@
 <?php
 
+global $ENV = 'production';
+
 # standard autoloader
 function autoload($class)
 {
@@ -27,3 +29,4 @@ ActiveRecord\Config::initialize(function ($cfg) {
         'development' => 'mysql://root:admin@localhost/lockups'
     ));
 });
+

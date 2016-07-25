@@ -571,7 +571,7 @@ class SvgGenerator {
 				$svg->addPath(self::RIGHT_CLOVER_H_3, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
 				$svg->addPath(self::RIGHT_CLOVER_H_4, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
 
-				$svg->addPath(self::CENTER_DIVIDER, array('fill' => self::BLACK, 'transform' => 'translate(50.5 0.1)', 'stroke' => self::BLACK, 'stroke-width' => '0.5pt'));
+				$svg->addPath(self::CENTER_DIVIDER, array('fill' => $secondary_text_color, 'transform' => 'translate(50.5 0.1)', 'stroke' => $secondary_text_color, 'stroke-width' => '0.5pt'));
 			} else {
 				$svg->addPath(self::VERT_N_R_CIRCLE, array('fill' => $n_main_color));
 				if (!($style == 'blk' && $rev)) {

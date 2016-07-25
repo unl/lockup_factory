@@ -178,7 +178,7 @@ class Lockup extends \ActiveRecord\Model {
 		}
 
 		foreach ($orients as $orient) {
-			if (!(($lockup->style == 'acronym_subject_2_1' || $lockup->style == 'acronym_social') && $orient == 'horiz')) { // no horizontal for this style
+			if (!(($lockup->style == 'acronym_subject_2_1' || $lockup->style == 'extension_4h' || $lockup->style == 'acronym_social') && $orient == 'horiz')) { // no horizontal for this style
 				foreach ($styles as $style) {
 					$svg_file = SVG::createLockup($this->style, $lockup, $orient, $style, FALSE);
 					# write this to a temp file

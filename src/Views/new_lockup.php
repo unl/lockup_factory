@@ -139,6 +139,16 @@
                 </div>
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
+                        <label>
+                            <input type="radio" name="type" value="extension_4h" id="type-extension-4h" <?php if ($context->lockup->style == 'extension_4h') echo 'checked="checked"'; ?>>
+                            <img class="horiz" src="/images/extension_4h_vert_example.png">
+                            <img class="vert" style="display: none;" src="/images/extension_vert_4h_example.png">
+                        </label><br>
+                        <label for="type-extension-4h">
+                            Extension/4H lockup: primary hierarchy for Extension and secondary hierarchy for the counties in a single line design. 4H logo included.
+                        </label><br><br>
+                    </div>
+                    <div class="wdn-col">
                         <label class="center">
                             <input type="radio" name="type" value="acronym_social" id="type-acronym-social" <?php if ($context->lockup->style == 'acronym_social') echo 'checked="checked"'; ?>>
                             <img class="horiz" src="/images/acronym_social_vert_example.png">
@@ -366,7 +376,7 @@ require(['jquery'], function ($) {
                 $('#acronym-second-line-field').show();
                 $('#acronym-subject-field').show();
                 $('#extension-county-field').hide();
-            } else if ($('#type-extension').is(':checked')) {
+            } else if ($('#type-extension').is(':checked') || $('#type-extension-4h').is(':checked')) {
                 $('#organization-field').hide();
                 $('#organization-second-line-field').hide();
                 $('#subject-field').hide();

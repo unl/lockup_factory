@@ -5,7 +5,7 @@ class SvgGenerator {
 	const SCARLET = '#d00000';
 	const WHITE = '#ffffff';
 	const BLACK = '#000000';
-	const PANTONE_RED = '#cf0a2c'; #186cp
+	const PANTONE_RED = '#cf0a2c'; #pantone 186cp
 	const CMYK_RED = '#da1a32 device-cmyk(0.02, 1.00, 0.85, 0.06)';
 	const FOUR_H_GREEN = '#129a63'; #pantone for this is 347U
 
@@ -60,6 +60,8 @@ class SvgGenerator {
 		$secondary_text_color = self::BLACK;
 		$n_main_color = self::SCARLET;
 		$n_secondary_color = self::WHITE;
+		$clover_color = self::FOUR_H_GREEN;
+		$clover_h_color = NULL;
 
 		switch ($style) {
 			case 'RGB':
@@ -97,6 +99,7 @@ class SvgGenerator {
 					$n_main_color = self::PANTONE_RED;
 					$n_secondary_color = self::WHITE;
 					$clover_color = self::WHITE;
+					$clover_h_color = self::BLACK;
 				}
 				break;
 			case '4c':
@@ -112,6 +115,7 @@ class SvgGenerator {
 					$n_main_color = self::CMYK_RED;
 					$n_secondary_color = self::WHITE;
 					$clover_color = self::WHITE;
+					$clover_h_color = self::BLACK;
 				}
 				break;
 			case 'blk':
@@ -131,6 +135,10 @@ class SvgGenerator {
 				break;
 			default:
 				break;
+		}
+
+		if (!isset($clover_h_color)) {
+			$clover_h_color = $n_secondary_color;
 		}
 
 		if ($preview) {
@@ -566,10 +574,10 @@ class SvgGenerator {
 				$svg->addPath(self::RIGHT_CLOVER_LETTER_6, array('fill' => $clover_color, 'transform' => 'translate(143.4054,29.43) rotate(180) scale(-1,1)'));
 				$svg->addPath(self::RIGHT_CLOVER_LETTER_7, array('fill' => $clover_color, 'transform' => 'translate(143.971,28.3368) rotate(180) scale(-1,1)'));
 				$svg->addPath(self::RIGHT_CLOVER_LETTER_8, array('fill' => $clover_color, 'transform' => 'translate(144.4453,28.0718) rotate(180) scale(-1,1)'));
-				$svg->addPath(self::RIGHT_CLOVER_H_1, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
-				$svg->addPath(self::RIGHT_CLOVER_H_2, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
-				$svg->addPath(self::RIGHT_CLOVER_H_3, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
-				$svg->addPath(self::RIGHT_CLOVER_H_4, array('fill' => $n_secondary_color, 'transform' => 'translate(56, 0)'));
+				$svg->addPath(self::RIGHT_CLOVER_H_1, array('fill' => $clover_h_color, 'transform' => 'translate(56, 0)'));
+				$svg->addPath(self::RIGHT_CLOVER_H_2, array('fill' => $clover_h_color, 'transform' => 'translate(56, 0)'));
+				$svg->addPath(self::RIGHT_CLOVER_H_3, array('fill' => $clover_h_color, 'transform' => 'translate(56, 0)'));
+				$svg->addPath(self::RIGHT_CLOVER_H_4, array('fill' => $clover_h_color, 'transform' => 'translate(56, 0)'));
 
 				$svg->addPath(self::CENTER_DIVIDER, array('fill' => $secondary_text_color, 'transform' => 'translate(50.5 0.1)', 'stroke' => $secondary_text_color, 'stroke-width' => '0.5pt'));
 			} else {

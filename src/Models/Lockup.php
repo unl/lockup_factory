@@ -140,7 +140,7 @@ class Lockup extends \ActiveRecord\Model {
 			$name = $this->organization . ' ' . $this->organization_second_line . ' ' . $this->subject . ' ' . $this->subject_second_line;
 		} else if (strrpos($this->style, 'acronym') === 0) {
 			$name = $this->acronym . ' ' . $this->acronym_subject;
-		} else if ($this->style == 'extension') {
+		} else if (strrpos($this->style,'extension') === 0) {
 			$name = 'EXTENSION ' . $this->extension_county;
 		}
 		if (empty(str_replace(' ', '', $name))) {
@@ -265,11 +265,12 @@ class Lockup extends \ActiveRecord\Model {
 		if ($return_var == 0) {
 
 			# POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
-			if ($color == '4c') {
+			if ($color == '4c' || $color == 'pms186cp') {
 				$file = fopen($new_eps, 'r');
 				$data = fread($file, filesize($new_eps));
-				$data = str_replace('setrgbcolor', 'setcmykcolor', $data);
-				$data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data);
+				$data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
+				$data = str_replace('0.0705882 0.603922 0.388235 rg' , '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
+				$data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
 				fclose($file);
 
 				$file = fopen($new_eps, 'w');

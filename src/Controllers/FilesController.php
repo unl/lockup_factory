@@ -71,6 +71,11 @@ class FilesController extends Controller {
 				$zip->addFromString($folder . '/' . $file->getName(), $file->data);
 			}
 
+			# add the javascript file and the templates
+			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/convert_pantone.jsx', 'convert_pantone.jsx');
+			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/Nh_template.ai', 'Nh_template.ai');
+			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/Nv_template.ai', 'Nv_template.ai');
+
 			$zip->close();
 		}
 		self::sendZipFile($lockup, $zip_filename);

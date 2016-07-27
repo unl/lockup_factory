@@ -72,9 +72,11 @@ class FilesController extends Controller {
 			}
 
 			# add the javascript file and the templates
-			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/convert_pantone.jsx', 'convert_pantone.jsx');
-			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/Nh_template.ai', 'Nh_template.ai');
-			$zip->addFile(Core::$ROOT . '/src/LockupTemplates/Nv_template.ai', 'Nv_template.ai');
+			$zip->addFile(\Core::ROOT . '/src/LockupTemplates/convert_pantone.jsx', 'convert_pantone.jsx');
+			$zip->addFile(\Core::ROOT . '/src/LockupTemplates/Nh_template.ai', "Nh_" . $lockup->getFolderName() . "/PMS186cp/Nh_" . $lockup->getFolderName() . "_pms186cp_rev.ai");
+			$zip->addFile(\Core::ROOT . '/src/LockupTemplates/Nh_template.ai', "Nh_" . $lockup->getFolderName() . "/PMS186cp/Nh_" . $lockup->getFolderName() . "_pms186cp.ai");
+			$zip->addFile(\Core::ROOT . '/src/LockupTemplates/Nv_template.ai', "Nv_" . $lockup->getFolderName() . "/PMS186cp/Nv_" . $lockup->getFolderName() . "_pms186cp_rev.ai");
+			$zip->addFile(\Core::ROOT . '/src/LockupTemplates/Nv_template.ai', "Nv_" . $lockup->getFolderName() . "/PMS186cp/Nv_" . $lockup->getFolderName() . "_pms186cp.ai");
 
 			$zip->close();
 		}

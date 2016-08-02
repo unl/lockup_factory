@@ -331,6 +331,7 @@ require(['jquery'], function ($) {
             }
         });
 
+        // temporary hack, until framework is improved to allow for closeable notices that do not remove HTML
         $('#text-notice').click(function (click) {
             $(this).fadeOut();
         });

@@ -231,7 +231,7 @@ class Lockup extends \ActiveRecord\Model {
 
 		$return_var = NULL;
 		
-		exec('inkscape -h200 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
+		exec('inkscape -h800 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
 		if ($return_var == 0) {
 			# attempt to write this to the DB
 			$file = fopen($new_png, 'r');

@@ -8,7 +8,7 @@ use \SvgGenerator as SVG;
 
 class LockupsController extends Controller {
 
-	const LOCKUP_VERSION = '1.4';
+	const LOCKUP_VERSION = '1.5';
 
 	private static function checkTextFieldLength($params, $field, $max_length) {
 		if (strlen($params[$field]) > $max_length) {

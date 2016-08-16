@@ -180,7 +180,7 @@
                             30 characters max
                         </div>
                     </div>
-                    <input type="text" name="organization" id="organization" data-max-length="30" value="<?php echo $context->lockup->organization; ?>">
+                    <input type="text" name="organization" id="organization" maxlength="30" value="<?php echo $context->lockup->organization; ?>">
                 </div>
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
@@ -189,7 +189,7 @@
                             30 characters max
                         </div>
                     </div>
-                    <input type="text" name="organization_second_line" data-max-length="30" id="organization-second-line">
+                    <input type="text" name="organization_second_line" maxlength="30" id="organization-second-line">
                 </div>
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>
@@ -198,7 +198,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="subject" id="subject" data-max-length="40" value="<?php echo $context->lockup->subject; ?>">
+                    <input type="text" name="subject" id="subject" maxlength="40" value="<?php echo $context->lockup->subject; ?>">
                     <br>
                 </div>
                 <div id="subject-second-line-field" style="display: none;">
@@ -208,7 +208,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="subject_second_line" data-max-length="40" id="subject-second-line" value="<?php echo $context->lockup->subject_second_line; ?>">
+                    <input type="text" name="subject_second_line" maxlength="40" id="subject-second-line" value="<?php echo $context->lockup->subject_second_line; ?>">
                     <br>
                 </div>
                 <div id="acronym-field" style="display: none;">
@@ -218,7 +218,7 @@
                             10 characters max
                         </div>
                     </div>
-                    <input type="text" name="acronym" id="acronym" data-max-length="10" value="<?php echo $context->lockup->acronym; ?>">
+                    <input type="text" name="acronym" id="acronym" maxlength="10" value="<?php echo $context->lockup->acronym; ?>">
                     <br>
                 </div>
                 <div id="acronym-second-line-field" style="display: none;">
@@ -228,7 +228,7 @@
                             10 characters max
                         </div>
                     </div>
-                    <input type="text" name="acronym_second_line" id="acronym-second-line" data-max-length="10" value="<?php echo $context->lockup->acronym_second_line; ?>">
+                    <input type="text" name="acronym_second_line" id="acronym-second-line" maxlength="10" value="<?php echo $context->lockup->acronym_second_line; ?>">
                     <br>
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
@@ -238,7 +238,7 @@
                             15 characters max
                         </div>
                     </div>
-                    <input type="text" name="acronym_subject" id="acronym-subject" data-max-length="15" value="<?php echo $context->lockup->acronym_subject; ?>">
+                    <input type="text" name="acronym_subject" id="acronym-subject" maxlength="15" value="<?php echo $context->lockup->acronym_subject; ?>">
                     <br>
                 </div>
                 <div id="extension-county-field" style="display: none;">
@@ -248,7 +248,7 @@
                             40 characters max
                         </div>
                     </div>
-                    <input type="text" name="extension_county" id="extension-county" data-max-length="40" value="<?php echo $context->lockup->extension_county; ?>">
+                    <input type="text" name="extension_county" id="extension-county" maxlength="40" value="<?php echo $context->lockup->extension_county; ?>">
                     <br>
                 </div>
             </fieldset>
@@ -316,8 +316,8 @@ require(['jquery'], function ($) {
             // look at all text fields that are visible inside lockup text
             $('#lockup-text input').each(function(index, input) {
                 if ($(input).is(':visible')) {
-                    if ($(input).val().length > parseInt($(input).attr('data-max-length'))) {
-                        messages = messages + ucwords($(input).attr('id').split('-').join(' ')) + ' must be ' + $(input).attr('data-max-length') + ' characters or fewer.<br>';
+                    if ($(input).val().length > parseInt($(input).attr('maxlength'))) {
+                        messages = messages + ucwords($(input).attr('id').split('-').join(' ')) + ' must be ' + $(input).attr('maxlength') + ' characters or fewer.<br>';
                         valid = false;
                     }
                 }

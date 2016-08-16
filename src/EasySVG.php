@@ -45,7 +45,52 @@ class EasySVG {
         $values = array();
         $lookingFor = 1;
 
+        $ligature_table = array(
+            'ff' => 64256, # = 0xFB00
+            'fi' => 64257,
+            'fl' => 64258,
+            'ffi' => 64259,
+            'ffl' => 64260,
+            'fb' => 64261,
+            'fh' => 64262,
+            'fj' => 64263,
+            'fk' => 64264,
+            'ffb' => 64265,
+            'ffh' => 64266,
+            'ffj' => 64267,
+            'ffk' => 64268
+        );
+
         for ($i = 0; $i < strlen( $str ); $i++ ) {
+            # check for ligatures here
+            # ------ THIS IS KIND OF A HACK ----- #
+            # see Unicode only supports ff, fi, fl, ffi, and ffl ligatures. However, certain unicode characters near these are unused.
+            # so I use these codes to correspond to other ligatures as given below. 
+            # See https://en.wikipedia.org/wiki/Typographic_ligature#Ligatures_in_Unicode_.28Latin_alphabets.29
+            # ---------------------------------------------------------------------------------------------------------------------- #
+            # |   fb   |   ff   |   fh   |   fi   |   fj   |   fk   |   fl   |   ffb  |   ffh  |   ffi  |   ffj  |   ffk  |   ffl  | #
+            # |--------------------------------------------------------------------------------------------------------------------| #
+            # | 0xFB05 | 0xFB00 | 0xFB06 | 0xFB01 | 0xFB07 | 0xFB08 | 0xFB02 | 0xFB09 | 0xFB0A | 0xFB03 | 0xFB0B | 0xFB0C | 0xFB04 | #
+            # |--------------------------------------------------------------------------------------------------------------------| #
+
+            if ($str[$i] == 'f') {
+                if (strlen($str) > $i+1 && in_array($str[$i+1], array('b','h','i','j','k','l'))) {
+                    $unicode[] = $ligature_table[substr($str, $i, 2)];
+                    $i++;
+                    continue;
+                } else if (strlen($str) > $i+1 && $str[$i+1] == 'f') {
+                    if (strlen($str) > $i+2 && in_array($str[$i+2], array('b','h','i','j','k','l'))) {
+                        $unicode[] = $ligature_table[substr($str, $i, 3)];
+                        $i += 2;
+                        continue;
+                    } else {
+                        $unicode[] = $ligature_table['ff'];
+                        $i++;
+                        continue;
+                    }
+                }
+            }
+
             $thisValue = ord( $str[ $i ] );
             if ( $thisValue < 128 ) $unicode[] = $thisValue;
             else {
@@ -213,7 +258,6 @@ class EasySVG {
         $horizAdvY = $this->font->ascent + $this->font->descent;
         $fontSize = floatval($this->font->size) / $this->font->unitsPerEm;
         $text = $this->_utf8ToUnicode($text);
-        error_log(print_r($text,1));
 
         for($i = 0; $i < count($text); $i++) {
 

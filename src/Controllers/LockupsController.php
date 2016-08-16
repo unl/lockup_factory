@@ -10,13 +10,142 @@ class LockupsController extends Controller {
 
 	const LOCKUP_VERSION = '1.4';
 
+	private static function checkTextFieldLength($params, $field, $max_length) {
+		if (strlen($params[$field]) > $max_length) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Invalid Text', ucwords(implode(' ',explode('_', $field))) . ' must be ' . $max_length . ' characters or fewer.');
+			return FALSE;
+		}
+
+		if (empty($params[$field])) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Invalid Text', ucwords(implode(' ',explode('_', $field))) . ' must not be empty.');
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
 	public static function createAction() {
 		\Core::$breadcrumbs[] = array('text' => 'Create Lockup');
 
 		$context = new \stdClass;
-		$context->lockup = new Lockup;
+		if (isset($_SESSION['create_lockup'])) {
+			$context->lockup = $_SESSION['create_lockup'];
+			unset($_SESSION['create_lockup']);
+		} else {
+			$context->lockup = new Lockup;
+		}
 		$context->approvers = User::find('all', array('conditions' => array('role' => 'approver')));
 		return self::renderView('new_lockup', $context);
+	}
+
+	public static function postCreateAction($post_params) {
+		self::requireAuth();
+
+		# take the params and generate a base lockup from that template
+		$lockup = new \stdClass;
+
+		$lockup->org_name = 				strtoupper($post_params['organization']);
+		$lockup->org_second_line = 			strtoupper($post_params['organization_second_line']);
+		$lockup->subject = 					$post_params['subject'];
+		$lockup->subject_second_line = 		$post_params['subject_second_line'];
+		$lockup->acronym = 					strtoupper($post_params['acronym']);
+		$lockup->acronym_second_line = 		strtoupper($post_params['acronym_second_line']);
+		$lockup->acronym_subject = 			strtoupper($post_params['acronym_subject']);
+		$lockup->extension_county = 		$post_params['extension_county'];
+		$lockup->style = 					$post_params['type'];
+
+		# set preview to true
+		$lockup->preview = TRUE;
+
+		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup)->svg_text;
+		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert')->svg_text;
+		$model = new Lockup(array(
+			'organization' => 				strtoupper($post_params['organization']),
+			'organization_second_line' => 	strtoupper($post_params['organization_second_line']),
+			'subject' => 					$post_params['subject'],
+			'subject_second_line' => 		$post_params['subject_second_line'],
+			'acronym' => 					strtoupper($post_params['acronym']),
+			'acronym_second_line' =>		strtoupper($post_params['acronym_second_line']),
+			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
+			'extension_county' =>	 		$post_params['extension_county'],
+			'style' => 						$post_params['type'],
+			'user_id' => 					\Auth::$current_user->id,
+			'date_created' => 				date('Y-m-d H:i:s'),
+			'preview_svg' => 				$svg_text,
+			'vert_preview_svg' => 			$vert_svg_text,
+			'approver_id' => 				empty($post_params['approver']) ? NULL : $post_params['approver'],
+			'file_organization' =>			$post_params['file_organization'],
+			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
+			'file_department' => 			$post_params['file_department'],
+			'file_department_acronym' =>	$post_params['file_department_acronym'],
+			'version' => 					NULL
+		));
+
+		$valid = TRUE;
+		# validate the lengths of fields
+		switch ($lockup->style) {
+			case 'org_only':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				break;
+			case 'org_two_line':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				break;
+			case 'org_subject':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				break;
+			case 'org_subject_1_2':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
+				break;
+			case 'org_subject_2_1':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				break;
+			case 'org_subject_2_2':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
+				break;
+			case 'acronym':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				break;
+			case 'acronym_subject':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_subject', 15);
+				break;
+			case 'acronym_subject_2_1':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_second_line', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_subject', 15);
+				break;
+			case 'acronym_social':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				break;
+			case 'extension':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
+				break;
+			case 'extension_4h':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
+				break;
+			default;
+				self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Invalid Style', 'Somehow you selected an invalid style. Please select one and try again.');
+				$valid = FALSE;
+				break;
+		}
+
+		if (!$valid) {
+			# store this lockup in the session so it can be seen on the page
+			$_SESSION['create_lockup'] = $model;
+			\Core::redirect('/lockups/create/');
+		}
+
+		$model->save();
+		\Core::redirect($model->getPreviewURL());
 	}
 
 	public static function editAction($get_params) {
@@ -47,56 +176,15 @@ class LockupsController extends Controller {
 		}
 
 		$context = new \stdClass;
-		$context->lockup = $lockup;
+		
+		if (isset($_SESSION['edit_lockup'])) {
+			$context->lockup = $_SESSION['edit_lockup'];
+			unset($_SESSION['edit_lockup']);
+		} else {
+			$context->lockup = $lockup;
+		}
 		$context->approvers = User::find('all', array('conditions' => array('role' => 'approver')));
 		return self::renderView('new_lockup', $context);
-	}
-
-	public static function postCreateAction($post_params) {
-		self::requireAuth();
-
-		# take the params and generate a base lockup from that template
-		$lockup = new \stdClass;
-
-		$lockup->org_name = 				strtoupper($post_params['organization']);
-		$lockup->org_second_line = 			strtoupper($post_params['organization_second_line']);
-		$lockup->subject = 					$post_params['subject'];
-		$lockup->subject_second_line = 		$post_params['subject_second_line'];
-		$lockup->acronym = 					strtoupper($post_params['acronym']);
-		$lockup->acronym_second_line = 		strtoupper($post_params['acronym_second_line']);
-		$lockup->acronym_subject = 			strtoupper($post_params['acronym_subject']);
-		$lockup->extension_county = 		$post_params['extension_county'];
-		$lockup->style = 					$post_params['type'];
-
-		# set preview to true
-		$lockup->preview = TRUE;
-
-		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup)->svg_text;
-		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert')->svg_text;
-		
-		$model = Lockup::create(array(
-			'organization' => 				strtoupper($post_params['organization']),
-			'organization_second_line' => 	strtoupper($post_params['organization_second_line']),
-			'subject' => 					$post_params['subject'],
-			'subject_second_line' => 		$post_params['subject_second_line'],
-			'acronym' => 					strtoupper($post_params['acronym']),
-			'acronym_second_line' =>		strtoupper($post_params['acronym_second_line']),
-			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
-			'extension_county' =>	 		$post_params['extension_county'],
-			'style' => 						$post_params['type'],
-			'user_id' => 					\Auth::$current_user->id,
-			'date_created' => 				date('Y-m-d H:i:s'),
-			'preview_svg' => 				$svg_text,
-			'vert_preview_svg' => 			$vert_svg_text,
-			'approver_id' => 				empty($post_params['approver']) ? NULL : $post_params['approver'],
-			'file_organization' =>			$post_params['file_organization'],
-			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
-			'file_department' => 			$post_params['file_department'],
-			'file_department_acronym' =>	$post_params['file_department_acronym'],
-			'version' => 					NULL
-		));
-
-		\Core::redirect($model->getPreviewURL());
 	}
 
 	public static function postEditAction($post_params) {
@@ -143,28 +231,93 @@ class LockupsController extends Controller {
 		$svg_text = SVG::createPreviewLockup($post_params['type'], $lockup)->svg_text;
 		$vert_svg_text = SVG::createPreviewLockup($post_params['type'], $lockup, 'vert')->svg_text;
 		
-		$lockup_model->update_attributes(array(
-			'organization' => 				strtoupper($post_params['organization']),
-			'organization_second_line' => 	strtoupper($post_params['organization_second_line']),
-			'subject' => 					$post_params['subject'],
-			'subject_second_line' => 		$post_params['subject_second_line'],
-			'acronym' => 					strtoupper($post_params['acronym']),
-			'acronym_second_line' => 		strtoupper($post_params['acronym_second_line']),
-			'acronym_subject' => 			strtoupper($post_params['acronym_subject']),
-			'extension_county' =>	 		$post_params['extension_county'],
-			'style' => 						$post_params['type'],
-			'user_id' => 					\Auth::$current_user->id,
-			'date_created' => 				date('Y-m-d H:i:s'),
-			'status' => 					Lockup::AWAITING_APPROVAL,
-			'creative_status' =>			Lockup::AWAITING_APPROVAL,
-			'preview_svg' => 				$svg_text,
-			'vert_preview_svg' => 			$vert_svg_text,
-			'approver_id' => 				empty($post_params['approver']) ? NULL : $post_params['approver'],
-			'file_organization' =>			$post_params['file_organization'],
-			'file_organization_acronym' =>  $post_params['file_organization_acronym'],
-			'file_department' => 			$post_params['file_department'],
-			'file_department_acronym' =>	$post_params['file_department_acronym']
-		));
+		$lockup_model->organization = 				strtoupper($post_params['organization']);
+		$lockup_model->organization_second_line = 	strtoupper($post_params['organization_second_line']);
+		$lockup_model->subject = 					$post_params['subject'];
+		$lockup_model->subject_second_line = 		$post_params['subject_second_line'];
+		$lockup_model->acronym = 					strtoupper($post_params['acronym']);
+		$lockup_model->acronym_second_line = 		strtoupper($post_params['acronym_second_line']);
+		$lockup_model->acronym_subject = 			strtoupper($post_params['acronym_subject']);
+		$lockup_model->extension_county =	 		$post_params['extension_county'];
+		$lockup_model->style = 						$post_params['type'];
+		$lockup_model->user_id = 					\Auth::$current_user->id;
+		$lockup_model->date_created = 				date('Y-m-d H:i:s');
+		$lockup_model->status = 					Lockup::AWAITING_APPROVAL;
+		$lockup_model->creative_status =			Lockup::AWAITING_APPROVAL;
+		$lockup_model->preview_svg = 				$svg_text;
+		$lockup_model->vert_preview_svg = 			$vert_svg_text;
+		$lockup_model->approver_id = 				empty($post_params['approver']) ? NULL : $post_params['approver'];
+		$lockup_model->file_organization =			$post_params['file_organization'];
+		$lockup_model->file_organization_acronym =  $post_params['file_organization_acronym'];
+		$lockup_model->file_department = 			$post_params['file_department'];
+		$lockup_model->file_department_acronym =	$post_params['file_department_acronym'];
+
+		$valid = TRUE;
+		# validate the lengths of fields
+		switch ($lockup_model->style) {
+			case 'org_only':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				break;
+			case 'org_two_line':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				break;
+			case 'org_subject':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				break;
+			case 'org_subject_1_2':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
+				break;
+			case 'org_subject_2_1':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				break;
+			case 'org_subject_2_2':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
+				break;
+			case 'acronym':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				break;
+			case 'acronym_subject':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_subject', 15);
+				break;
+			case 'acronym_subject_2_1':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_second_line', 10);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym_subject', 15);
+				break;
+			case 'acronym_social':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
+				break;
+			case 'extension':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
+				break;
+			case 'extension_4h':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
+				break;
+			default;
+				self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Invalid Style', 'Somehow you selected an invalid style. Please select one and try again.');
+				$valid = FALSE;
+				break;
+		}
+
+		if (!$valid) {
+			# store this lockup in the session so it can be seen on the page
+			$_SESSION['edit_lockup'] = $lockup_model;
+			\Core::redirect($lockup_model->getEditURL());
+		}
+
+		$model->save();
+		\Core::redirect($model->getPreviewURL());
+
 
 		\Core::redirect($lockup_model->getPreviewURL());
 	}

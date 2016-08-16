@@ -165,7 +165,7 @@
 
             <fieldset id="lockup-text">
                 <legend>Lockup Text</legend>
-                <div id="text-notice" class="wdn_notice alert" style="display: none;">
+                <div id="text-notice" class="wdn_notice alert" style="display: none;" tab-index="-1">
                     <div class="message">
                         <h4>Invalid Text Entered</h4>
                         <div class="message-content"></div>

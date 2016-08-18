@@ -11,7 +11,7 @@ class LockupsController extends Controller {
 	const LOCKUP_VERSION = '1.5';
 
 	private static function checkTextFieldLength($params, $field, $max_length) {
-		if (strlen($params[$field]) > $max_length) {
+		if (mb_strlen($params[$field]) > $max_length) {
 			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Invalid Text', ucwords(implode(' ',explode('_', $field))) . ' must be ' . $max_length . ' characters or fewer.');
 			return FALSE;
 		}

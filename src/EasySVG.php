@@ -61,7 +61,6 @@ class EasySVG {
             'ffk' => 64268
         );
 
-        $str = html_entity_decode($str);
         for ($i = 0; $i < mb_strlen($str); $i++ ) {
             # check for ligatures here
             # ------ THIS IS KIND OF A HACK ----- #
@@ -208,6 +207,7 @@ class EasySVG {
 
                 if ($name == 'glyph') {
                     $unicode = $z->getAttribute('unicode');
+                    $unicode = html_entity_decode($unicode);
                     $unicode = $this->_utf8ToUnicode($unicode);
                     if (count($unicode) > 0) {
                         $unicode = $unicode[0];

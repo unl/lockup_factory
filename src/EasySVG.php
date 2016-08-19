@@ -61,6 +61,7 @@ class EasySVG {
             'ffk' => 64268
         );
 
+        $str = html_entity_decode($str);
         for ($i = 0; $i < mb_strlen($str); $i++ ) {
             # check for ligatures here
             # ------ THIS IS KIND OF A HACK ----- #
@@ -78,7 +79,7 @@ class EasySVG {
                     $unicode[] = $ligature_table[mb_substr($str, $i, 2)];
                     $i++;
                     continue;
-                } else if (mb_strlen($str) > $i+1 && $str[$i+1] == 'f') {
+                } else if (mb_strlen($str) > $i+1 && mb_substr($str, $i+1, 1) == 'f') {
                     if (mb_strlen($str) > $i+2 && in_array(mb_substr($str, $i+2, 1), array('b','h','i','j','k','l'))) {
                         $unicode[] = $ligature_table[mb_substr($str, $i, 3)];
                         $i += 2;
@@ -91,8 +92,8 @@ class EasySVG {
                 }
             }
 
-            $thisValue = ord( $str[ $i ] );
-            if ( $thisValue < 128 ) $unicode[] = $thisValue;
+            $thisValue = _ordutf8(mb_substr($str, $i, 1));
+            if ($thisValue < 128) $unicode[] = $thisValue;
             else {
                 if ( count( $values ) == 0 ) $lookingFor = ( $thisValue < 224 ) ? 2 : 3;
                 $values[] = $thisValue;
@@ -109,6 +110,24 @@ class EasySVG {
         }
 
         return $unicode;
+    }
+
+    private function _ordutf8($string) {
+        $k = 0;
+        $code = ord(substr($string, $k,1)); 
+        if ($code >= 128) {        //otherwise 0xxxxxxx
+            if ($code < 224) $bytesnumber = 2;                //110xxxxx
+            else if ($code < 240) $bytesnumber = 3;        //1110xxxx
+            else if ($code < 248) $bytesnumber = 4;    //11110xxx
+            $codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
+            for ($i = 2; $i <= $bytesnumber; $i++) {
+                $k++;
+                $code2 = ord(substr($string, $k, 1)) - 128;        //10xxxxxx
+                $codetemp = $codetemp*64 + $code2;
+            }
+            $code = $codetemp;
+        }
+        return $code;
     }
 
     /**
@@ -257,7 +276,9 @@ class EasySVG {
         $horizAdvX = 0;
         $horizAdvY = $this->font->ascent + $this->font->descent;
         $fontSize = floatval($this->font->size) / $this->font->unitsPerEm;
+
         $text = $this->_utf8ToUnicode($text);
+        error_log(print_r($text, 1));
 
         for($i = 0; $i < count($text); $i++) {
 
@@ -271,8 +292,13 @@ class EasySVG {
             }
             
             // extract character definition
-            $d = $this->font->glyphs[$letter]->d;
+            if (isset($this->font->glyphs[$letter])) {
+                $letter = $this->font->glyphs[$letter];
+            } else {
+                $letter = $this->font->glyphs[32];
+            }
 
+            $d = $letter->d;
             // transform typo from original SVG format to straight display
             $d = $this->defScale($d, $fontSize, -$fontSize);
             $d = $this->defTranslate($d, $horizAdvX, $horizAdvY*$fontSize*2);
@@ -280,7 +306,7 @@ class EasySVG {
             $def[] = $d;
 
             // next letter's position
-            $horizAdvX += $this->font->glyphs[$letter]->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
+            $horizAdvX += $letter->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
         }
         return implode(' ', $def);
     }
@@ -315,7 +341,14 @@ class EasySVG {
                 continue;
             }
 
-            $lineWidth += $this->font->glyphs[$letter]->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
+            // extract character definition
+            if (isset($this->font->glyphs[$letter])) {
+                $letter = $this->font->glyphs[$letter];
+            } else {
+                $letter = $this->font->glyphs[32];
+            }
+
+            $lineWidth += $letter->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
         }
 
         // only keep the widest line's width

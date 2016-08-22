@@ -91,42 +91,28 @@ class EasySVG {
                 }
             }
 
-            $thisValue = _ordutf8(mb_substr($str, $i, 1));
-            if ($thisValue < 128) $unicode[] = $thisValue;
-            else {
-                if ( count( $values ) == 0 ) $lookingFor = ( $thisValue < 224 ) ? 2 : 3;
-                $values[] = $thisValue;
-                if ( count( $values ) == $lookingFor ) {
-                    $number = ( $lookingFor == 3 ) ?
-                        ( ( $values[0] % 16 ) * 4096 ) + ( ( $values[1] % 64 ) * 64 ) + ( $values[2] % 64 ):
-                        ( ( $values[0] % 32 ) * 64 ) + ( $values[1] % 64 );
-
-                    $unicode[] = $number;
-                    $values = array();
-                    $lookingFor = 1;
-                }
-            }
+            $unicode[] = $this->_unicodeOrd(mb_substr($str, $i, 1));
         }
 
         return $unicode;
     }
 
-    private function _ordutf8($string) {
-        $k = 0;
-        $code = ord(substr($string, $k,1)); 
-        if ($code >= 128) {        //otherwise 0xxxxxxx
-            if ($code < 224) $bytesnumber = 2;                //110xxxxx
-            else if ($code < 240) $bytesnumber = 3;        //1110xxxx
-            else if ($code < 248) $bytesnumber = 4;    //11110xxx
-            $codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
-            for ($i = 2; $i <= $bytesnumber; $i++) {
-                $k++;
-                $code2 = ord(substr($string, $k, 1)) - 128;        //10xxxxxx
-                $codetemp = $codetemp*64 + $code2;
-            }
-            $code = $codetemp;
-        }
-        return $code;
+    private function _unicodeOrd($c) {
+        if (ord($c[0]) >=0 && ord($c[0]) <= 127)
+            return ord($c[0]);
+        if (ord($c[0]) >= 192 && ord($c[0]) <= 223)
+            return (ord($c[0])-192)*64 + (ord($c[1])-128);
+        if (ord($c[0]) >= 224 && ord($c[0]) <= 239)
+            return (ord($c[0])-224)*4096 + (ord($c[1])-128)*64 + (ord($c[2])-128);
+        if (ord($c[0]) >= 240 && ord($c[0]) <= 247)
+            return (ord($c[0])-240)*262144 + (ord($c[1])-128)*4096 + (ord($c[2])-128)*64 + (ord($c[3])-128);
+        if (ord($c[0]) >= 248 && ord($c[0]) <= 251)
+            return (ord($c[0])-248)*16777216 + (ord($c[1])-128)*262144 + (ord($c[2])-128)*4096 + (ord($c[3])-128)*64 + (ord($c[4])-128);
+        if (ord($c[0]) >= 252 && ord($c[0]) <= 253)
+            return (ord($c[0])-252)*1073741824 + (ord($c[1])-128)*16777216 + (ord($c[2])-128)*262144 + (ord($c[3])-128)*4096 + (ord($c[4])-128)*64 + (ord($c[5])-128);
+        if (ord($c[0]) >= 254 && ord($c[0]) <= 255)    //  error
+            return FALSE;
+        return 0;
     }
 
     /**

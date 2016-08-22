@@ -40,30 +40,79 @@ class EasySVG {
      * @param  string $str
      * @return string
      */
-    private function _utf8ToUnicode( $str ) {
+    private function _utf8ToUnicode($str) {
         $unicode = array();
         $values = array();
         $lookingFor = 1;
 
-        for ($i = 0; $i < strlen( $str ); $i++ ) {
-            $thisValue = ord( $str[ $i ] );
-            if ( $thisValue < 128 ) $unicode[] = $thisValue;
-            else {
-                if ( count( $values ) == 0 ) $lookingFor = ( $thisValue < 224 ) ? 2 : 3;
-                $values[] = $thisValue;
-                if ( count( $values ) == $lookingFor ) {
-                    $number = ( $lookingFor == 3 ) ?
-                        ( ( $values[0] % 16 ) * 4096 ) + ( ( $values[1] % 64 ) * 64 ) + ( $values[2] % 64 ):
-                        ( ( $values[0] % 32 ) * 64 ) + ( $values[1] % 64 );
+        $ligature_table = array(
+            'ff' => 64256, # = 0xFB00
+            'fi' => 64257,
+            'fl' => 64258,
+            'ffi' => 64259,
+            'ffl' => 64260,
+            'fb' => 64261,
+            'fh' => 64262,
+            'fj' => 64263,
+            'fk' => 64264,
+            'ffb' => 64265,
+            'ffh' => 64266,
+            'ffj' => 64267,
+            'ffk' => 64268
+        );
 
-                    $unicode[] = $number;
-                    $values = array();
-                    $lookingFor = 1;
+        for ($i = 0; $i < mb_strlen($str); $i++ ) {
+            # check for ligatures here
+            # ------ THIS IS KIND OF A HACK ----- #
+            # see Unicode only supports ff, fi, fl, ffi, and ffl ligatures. However, certain unicode characters near these are unused.
+            # so I use these codes to correspond to other ligatures as given below. 
+            # See https://en.wikipedia.org/wiki/Typographic_ligature#Ligatures_in_Unicode_.28Latin_alphabets.29
+            # ---------------------------------------------------------------------------------------------------------------------- #
+            # |   fb   |   ff   |   fh   |   fi   |   fj   |   fk   |   fl   |   ffb  |   ffh  |   ffi  |   ffj  |   ffk  |   ffl  | #
+            # |--------------------------------------------------------------------------------------------------------------------| #
+            # | 0xFB05 | 0xFB00 | 0xFB06 | 0xFB01 | 0xFB07 | 0xFB08 | 0xFB02 | 0xFB09 | 0xFB0A | 0xFB03 | 0xFB0B | 0xFB0C | 0xFB04 | #
+            # |--------------------------------------------------------------------------------------------------------------------| #
+
+            if (mb_substr($str, $i, 1) == 'f') {
+                if (mb_strlen($str) > $i+1 && in_array(mb_substr($str, $i+1, 1), array('b','h','i','j','k','l'))) {
+                    $unicode[] = $ligature_table[mb_substr($str, $i, 2)];
+                    $i++;
+                    continue;
+                } else if (mb_strlen($str) > $i+1 && mb_substr($str, $i+1, 1) == 'f') {
+                    if (mb_strlen($str) > $i+2 && in_array(mb_substr($str, $i+2, 1), array('b','h','i','j','k','l'))) {
+                        $unicode[] = $ligature_table[mb_substr($str, $i, 3)];
+                        $i += 2;
+                        continue;
+                    } else {
+                        $unicode[] = $ligature_table['ff'];
+                        $i++;
+                        continue;
+                    }
                 }
             }
+
+            $unicode[] = $this->_unicodeOrd(mb_substr($str, $i, 1));
         }
 
         return $unicode;
+    }
+
+    private function _unicodeOrd($c) {
+        if (ord($c[0]) >=0 && ord($c[0]) <= 127)
+            return ord($c[0]);
+        if (ord($c[0]) >= 192 && ord($c[0]) <= 223)
+            return (ord($c[0])-192)*64 + (ord($c[1])-128);
+        if (ord($c[0]) >= 224 && ord($c[0]) <= 239)
+            return (ord($c[0])-224)*4096 + (ord($c[1])-128)*64 + (ord($c[2])-128);
+        if (ord($c[0]) >= 240 && ord($c[0]) <= 247)
+            return (ord($c[0])-240)*262144 + (ord($c[1])-128)*4096 + (ord($c[2])-128)*64 + (ord($c[3])-128);
+        if (ord($c[0]) >= 248 && ord($c[0]) <= 251)
+            return (ord($c[0])-248)*16777216 + (ord($c[1])-128)*262144 + (ord($c[2])-128)*4096 + (ord($c[3])-128)*64 + (ord($c[4])-128);
+        if (ord($c[0]) >= 252 && ord($c[0]) <= 253)
+            return (ord($c[0])-252)*1073741824 + (ord($c[1])-128)*16777216 + (ord($c[2])-128)*262144 + (ord($c[3])-128)*4096 + (ord($c[4])-128)*64 + (ord($c[5])-128);
+        if (ord($c[0]) >= 254 && ord($c[0]) <= 255)    //  error
+            return FALSE;
+        return 0;
     }
 
     /**
@@ -144,6 +193,7 @@ class EasySVG {
 
                 if ($name == 'glyph') {
                     $unicode = $z->getAttribute('unicode');
+                    $unicode = html_entity_decode($unicode);
                     $unicode = $this->_utf8ToUnicode($unicode);
                     if (count($unicode) > 0) {
                         $unicode = $unicode[0];
@@ -212,8 +262,9 @@ class EasySVG {
         $horizAdvX = 0;
         $horizAdvY = $this->font->ascent + $this->font->descent;
         $fontSize = floatval($this->font->size) / $this->font->unitsPerEm;
+
         $text = $this->_utf8ToUnicode($text);
-        error_log(print_r($text,1));
+        error_log(print_r($text, 1));
 
         for($i = 0; $i < count($text); $i++) {
 
@@ -227,8 +278,13 @@ class EasySVG {
             }
             
             // extract character definition
-            $d = $this->font->glyphs[$letter]->d;
+            if (isset($this->font->glyphs[$letter])) {
+                $letter = $this->font->glyphs[$letter];
+            } else {
+                $letter = $this->font->glyphs[32];
+            }
 
+            $d = $letter->d;
             // transform typo from original SVG format to straight display
             $d = $this->defScale($d, $fontSize, -$fontSize);
             $d = $this->defTranslate($d, $horizAdvX, $horizAdvY*$fontSize*2);
@@ -236,7 +292,7 @@ class EasySVG {
             $def[] = $d;
 
             // next letter's position
-            $horizAdvX += $this->font->glyphs[$letter]->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
+            $horizAdvX += $letter->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
         }
         return implode(' ', $def);
     }
@@ -271,7 +327,14 @@ class EasySVG {
                 continue;
             }
 
-            $lineWidth += $this->font->glyphs[$letter]->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
+            // extract character definition
+            if (isset($this->font->glyphs[$letter])) {
+                $letter = $this->font->glyphs[$letter];
+            } else {
+                $letter = $this->font->glyphs[32];
+            }
+
+            $lineWidth += $letter->horizAdvX * $fontSize + $this->font->em * $this->font->letterSpacing * $fontSize;
         }
 
         // only keep the widest line's width

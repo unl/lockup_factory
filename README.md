@@ -14,6 +14,12 @@
 11. This project uses `/public` instead of `/www` for its DocumentRoot, you may have to go into your httpd.conf files and change this. Look in `/etc/httpd/conf.d/` for a number-prefixed conf file.
 12. The server should now be running at `localhost:8009`.
 
+** Testing **
+-------------
+We are now striving for more unit testing. To run tests, please go to the
+root folder and type
+`phpunit --verbose --bootstrap config.inc.php tests`
+
 ** Usage **
 -----------
 

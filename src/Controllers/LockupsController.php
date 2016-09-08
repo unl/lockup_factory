@@ -603,11 +603,57 @@ UNL Lockup Factory';
 		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Manage Lockups');
 
+		$page_size = 10;
+		$all_page = 1;
+		$all_offset = 0;
+		$my_page = 1;
+		$my_offset = 0;
+		$approver_page = 1;
+		$approver_offset = 0;
+		$creative_page = 1;
+		$creative_offset = 0;
+		if (array_key_exists('all_page', $get_params)) {
+			if ((int)($get_params['all_page']) >= 1) {
+				$all_page = (int)($get_params['all_page']);
+				$all_offset = ($all_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('page', $get_params)) {
+			if ((int)($get_params['page']) >= 1) {
+				$my_page = (int)($get_params['page']);
+				$my_offset = ($my_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('approver_page', $get_params)) {
+			if ((int)($get_params['approver_page']) >= 1) {
+				$approver_page = (int)($get_params['approver_page']);
+				$approver_offset = ($approver_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('creative_page', $get_params)) {
+			if ((int)($get_params['creative_page']) >= 1) {
+				$creative_page = (int)($get_params['creative_page']);
+				$creative_offset = ($creative_page - 1) * $page_size;
+			} 
+		}
+
 		$context = new \stdClass;
-		$context->all_lockups = Lockup::all(array('include' => array('user')));
-		$context->my_lockups = \Auth::$current_user->lockups;
-		$context->approver_lockups = Lockup::all(array('conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given'))));
-		$context->creative_approval_lockups = Lockup::all(array('conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given'))));
+		$context->all_lockups = Lockup::all(array('include' => array('user'), 'offset' => $all_offset, 'limit' => $page_size));
+		$context->all_count = Lockup::count();
+		$context->all_page = $all_page;
+		$context->my_lockups = Lockup::all(array('include' => array('user'), 'offset' => $my_offset, 'limit' => $page_size, 'conditions' => array('user_id' => \Auth::$current_user->id)));
+		$context->my_count = Lockup::count(array('conditions' => array('user_id' => \Auth::$current_user->id)));
+		$context->my_page = $my_page;
+		$context->approver_lockups = Lockup::all(array('offset' => $approver_offset, 'limit' => $page_size, 'conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given'))));
+		$context->approver_count = Lockup::count(array('conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given'))));
+		$context->approver_page = $approver_page;
+		$context->creative_approval_lockups = Lockup::all(array('offset' => $creative_offset, 'limit' => $page_size, 'conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given'))));
+		$context->creative_count = Lockup::count(array('conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given'))));
+		$context->creative_page = $creative_page;
+		$context->page_size = $page_size;
 
 		return self::renderView('manage_lockups', $context);
 	}

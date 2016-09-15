@@ -86,7 +86,7 @@ class Auth
             # if they don't have an email, they were created before we had emails in teh system
             if (empty($user->email)) {
                 $info = self::getUserInfo($username);
-                $user->email = $info['email'];
+                $user->email = array_key_exists('email', $info) ? $info['email'] : NULL;
                 $user->save();
             }
         } else {
@@ -95,7 +95,7 @@ class Auth
             $user = User::create(array(
                 'username' => $username,
                 'date_created' => date('Y-m-d H:i:s'),
-                'email' => $info['email']
+                'email' => (array_key_exists('email', $info) ? $info['email'] : NULL)
             ));
         }
 

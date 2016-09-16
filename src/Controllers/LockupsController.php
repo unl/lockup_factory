@@ -315,9 +315,7 @@ class LockupsController extends Controller {
 			\Core::redirect($lockup_model->getEditURL());
 		}
 
-		$model->save();
-		\Core::redirect($model->getPreviewURL());
-
+		$lockup_model->save();
 
 		\Core::redirect($lockup_model->getPreviewURL());
 	}

@@ -16,6 +16,9 @@
     if ($context->creative_page != 1) {
         $page_array['creative_page'] = $context->creative_page;
     }
+    if (!empty($context->search_term)) {
+        $page_array['search_term'] = $context->search_term;
+    }
 
     function outputParam($key, $val) {
         return $key . '=' . $val;
@@ -32,13 +35,22 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
 <div class="wdn-band">
 	<div class="wdn-inner-wrapper">
     <h3 class="page-title">Manage Lockups</h3>
+    <form>
+    <input style="width: auto;" value="<?php echo $context->search_term ?>" type="text" placeholder="Search..." name="search_term">
+    <button type="submit" class="wdn-button wdn-button-triad">Search</button>
+    <?php if (!empty($context->search_term)): ?>
+    <button id="clear-search" class="wdn-button wdn-button" type="button">Clear</button>
+    <?php endif; ?>
+    </form>
     <?php if (\Auth::$current_user->isAdmin()): ?>
+        <h4 class="wdn-brand">All Lockups</h4>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>All Lockups</th>
+                    <th>Title</th>
                     <th>Submitter</th>
+                    <th>Submitted</th>
                     <th>Approver</th>
                     <th>Status</th>
                     <th>Version</th>
@@ -51,6 +63,7 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
                     <td><?php echo $lockup->id; ?></td>
                     <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
                     <td><?php echo $lockup->user->username; ?></td>
+                    <td><?php echo $lockup->date_created;?></td>
                     <td><?php echo $lockup->getApproverName(); ?></td>
                     <td><?php echo $lockup->getFullStatusText(); ?></td>
                     <td><?php echo $lockup->version; ?></td>
@@ -97,10 +110,117 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
             </div>
         <?php endif; ?>
     <?php else: ?>
+        <?php if (\Auth::$current_user->isApprover()): ?>
+        <h4 class="wdn-brand">Lockups Needing Communicator Approval</h4>
         <table>
             <thead>
                 <tr>
-                    <th>My Lockups</th>
+                    <th>Title</th>
+                    <th>Submitter</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                </tr>   
+            </thead>
+            <tbody>
+            <?php foreach ($context->approver_lockups as $lockup): ?>
+                <tr>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->user->username ?></td>
+                    <td><?php echo date('M j, Y', strtotime($lockup->date_created)) ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php if ($approver_pages > 1): ?>
+            <div style="text-align: center;">
+                <div style="display: inline-block;">
+                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                        <?php if($context->approver_page != 1): ?>
+                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                        <?php endif; ?>
+                        <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
+                        <?php for ($i = 1; $i <= $approver_pages; $i++): ?>
+                                <?php if ($i == $context->approver_page): ?>
+                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                <?php elseif ($i <= 3 || $i >= $approver_page - 2 || $i == $context->approver_page - 1 || 
+                                            $i == $context->approver_page - 2 || $i == $context->approver_page + 1 || $i == $context->approver_page + 2): ?>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                <?php elseif ($i < $context->approver_page && !$before_ellipsis_shown): ?>
+                                    <li><span class="ellipsis">...</span></li>
+                                    <?php $before_ellipsis_shown = TRUE; ?>
+                                <?php elseif ($i > $context->approver_page && !$after_ellipsis_shown): ?>
+                                    <li><span class="ellipsis">...</span></li>
+                                    <?php $after_ellipsis_shown = TRUE; ?>
+                                <?php endif; ?>
+                        <?php endfor; ?>
+                        <?php if($context->approver_page != $approver_pages): ?>
+                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
+        <br>
+        <?php endif; ?>
+        <?php if (\Auth::$current_user->isCreative()): ?>
+        <h4 class="wdn-brand">Lockups Needing Creative Approval</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Submitter</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                </tr>   
+            </thead>
+            <tbody>
+            <?php foreach ($context->creative_approval_lockups as $lockup): ?>
+                <tr>
+                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
+                    <td><?php echo $lockup->user->username ?></td>
+                    <td><?php echo date('M j, Y', strtotime($lockup->date_created)) ?></td>
+                    <td><?php echo $lockup->getFullStatusText(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php if ($creative_pages > 1): ?>
+            <div style="text-align: center;">
+                <div style="display: inline-block;">
+                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                        <?php if($context->creative_page != 1): ?>
+                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                        <?php endif; ?>
+                        <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
+                        <?php for ($i = 1; $i <= $creative_pages; $i++): ?>
+                                <?php if ($i == $context->creative_page): ?>
+                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                <?php elseif ($i <= 3 || $i >= $context->creative_page - 2 || $i == $context->creative_page - 1 || 
+                                            $i == $context->creative_page - 2 || $i == $context->creative_page + 1 || $i == $context->creative_page + 2): ?>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                <?php elseif ($i < $context->creative_page && !$before_ellipsis_shown): ?>
+                                    <li><span class="ellipsis">...</span></li>
+                                    <?php $before_ellipsis_shown = TRUE; ?>
+                                <?php elseif ($i > $context->creative_page && !$after_ellipsis_shown): ?>
+                                    <li><span class="ellipsis">...</span></li>
+                                    <?php $after_ellipsis_shown = TRUE; ?>
+                                <?php endif; ?>
+                        <?php endfor; ?>
+                        <?php if($context->creative_page != $creative_pages): ?>
+                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
+        <br>
+        <?php endif; ?>
+        <h4 class="wdn-brand">My Lockups</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
                     <th>Approver</th>
                     <th>Status</th>
                     <th class="right">Actions</th>
@@ -155,107 +275,16 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
             </div>
         <?php endif; ?>
         <br>
-        <?php if (\Auth::$current_user->isApprover()): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Lockups Needing Communicator Approval</th>
-                    <th>Submitter</th>
-                    <th>Status</th>
-                </tr>   
-            </thead>
-            <tbody>
-            <?php foreach ($context->approver_lockups as $lockup): ?>
-                <tr>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
-                    <td><?php echo $lockup->user->username ?></td>
-                    <td><?php echo $lockup->getFullStatusText(); ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <?php if ($approver_pages > 1): ?>
-            <div style="text-align: center;">
-                <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
-                        <?php if($context->approver_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
-                        <?php endif; ?>
-                        <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
-                        <?php for ($i = 1; $i <= $approver_pages; $i++): ?>
-                                <?php if ($i == $context->approver_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
-                                <?php elseif ($i <= 3 || $i >= $approver_page - 2 || $i == $context->approver_page - 1 || 
-                                            $i == $context->approver_page - 2 || $i == $context->approver_page + 1 || $i == $context->approver_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
-                                <?php elseif ($i < $context->approver_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
-                                    <?php $before_ellipsis_shown = TRUE; ?>
-                                <?php elseif ($i > $context->approver_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
-                                    <?php $after_ellipsis_shown = TRUE; ?>
-                                <?php endif; ?>
-                        <?php endfor; ?>
-                        <?php if($context->approver_page != $approver_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page + 1))); ?>" title="Go to the next page">next →</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <?php endif; ?>
-        <br>
-        <?php if (\Auth::$current_user->isCreative()): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Lockups Needing Creative Approval</th>
-                    <th>Submitter</th>
-                    <th>Status</th>
-                </tr>   
-            </thead>
-            <tbody>
-            <?php foreach ($context->creative_approval_lockups as $lockup): ?>
-                <tr>
-                    <td><a href="<?php echo $lockup->getPreviewURL(); ?>"><?php echo $lockup->getName(); ?></a></td>
-                    <td><?php echo $lockup->user->username ?></td>
-                    <td><?php echo $lockup->getFullStatusText(); ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <?php if ($creative_pages > 1): ?>
-            <div style="text-align: center;">
-                <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
-                        <?php if($context->creative_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
-                        <?php endif; ?>
-                        <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
-                        <?php for ($i = 1; $i <= $creative_pages; $i++): ?>
-                                <?php if ($i == $context->creative_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
-                                <?php elseif ($i <= 3 || $i >= $context->creative_page - 2 || $i == $context->creative_page - 1 || 
-                                            $i == $context->creative_page - 2 || $i == $context->creative_page + 1 || $i == $context->creative_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
-                                <?php elseif ($i < $context->creative_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
-                                    <?php $before_ellipsis_shown = TRUE; ?>
-                                <?php elseif ($i > $context->creative_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
-                                    <?php $after_ellipsis_shown = TRUE; ?>
-                                <?php endif; ?>
-                        <?php endfor; ?>
-                        <?php if($context->creative_page != $creative_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page + 1))); ?>" title="Go to the next page">next →</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <?php endif; ?>
     <?php endif; ?>
 	</div>
 </div>
+
+<script type="text/javascript">
+require(['jquery'], function ($) {
+    $(document).ready(function () {
+        $('#clear-search').click(function (click) {
+            window.location = window.location.href.split('?')[0];
+        });
+    });
+});
+</script>

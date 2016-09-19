@@ -39,7 +39,7 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
     <input style="width: auto;" value="<?php echo $context->search_term ?>" type="text" placeholder="Search..." name="search_term">
     <button type="submit" class="wdn-button wdn-button-triad">Search</button>
     <?php if (!empty($context->search_term)): ?>
-    <button id="clear-search" class="wdn-button wdn-button" type="button">Clear</button>
+    <button id="clear-search" class="wdn-button wdn-button" type="button">&times;</button>
     <?php endif; ?>
     </form>
     <?php if (\Auth::$current_user->isAdmin()): ?>

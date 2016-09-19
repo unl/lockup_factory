@@ -601,11 +601,98 @@ UNL Lockup Factory';
 		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Manage Lockups');
 
+		$page_size = 10;
+		$all_page = 1;
+		$all_offset = 0;
+		$my_page = 1;
+		$my_offset = 0;
+		$approver_page = 1;
+		$approver_offset = 0;
+		$creative_page = 1;
+		$creative_offset = 0;
+		if (array_key_exists('all_page', $get_params)) {
+			if ((int)($get_params['all_page']) >= 1) {
+				$all_page = (int)($get_params['all_page']);
+				$all_offset = ($all_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('page', $get_params)) {
+			if ((int)($get_params['page']) >= 1) {
+				$my_page = (int)($get_params['page']);
+				$my_offset = ($my_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('approver_page', $get_params)) {
+			if ((int)($get_params['approver_page']) >= 1) {
+				$approver_page = (int)($get_params['approver_page']);
+				$approver_offset = ($approver_page - 1) * $page_size;
+			} 
+		}
+
+		if (array_key_exists('creative_page', $get_params)) {
+			if ((int)($get_params['creative_page']) >= 1) {
+				$creative_page = (int)($get_params['creative_page']);
+				$creative_offset = ($creative_page - 1) * $page_size;
+			} 
+		}
+
+		$all_options = array('include' => array('user'), 'offset' => $all_offset, 'limit' => $page_size);
+		$my_options = array('include' => array('user'), 'offset' => $my_offset, 'limit' => $page_size, 
+			'conditions' => array('user_id = ?', \Auth::$current_user->id));
+		$approver_options = array('offset' => $approver_offset, 'limit' => $page_size, 
+			'conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given')));
+		$creative_options = array('offset' => $creative_offset, 'limit' => $page_size, 
+			'conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given')));
+
+		$search_term = array_key_exists('search_term', $get_params) ? $get_params['search_term'] : NULL;
+		$search_sql_string = '(organization LIKE ? OR subject LIKE ? OR organization_second_line LIKE ? OR subject_second_line LIKE ? OR 
+			acronym LIKE ? OR acronym_second_line LIKE ? OR acronym_subject LIKE ? OR extension_county LIKE ?)';
+		$search_array = array('%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%',
+			'%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%');
+
+		if (!empty($search_term)) {
+			$all_options['conditions'] = array_merge(array($search_sql_string), $search_array);
+			$my_options['conditions'][0] = $my_options['conditions'][0] . ' AND ' . $search_sql_string;
+			$my_options['conditions'] = array_merge($my_options['conditions'], $search_array);
+			$approver_options['conditions'][0] = $approver_options['conditions'][0] . ' AND ' . $search_sql_string;
+			$approver_options['conditions'] = array_merge($approver_options['conditions'], $search_array);
+			$creative_options['conditions'][0] = $creative_options['conditions'][0] . ' AND ' . $search_sql_string;
+			$creative_options['conditions'] = array_merge($creative_options['conditions'], $search_array);
+		}
+
 		$context = new \stdClass;
-		$context->all_lockups = Lockup::all(array('include' => array('user')));
-		$context->my_lockups = \Auth::$current_user->lockups;
-		$context->approver_lockups = Lockup::all(array('conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given'))));
-		$context->creative_approval_lockups = Lockup::all(array('conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given'))));
+		$context->all_lockups = Lockup::all($all_options);
+		unset($all_options['offset']);
+		unset($all_options['limit']);
+		unset($all_options['include']);
+		$context->all_count = Lockup::count($all_options);
+		$context->all_page = $all_page;
+
+		$context->my_lockups = Lockup::all($my_options);
+		unset($my_options['offset']);
+		unset($my_options['limit']);
+		unset($my_options['include']);
+		$context->my_count = Lockup::count($my_options);
+		$context->my_page = $my_page;
+
+		$context->approver_lockups = Lockup::all($approver_options);
+		unset($approver_options['offset']);
+		unset($approver_options['limit']);
+		unset($approver_options['include']);
+		$context->approver_count = Lockup::count($approver_options);
+		$context->approver_page = $approver_page;
+		
+		$context->creative_approval_lockups = Lockup::all($creative_options);
+		unset($creative_options['offset']);
+		unset($creative_options['limit']);
+		unset($creative_options['include']);
+		$context->creative_count = Lockup::count($creative_options);
+		$context->creative_page = $creative_page;
+
+		$context->page_size = $page_size;
+		$context->search_term = $search_term;
 
 		return self::renderView('manage_lockups', $context);
 	}

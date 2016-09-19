@@ -25,7 +25,7 @@ $router->map('GET', '/logout/?', function() {
 	\Auth::logout();
 });
 $router->map('GET', '/[a:controller]/[a:action]/?', function($controller, $action) {
-	\Core::callController($controller, $action);
+	\Core::callController($controller, $action, array_merge(array(), $_GET));
 });
 $router->map('GET', '/[a:controller]/[a:action]/[**:trailing]', function($controller, $action, $trailing) {
 	# convert "trailing" into an array of params
@@ -43,7 +43,7 @@ $router->map('GET', '/[a:controller]/[a:action]/[**:trailing]', function($contro
 		$even = !$even;
 	}
 
-	\Core::callController($controller, $action, $params);
+	\Core::callController($controller, $action, array_merge($_GET, $params));
 });
 $router->map('POST', '/[a:controller]/[a:action]/?', function($controller, $action) {
 	\Core::callController($controller, 'post' . ucfirst($action), $_POST);

@@ -14,7 +14,7 @@ if (file_exists($wdn_include_path)) {
 $page->doctitle = '<title>UNL Lockup Factory</title>';
 $page->titlegraphic = 'UNL Lockup Factory';
 $page->pagetitle = '';
-$page->affiliation = '<a href="http://ucomm.unl.edu">University Communications</a>';
+$page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
 # css
 $page->addStyleSheet('/css/main.css');

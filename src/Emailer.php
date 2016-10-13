@@ -28,6 +28,7 @@ class Emailer {
 			self::$mailer->addAddress($to);
 		}
 		self::$mailer->addReplyTo('lemburg@unl.edu', 'Tyler Lemburg');
+		self::$mailer->addReplyTo('mplioplis2@unl.edu', 'Marcelo Plioplis');
 		self::$mailer->isHTML(true);
 
 		self::$mailer->Subject = $subject;

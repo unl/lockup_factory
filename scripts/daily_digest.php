@@ -38,19 +38,16 @@ UNL Lockup Factory
 ';
 
 		Emailer::sendMail($approver->email, "UNL Lockup Factory Digest", $body);
-		echo 'sent mail to ' . $approver->email;
-		echo $body;
 	}
 }
 
 # also do this for creative
 $creative_emails = array('mplioplis2@unl.edu'); # configurable value
 
-# find all lockups that they have that are awaiting communicator approval 
-# (that were generated in the last 24 hours)
+# find all lockups that they have that are awaiting creative approval
 $lockups = Lockup::find('all', array('conditions' => 
-	array('creative_status = ? AND date_created >= ?', 'awaiting_approval', 
-	date('Y-m-d H:i:s', time() - 24*60*60))));
+	array('creative_status = ? AND status = ?', 
+		'awaiting_approval', 'approved')));
 
 # send an email if there is at least 1 of these
 if (count($lockups) > 0) {
@@ -70,6 +67,4 @@ UNL Lockup Factory
 ';
 
 	Emailer::sendMail($creative_emails, "UNL Lockup Factory Digest", $body);
-	echo 'sent mail to creative';
-	echo $body;
 }

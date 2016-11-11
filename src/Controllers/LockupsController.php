@@ -725,9 +725,22 @@ UNL Lockup Factory';
 	public static function libraryAction($get_params) {
 		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Lockup Library');
-
 		$context = new \stdClass;
-		$lockups = Lockup::all(array('conditions' => array('status' => Lockup::GENERATED), 'include' => array('user', 'approver')));
+
+		$all_options = array('conditions' => array('status' => Lockup::GENERATED), 'include' => array('user', 'approver'));
+
+		$search_term = array_key_exists('search_term', $get_params) ? $get_params['search_term'] : NULL;
+		$search_sql_string = '(organization LIKE ? OR subject LIKE ? OR organization_second_line LIKE ? OR subject_second_line LIKE ? OR 
+			acronym LIKE ? OR acronym_second_line LIKE ? OR acronym_subject LIKE ? OR extension_county LIKE ?)';
+		$search_array = array(Lockup::GENERATED,'%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%',
+			'%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%');
+
+		if (!empty($search_term)) {
+			$all_options['conditions'] = array_merge(array('status = ? AND ' . $search_sql_string), $search_array);
+		}
+
+		$context->search_term = $search_term;
+		$lockups = Lockup::all($all_options);
 
 		$context->lockups = array();
 		foreach ($lockups as $lockup) {

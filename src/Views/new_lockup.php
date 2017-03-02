@@ -177,19 +177,19 @@
                     <label for="organization">Organization</label>
                     <div class="tooltip wdn-icon-info italic hang-right">
                         <div>
-                            30 characters max
+                            31 characters max
                         </div>
                     </div>
-                    <input type="text" name="organization" id="organization" maxlength="30" value="<?php echo $context->lockup->organization; ?>">
+                    <input type="text" name="organization" id="organization" maxlength="31" value="<?php echo $context->lockup->organization; ?>">
                 </div>
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
                     <div class="tooltip wdn-icon-info italic hang-right">
                         <div>
-                            30 characters max
+                            31 characters max
                         </div>
                     </div>
-                    <input type="text" name="organization_second_line" maxlength="30" id="organization-second-line">
+                    <input type="text" name="organization_second_line" maxlength="31" id="organization-second-line">
                 </div>
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>

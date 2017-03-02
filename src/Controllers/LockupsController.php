@@ -85,29 +85,29 @@ class LockupsController extends Controller {
 		# validate the lengths of fields
 		switch ($lockup->style) {
 			case 'org_only':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				break;
 			case 'org_two_line':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				break;
 			case 'org_subject':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				break;
 			case 'org_subject_1_2':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
 				break;
 			case 'org_subject_2_1':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				break;
 			case 'org_subject_2_2':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
 				break;
@@ -256,29 +256,29 @@ class LockupsController extends Controller {
 		# validate the lengths of fields
 		switch ($lockup_model->style) {
 			case 'org_only':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				break;
 			case 'org_two_line':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				break;
 			case 'org_subject':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				break;
 			case 'org_subject_1_2':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
 				break;
 			case 'org_subject_2_1':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				break;
 			case 'org_subject_2_2':
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 30);
-				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 30);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+				$valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				$valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
 				break;

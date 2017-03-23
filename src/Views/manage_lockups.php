@@ -248,6 +248,18 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
                         <?php if ($lockup->isEditable()): ?>
                             <a class="wdn-button wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
                         <?php endif; ?>
+                        <?php if ($lockup->isGenerated() && $lockup->isPublished()): ?>
+                        <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="delete-form">
+                            <button type="submit" class="wdn-button">Unpublish</button>
+                            <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
+                        </form>
+                        <?php endif; ?>
+                        <?php if ($lockup->isGenerated() && !$lockup->isPublished()): ?>
+                        <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="delete-form">
+                            <button type="submit" class="wdn-button wdn-button-complement">Publish</button>
+                            <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
+                        </form>
+                        <?php endif; ?>
                         <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="delete-form">
                             <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">

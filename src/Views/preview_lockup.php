@@ -67,10 +67,11 @@
 					<div><a class="wdn-button wdn-button-triad" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
 				<?php endif; ?>
 				<?php if ($context->lockup->isFullyApproved() && ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin())): ?>
-				<form method="POST" action="/lockups/generate/" id="generate" class="wdn-center">
+				<form method="POST" action="/lockups/generate/" id="generate" class="wdn-center" style="background-color: #DDDDDD">
 					<div><label>You have permission to generate this lockup. Click "Generate Files" below to begin.</label></div>
 					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-					<button type="submit" class="wdn-button wdn-button-complement" id="submit-generate">Generate Files</button>
+					<button type="submit" class="wdn-button wdn-button-complement" id="submit-generate">Generate Files</button><br>
+					<input type="checkbox" checked="checked" id="publish-lockup" name="publish-lockup"><label for="publish-lockup">Publish lockup for all UNL users?</label>
 					<div style="display: none;" id="going-message">
 						<img src="/images/spinner.svg" style="height: 16px;">
 						<label style="font-style: italic;">And off we go! This will take a little while. Please be patient, we'll redirect you when this is complete.</label>

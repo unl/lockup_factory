@@ -38,6 +38,14 @@ class Lockup extends \ActiveRecord\Model {
 		return '/lockups/download/id/' . $this->id . '/';
 	}
 
+	public function getPublishURL() {
+		return '/lockups/publish/';
+	}
+
+	public function getUnpublishURL() {
+		return '/lockups/unpublish/';
+	}
+
 	public function getDeleteURL() {
 		return '/lockups/delete/';
 	}
@@ -118,6 +126,10 @@ class Lockup extends \ActiveRecord\Model {
 
 	public function isGenerated() {
 		return $this->status == self::GENERATED;
+	}
+
+	public function isPublished() {
+		return $this->published;
 	}
 
 	public function isEditable() {

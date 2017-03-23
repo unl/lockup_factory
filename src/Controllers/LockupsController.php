@@ -144,6 +144,8 @@ class LockupsController extends Controller {
 			\Core::redirect('/lockups/create/');
 		}
 
+		echo $model->date_created;
+
 		$model->save();
 		\Core::redirect($model->getPreviewURL());
 	}
@@ -539,6 +541,13 @@ UNL Lockup Factory';
 		$lockup_model->status = Lockup::GENERATED;
 		$lockup_model->creative_status = Lockup::GENERATED;
 		$lockup_model->version = self::LOCKUP_VERSION;
+
+		if (array_key_exists('publish_lockup', $post_params) && $post_params['publish_lockup'] == 'on') {
+			$lockup_model->published = TRUE;
+		} else {
+			$lockup_model->published = FALSE;
+		}
+
 		$lockup_model->save();
 
 		\Core::redirect($lockup_model->getDownloadURL());
@@ -585,6 +594,10 @@ UNL Lockup Factory';
 			$lockup = Lockup::find($id, array('include' => array('files', 'user')));
 		} catch (\ActiveRecord\RecordNotFound $e) {
 			\Core::notFound('That lockup could not be found.');
+		}
+
+		if ($lockup->published == FALSE && $lockup->user_id != \Auth::$current_user->id) {
+			\Core::notFound('That lockup is private.');
 		}
 
 		$context = new \stdClass;
@@ -722,12 +735,66 @@ UNL Lockup Factory';
 		\Core::redirect('/lockups/manage/');
 	}
 
+	public static function postPublishAction($post_params) {
+		self::requireAuth();
+
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup_model = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# the user must have submitted the lockup or be an admin to publish
+		if ($lockup_model->user_id != \Auth::$current_user->id && !(\Auth::$current_user->isAdmin())) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Unauthorized', 'Sorry, you are not allowed to publish that lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		$lockup_model->published = TRUE;
+		$lockup_model->save();
+
+		self::flashNotice(parent::NOTICE_LEVEL_SUCCESS, 'Lockup Published', 'Your lockup ' . $lockup_model->getName() . ' has been published to the Lockup Library.');
+		\Core::redirect('/lockups/manage/');
+	}
+
+	public static function postUnpublishAction($post_params) {
+		self::requireAuth();
+
+		if (empty($post_params['id'])) {
+			\Core::notFound();
+		}
+
+		$id = $post_params['id'];
+		try {
+			$lockup_model = Lockup::find($id);
+		} catch (\ActiveRecord\RecordNotFound $e) {
+			\Core::notFound('That lockup could not be found.');
+		}
+
+		# the user must have submitted the lockup or be an admin to publish
+		if ($lockup_model->user_id != \Auth::$current_user->id && !(\Auth::$current_user->isAdmin())) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Unauthorized', 'Sorry, you are not allowed to unpublish that lockup.');
+			\Core::redirect('/lockups/manage/');
+		}
+
+		$lockup_model->published = FALSE;
+		$lockup_model->save();
+
+		self::flashNotice(parent::NOTICE_LEVEL_SUCCESS, 'Lockup Unpublished', 'Your lockup ' . $lockup_model->getName() . ' has been removed from the Lockup Library.');
+		\Core::redirect('/lockups/manage/');
+	}
+
 	public static function libraryAction($get_params) {
 		self::requireAuth();
 		\Core::$breadcrumbs[] = array('text' => 'Lockup Library');
 		$context = new \stdClass;
 
-		$all_options = array('conditions' => array('status' => Lockup::GENERATED), 'include' => array('user', 'approver'));
+		$all_options = array('conditions' => array('status' => Lockup::GENERATED, 'published' => TRUE), 'include' => array('user', 'approver'));
 
 		$search_term = array_key_exists('search_term', $get_params) ? $get_params['search_term'] : NULL;
 		$search_sql_string = '(organization LIKE ? OR subject LIKE ? OR organization_second_line LIKE ? OR subject_second_line LIKE ? OR 

@@ -140,6 +140,16 @@
                 <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label>
+                            <input type="radio" name="type" value="ncta" id="type-ncta" <?php if ($context->lockup->style == 'ncta') echo 'checked="checked"'; ?>>
+                            <img class="horiz height-38" src="/images/ncta_example.png">
+                            <img class="vert" style="display: none;" src="/images/ncta_vert_example.png">
+                        </label><br>
+                        <label for="type-extension">
+                            NCTA lockup: primary hierarchy for NCTA and secondary hierarchy for the subject in a single line design.
+                        </label><br><br>
+                    </div>
+                    <div class="wdn-col">
+                        <label>
                             <input type="radio" name="type" value="extension_4h" id="type-extension-4h" <?php if ($context->lockup->style == 'extension_4h') echo 'checked="checked"'; ?>>
                             <img class="horiz" src="/images/extension_4h_vert_example.png">
                             <img class="vert" style="display: none;" src="/images/extension_4h_vert_example.png">
@@ -149,6 +159,8 @@
                             <br><em>*This lockup is vertical style ONLY.</em>
                         </label><br><br>
                     </div>
+                </div>
+                <div class="bp2-wdn-grid-set-halves">
                     <div class="wdn-col">
                         <label class="center">
                             <input type="radio" name="type" value="acronym_social" id="type-acronym-social" <?php if ($context->lockup->style == 'acronym_social') echo 'checked="checked"'; ?>>
@@ -427,6 +439,15 @@ require(['jquery'], function ($) {
                 $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();
                 $('#extension-county-field').show();
+            } else if ($('#type-ncta').is(':checked')) {
+                $('#organization-field').hide();
+                $('#organization-second-line-field').hide();
+                $('#subject-field').show();
+                $('#subject-second-line-field').hide();
+                $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
+                $('#acronym-subject-field').hide();
+                $('#extension-county-field').hide();
             } else if ($('#type-acronym-social').is(':checked')) {
                 $('#organization-field').hide();
                 $('#organization-second-line-field').hide();

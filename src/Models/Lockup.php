@@ -154,6 +154,8 @@ class Lockup extends \ActiveRecord\Model {
 			$name = $this->acronym . ' ' . $this->acronym_subject;
 		} else if (strrpos($this->style,'extension') === 0) {
 			$name = 'EXTENSION ' . $this->extension_county;
+		} else if (strrpos($this->style,'ncta') === 0) {
+			$name = 'NCTA ' . $this->subject;
 		}
 		if (empty(str_replace(' ', '', $name))) {
 			$name = "Lockup";

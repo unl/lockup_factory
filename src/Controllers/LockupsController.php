@@ -129,6 +129,9 @@ class LockupsController extends Controller {
 			case 'extension':
 				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
 				break;
+			case 'ncta':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
+				break;
 			case 'extension_4h':
 				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
 				break;
@@ -143,8 +146,6 @@ class LockupsController extends Controller {
 			$_SESSION['create_lockup'] = $model;
 			\Core::redirect('/lockups/create/');
 		}
-
-		echo $model->date_created;
 
 		$model->save();
 		\Core::redirect($model->getPreviewURL());
@@ -301,6 +302,9 @@ class LockupsController extends Controller {
 				break;
 			case 'extension':
 				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);
+				break;
+			case 'ncta':
+				$valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
 				break;
 			case 'extension_4h':
 				$valid = $valid && self::checkTextFieldLength($post_params, 'extension_county', 40);

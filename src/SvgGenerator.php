@@ -348,6 +348,29 @@ class SvgGenerator {
 						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
 					}
 					break;
+				case 'ncta':
+					$svg->setFontSVG(self::TUNGSTEN);
+					$svg->setLetterSpacing(0.05);
+					$svg->setFontSize(22);
+					$svg->setFontColor($main_text_color);
+					$svg->addText('NCTA', 44, -0.5);
+					$main_text_width = $svg->textDimensions('NCTA')[0];
+
+					$svg->setFontSVG(self::MERCURY);
+					$svg->setLetterSpacing(0);
+					$svg->setFontSize(8.125);
+					$svg->setFontColor($secondary_text_color);
+					$svg->addText($lockup->subject, 44, 26);
+					$secondary_text_width = $svg->textDimensions($lockup->subject)[0];
+
+					$svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 38");
+					$svg_file->height = 38;
+					$svg_file->width = max($main_text_width, $secondary_text_width) + 44;
+					if (!$preview) {
+						$svg->addAttribute('height', 38);
+						$svg->addAttribute('width', max($main_text_width, $secondary_text_width) + 44);
+					}
+					break;
 			}
 
 			$svg->addPath(self::HORIZ_N_R_CIRCLE, array('fill' => $n_main_color));
@@ -510,6 +533,21 @@ class SvgGenerator {
 					$svg->setFontColor($secondary_text_color);
 					$text_width = $svg->textDimensions($lockup->extension_county)[0];
 					$svg->addText($lockup->extension_county, 100 - ($text_width / 2), 60);
+					break;
+				case 'ncta':
+					$svg->setFontSVG(self::TUNGSTEN);
+					$svg->setLetterSpacing(0.05);
+					$svg->setFontSize(22);
+					$svg->setFontColor($main_text_color);
+					$text_width = $svg->textDimensions('NCTA')[0];
+					$svg->addText('NCTA', 100 - ($text_width / 2), 32);
+
+					$svg->setFontSVG(self::MERCURY);
+					$svg->setLetterSpacing(0);
+					$svg->setFontSize(8.125);
+					$svg->setFontColor($secondary_text_color);
+					$text_width = $svg->textDimensions($lockup->subject)[0];
+					$svg->addText($lockup->subject, 100 - ($text_width / 2), 60);
 					break;
 				case 'extension_4h':
 					$svg->setFontSVG(self::TUNGSTEN);

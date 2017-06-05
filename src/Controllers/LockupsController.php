@@ -239,9 +239,9 @@ class LockupsController extends Controller {
 		$lockup_model->organization_second_line = 	strtoupper($post_params['organization_second_line']);
 		$lockup_model->subject = 					$post_params['subject'];
 		$lockup_model->subject_second_line = 		$post_params['subject_second_line'];
-		$lockup_model->acronym = 					$post_params['acronym']);
-		$lockup_model->acronym_second_line = 		$post_params['acronym_second_line']);
-		$lockup_model->acronym_subject = 			$post_params['acronym_subject']);
+		$lockup_model->acronym = 					$post_params['acronym'];
+		$lockup_model->acronym_second_line = 		$post_params['acronym_second_line'];
+		$lockup_model->acronym_subject = 			$post_params['acronym_subject'];
 		$lockup_model->extension_county =	 		$post_params['extension_county'];
 		$lockup_model->style = 						$post_params['type'];
 		$lockup_model->user_id = 					\Auth::$current_user->id;

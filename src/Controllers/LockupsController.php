@@ -48,9 +48,9 @@ class LockupsController extends Controller {
 		$lockup->org_second_line = 			strtoupper($post_params['organization_second_line']);
 		$lockup->subject = 					$post_params['subject'];
 		$lockup->subject_second_line = 		$post_params['subject_second_line'];
-		$lockup->acronym = 					$post_params['acronym']);
-		$lockup->acronym_second_line = 		$post_params['acronym_second_line']);
-		$lockup->acronym_subject = 			$post_params['acronym_subject']);
+		$lockup->acronym = 					$post_params['acronym'];
+		$lockup->acronym_second_line = 		$post_params['acronym_second_line'];
+		$lockup->acronym_subject = 			$post_params['acronym_subject'];
 		$lockup->extension_county = 		$post_params['extension_county'];
 		$lockup->style = 					$post_params['type'];
 
@@ -223,9 +223,9 @@ class LockupsController extends Controller {
 		$lockup->org_second_line = 			strtoupper($post_params['organization_second_line']);
 		$lockup->subject = 					$post_params['subject'];
 		$lockup->subject_second_line = 		$post_params['subject_second_line'];
-		$lockup->acronym = 					$post_params['acronym']);
-		$lockup->acronym_second_line = 		$post_params['acronym_second_line']);
-		$lockup->acronym_subject = 			$post_params['acronym_subject']);
+		$lockup->acronym = 					$post_params['acronym'];
+		$lockup->acronym_second_line = 		$post_params['acronym_second_line'];
+		$lockup->acronym_subject = 			$post_params['acronym_subject'];
 		$lockup->extension_county = 		$post_params['extension_county'];
 		$lockup->style = 					$post_params['type'];
 

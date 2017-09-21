@@ -808,7 +808,7 @@ UNL Lockup Factory';
 			'%'.$search_term.'%','%'.$search_term.'%','%'.$search_term.'%');
 
 		if (!empty($search_term)) {
-			$all_options['conditions'] = array_merge(array('status = ? AND ' . $search_sql_string), $search_array);
+			$all_options['conditions'] = array_merge(array('status = ? AND published = 1 AND ' . $search_sql_string), $search_array);
 		}
 
 		$context->search_term = $search_term;

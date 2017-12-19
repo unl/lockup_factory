@@ -656,12 +656,15 @@ UNL Lockup Factory';
 			} 
 		}
 
-		$all_options = array('include' => array('user'), 'offset' => $all_offset, 'limit' => $page_size);
-		$my_options = array('include' => array('user'), 'offset' => $my_offset, 'limit' => $page_size, 
+		$select_fields = 'id, organization, subject, organization_second_line, subject_second_line, acronym, acronym_subject, extension_county,
+		style, user_id, date_created, status, approver_id, file_organization, file_organization_acronym, file_department, file_department_acronym,
+		creative_status, creative_feedback, communicator_feedback, version, acronym_second_line, published';
+		$all_options = array('select' => $select_fields, 'include' => array('user'), 'offset' => $all_offset, 'limit' => $page_size);
+		$my_options = array('select' => $select_fields, 'include' => array('user'), 'offset' => $my_offset, 'limit' => $page_size, 
 			'conditions' => array('user_id = ?', \Auth::$current_user->id));
-		$approver_options = array('offset' => $approver_offset, 'limit' => $page_size, 
+		$approver_options = array('select' => $select_fields, 'offset' => $approver_offset, 'limit' => $page_size, 
 			'conditions' => array('approver_id = ? AND status in (?)', \Auth::$current_user->id, array('awaiting_approval', 'feedback_given')));
-		$creative_options = array('offset' => $creative_offset, 'limit' => $page_size, 
+		$creative_options = array('select' => $select_fields, 'offset' => $creative_offset, 'limit' => $page_size, 
 			'conditions' => array('creative_status in (?)', array('awaiting_approval', 'feedback_given')));
 
 		$search_term = array_key_exists('search_term', $get_params) ? $get_params['search_term'] : NULL;

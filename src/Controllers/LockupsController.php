@@ -596,7 +596,10 @@ UNL Lockup Factory';
 		}
 		$id = $get_params['id'];
 		try {
-			$lockup = Lockup::find($id, array('include' => array('files', 'user')));
+			$select_fields = 'id, organization, subject, organization_second_line, subject_second_line, acronym, acronym_subject, extension_county,
+		style, user_id, date_created, status, approver_id, file_organization, file_organization_acronym, file_department, file_department_acronym,
+		creative_status, creative_feedback, communicator_feedback, version, acronym_second_line, published';
+			$lockup = Lockup::find($id, array('select' => $select_fields, 'include' => array('files', 'user')));
 		} catch (\ActiveRecord\RecordNotFound $e) {
 			\Core::notFound('That lockup could not be found.');
 		}

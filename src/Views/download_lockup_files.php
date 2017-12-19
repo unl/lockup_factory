@@ -52,7 +52,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php foreach ($context->lockup->files as $lockup_file): ?>
+			<?php foreach ($context->files as $lockup_file): ?>
 				<tr>
 					<td><a href="<?php echo $lockup_file->downloadLink(); ?>"><?php echo $lockup_file->getName(); ?></a></td>
 					<td><?php echo $lockup_file->type; ?>

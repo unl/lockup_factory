@@ -599,7 +599,7 @@ UNL Lockup Factory';
 			$select_fields = 'id, organization, subject, organization_second_line, subject_second_line, acronym, acronym_subject, extension_county,
 		style, user_id, date_created, status, approver_id, file_organization, file_organization_acronym, file_department, file_department_acronym,
 		creative_status, creative_feedback, communicator_feedback, version, acronym_second_line, published';
-			$lockup = Lockup::find($id, array('select' => $select_fields, 'include' => array('files', 'user')));
+			$lockup = Lockup::find($id, array('select' => $select_fields, 'include' => array('user')));
 
 			$files_fields = 'id, lockup_id, orientation, color, reverse, type';
 			$files = LockupFile::all(array('select' => $files_fields, 'conditions' => array('lockup_id' => $id)));

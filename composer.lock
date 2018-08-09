@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "c78edb53b57d623af394537be259da40",
+    "content-hash": "262079e51c08cef2c1fe3f454e4a9a60",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -55,25 +55,25 @@
                 "router",
                 "routing"
             ],
-            "time": "2014-04-16 09:44:40"
+            "time": "2014-04-16T09:44:40+00:00"
         },
         {
             "name": "jasig/phpcas",
-            "version": "1.3.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Jasig/phpCAS.git",
-                "reference": "8c74d21630f74278270830fdbdb0c1317bce3f0a"
+                "url": "https://github.com/apereo/phpCAS.git",
+                "reference": "7a949dee79aaadc16161d7d4863b5c0871546222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jasig/phpCAS/zipball/8c74d21630f74278270830fdbdb0c1317bce3f0a",
-                "reference": "8c74d21630f74278270830fdbdb0c1317bce3f0a",
+                "url": "https://api.github.com/repos/apereo/phpCAS/zipball/7a949dee79aaadc16161d7d4863b5c0871546222",
+                "reference": "7a949dee79aaadc16161d7d4863b5c0871546222",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": ">=5.0.0"
+                "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.10"
@@ -106,10 +106,11 @@
             "description": "Provides a simple API for authenticating users against a CAS server",
             "homepage": "https://wiki.jasig.org/display/CASC/phpCAS",
             "keywords": [
+                "apereo",
                 "cas",
                 "jasig"
             ],
-            "time": "2015-11-16 20:44:36"
+            "time": "2018-03-15T13:17:25+00:00"
         },
         {
             "name": "pear-pear.php.net/Archive_Tar",
@@ -360,7 +361,7 @@
                 "activerecord",
                 "orm"
             ],
-            "time": "2013-04-26 21:01:08"
+            "time": "2013-04-26T21:01:08+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -420,7 +421,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2016-06-06 09:09:37"
+            "time": "2016-06-06T09:09:37+00:00"
         },
         {
             "name": "tedivm/stash",
@@ -474,7 +475,7 @@
                 "redis",
                 "sessions"
             ],
-            "time": "2015-01-17 07:51:57"
+            "time": "2015-01-17T07:51:57+00:00"
         },
         {
             "name": "unl/php-dwt-parser",
@@ -525,7 +526,7 @@
             ],
             "description": "A PHP library for parsing DWT files and turning them into PHP classes",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2016-01-05 21:35:46"
+            "time": "2016-01-05T21:35:46+00:00"
         },
         {
             "name": "unl/php-wdn-templates",
@@ -578,7 +579,7 @@
             ],
             "description": "A PHP library for rendering the UNL templates",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2015-12-15 00:14:04"
+            "time": "2015-12-15T00:14:04+00:00"
         },
         {
             "name": "unl/unl_cache_lite",
@@ -605,7 +606,7 @@
                 "source": "https://github.com/unlpear/UNL_Cache_Lite/tree/v0.1.1",
                 "issues": "https://github.com/unlpear/UNL_Cache_Lite/issues"
             },
-            "time": "2014-08-25 20:13:04"
+            "time": "2014-08-25T20:13:04+00:00"
         },
         {
             "name": "zaininnari/html-minifier",
@@ -656,7 +657,7 @@
                 "HTML minify",
                 "php"
             ],
-            "time": "2015-08-18 14:10:55"
+            "time": "2015-08-18T14:10:55+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -708,7 +709,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-01-05 05:58:37"
+            "time": "2016-01-05T05:58:37+00:00"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -762,13 +763,15 @@
                 "events",
                 "zf2"
             ],
-            "time": "2016-01-12 23:27:48"
+            "time": "2016-01-12T23:27:48+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jasig/phpcas": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

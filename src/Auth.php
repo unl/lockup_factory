@@ -7,7 +7,7 @@ class Auth
     /**
      * @var array
      */
-    public static $directory_url = 'http://directory.unl.edu/';
+    public static $directory_url = 'https://directory.unl.edu/';
     public static $cas_cert_path = '/etc/pki/tls/cert.pem';
     public static $current_user = NULL;
     
@@ -140,8 +140,9 @@ class Auth
     public static function setUpClient()
     {
         if (!\phpCAS::isInitialized()) {
-            \phpCAS::client(CAS_VERSION_2_0, 'login.unl.edu', 443, 'cas');
-            \phpCAS::setCasServerCACert(self::$cas_cert_path);
+            \phpCAS::client(CAS_VERSION_2_0, 'shib.unl.edu', 443, 'idp/profile/cas');
+            //\phpCAS::setCasServerCACert(self::$cas_cert_path);
+            phpCAS::setNoCasServerValidation();
         }
     }
 }

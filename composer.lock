@@ -1,10 +1,18 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
+<<<<<<< HEAD
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "262079e51c08cef2c1fe3f454e4a9a60",
+=======
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "c18a1c31cb819b7c5f3ea472948cebab",
+    "content-hash": "f68c419bda084ecc631cee1945a2f889",
+>>>>>>> temp
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -110,7 +118,7 @@
                 "cas",
                 "jasig"
             ],
-            "time": "2018-03-15T13:17:25+00:00"
+            "time": "2018-03-15 13:17:25"
         },
         {
             "name": "pear-pear.php.net/Archive_Tar",

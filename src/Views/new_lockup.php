@@ -6,9 +6,9 @@
             <input type="hidden" id="id" name="id" value="<?php echo $context->lockup->id; ?>">
             <?php if (\Auth::$current_user === NULL): ?>
                 <fieldset>
-                    <legend>Log In</legend>
-                    <div><label>We'll need you to log in to your UNL account before creating a lockup.</label></div>
-                    <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
+                    <legend>Login</legend>
+                    <div><label>We'll need you to login to your My.UNL account before creating a lockup.</label></div>
+                    <a class="wdn-button wdn-button-brand" href="https://shib.unl.edu/idp/profile/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Login</a>
                 </fieldset>
             <?php endif; ?>
 
@@ -291,7 +291,7 @@
             <fieldset>
                 <legend>Communicator Approval</legend>
                 <label class="explanation">
-                    Lockup requests will be reviewed for approval by your designated Communicator Contact and University Communications.
+                    Lockup requests will be reviewed for approval by your designated Communicator Contact and University Communication.
                 </label><br>
                 <label for="approver">Select your Communicator Contact:</label>
                 <select id="approver" name="approver">
@@ -306,7 +306,7 @@
             <?php if (\Auth::$current_user !== NULL): ?>
                 <button type="submit" class="wdn-button wdn-button-brand">Submit Lockup</button>
             <?php else: ?>
-                <a class="wdn-button wdn-button-brand" href="https://login.unl.edu/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Log in to UNL</a>
+                <a class="wdn-button wdn-button-brand" href="https://shib.unl.edu/idp/profile/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Login</a>
             <?php endif; ?>
         </form>
 	</div>

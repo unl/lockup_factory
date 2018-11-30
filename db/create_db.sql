@@ -81,7 +81,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `date_created`, `role`, `name`, `organization`, `organization_acronym`)
 VALUES
-  (1, 's-tlembur1', '2016-02-29 19:59:57', 'admin', 'Tyler Lemburg', NULL, NULL),
+  (1, 's-tlembur1', '2016-02-29 19:59:57', NULL, 'Tyler Lemburg', NULL, NULL),
   (3, 'jbrown14', '2016-03-17 15:07:40', 'approver', 'Jill Brown', 'College of Agricultural Sciences and Natural Resources', 'CASNR & IANR'),
   (4, 'mriese3', '2016-03-17 15:07:40', 'approver', 'Michael Riese', 'Extension', 'EXT'),
   (5, 'kvondrak2', '2016-03-17 15:07:40', 'approver', 'Kerry McCullough-Vondrak', 'College of Architecture', 'ARCH'),

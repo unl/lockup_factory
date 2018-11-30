@@ -27,7 +27,7 @@ class Emailer {
 		} else {
 			self::$mailer->addAddress($to);
 		}
-		self::$mailer->addReplyTo('lemburg@unl.edu', 'Tyler Lemburg');
+		self::$mailer->addReplyTo('iim@listserv.unl.edu', 'IIM Devs');
 		self::$mailer->addReplyTo('mplioplis2@unl.edu', 'Marcelo Plioplis');
 		self::$mailer->isHTML(true);
 

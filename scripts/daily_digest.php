@@ -46,8 +46,8 @@ $creative_emails = array('mplioplis2@unl.edu'); # configurable value
 
 # find all lockups that they have that are awaiting creative approval
 $lockups = Lockup::find('all', array('conditions' => 
-	array('creative_status = ? AND status = ?', 
-		'awaiting_approval', 'approved')));
+	array('(creative_status = ? AND status = ?) OR (approver_id IS NULL AND creative_status = ? AND status = ?)', 
+		'awaiting_approval', 'approved', 'awaiting_approval', 'awaiting_approval')));
 
 # send an email if there is at least 1 of these
 if (count($lockups) > 0) {

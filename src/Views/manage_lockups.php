@@ -28,22 +28,22 @@
         $str = '?';
         return $str . implode('&', array_map('outputParam', array_keys($array), $array));
     }
+
+    // TODO: No 5.0 pagination css, so using 4.1
+    $context->scriptState->loadScriptDeclaration("WDN.loadCSS('https://unlcms.unl.edu/wdn/templates_4.1/css/modules/pagination.css');");
 ?>
-<script type="text/javascript">
-WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
-</script>
-<div class="wdn-band">
-	<div class="wdn-inner-wrapper">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
+	<div class="dcf-wrapper">
     <h3 class="page-title">Manage Lockups</h3>
     <form>
     <input style="width: auto;" value="<?php echo $context->search_term ?>" type="text" placeholder="Search..." name="search_term">
-    <button type="submit" class="wdn-button wdn-button-triad">Search</button>
+    <button type="submit" class="dcf-btn wdn-button-triad">Search</button>
     <?php if (!empty($context->search_term)): ?>
-    <button id="clear-search" class="wdn-button wdn-button" type="button">&times;</button>
+    <button id="clear-search" class="dcf-btn dcf-btn-primary" type="button">&times;</button>
     <?php endif; ?>
     </form>
     <?php if (\Auth::$current_user->isAdmin()): ?>
-        <h4 class="wdn-brand">All Lockups</h4>
+        <h4>All Lockups</h4>
         <table>
             <thead>
                 <tr>
@@ -69,22 +69,22 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
                     <td><?php echo $lockup->version; ?></td>
                     <td class="table-actions right" style="min-width: 250px;">
                         <?php if ($lockup->isEditable()): ?>
-                            <a class="wdn-button wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
+                            <a class="dcf-btn wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && $lockup->isPublished()): ?>
                         <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button">Unpublish</button>
+                            <button type="submit" class="dcf-btn">Unpublish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && !$lockup->isPublished()): ?>
                         <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button wdn-button-complement">Publish</button>
+                            <button type="submit" class="dcf-btn wdn-button-complement">Publish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
+                            <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                     </td>
@@ -123,7 +123,7 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
         <?php endif; ?>
     <?php else: ?>
         <?php if (\Auth::$current_user->isApprover()): ?>
-        <h4 class="wdn-brand">Lockups Needing Communicator Approval</h4>
+        <h4>Lockups Needing Communicator Approval</h4>
         <table>
             <thead>
                 <tr>
@@ -176,7 +176,7 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
         <br>
         <?php endif; ?>
         <?php if (\Auth::$current_user->isCreative()): ?>
-        <h4 class="wdn-brand">Lockups Needing Creative Approval</h4>
+        <h4>Lockups Needing Creative Approval</h4>
         <table>
             <thead>
                 <tr>
@@ -228,7 +228,7 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
         <?php endif; ?>
         <br>
         <?php endif; ?>
-        <h4 class="wdn-brand">My Lockups</h4>
+        <h4>My Lockups</h4>
         <table>
             <thead>
                 <tr>
@@ -246,22 +246,22 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
                     <td><?php echo $lockup->getFullStatusText(); ?></td>
                     <td class="table-actions right" style="min-width: 200px;">
                         <?php if ($lockup->isEditable()): ?>
-                            <a class="wdn-button wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
+                            <a class="dcf-btn wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && $lockup->isPublished()): ?>
                         <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button">Unpublish</button>
+                            <button type="submit" class="dcf-btn">Unpublish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && !$lockup->isPublished()): ?>
                         <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button wdn-button-complement">Publish</button>
+                            <button type="submit" class="dcf-btn wdn-button-complement">Publish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="wdn-button wdn-button-brand">Delete</button>
+                            <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                     </td>
@@ -303,12 +303,13 @@ WDN.loadCSS(WDN.getTemplateFilePath('css/modules/pagination.css'));
 	</div>
 </div>
 
-<script type="text/javascript">
+<?php
+$context->scriptState->loadScriptDeclaration("
 require(['jquery'], function ($) {
     $(document).ready(function () {
         $('#clear-search').click(function (click) {
             window.location = window.location.href.split('?')[0];
         });
     });
-});
-</script>
+});");
+?>

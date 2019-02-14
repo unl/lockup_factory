@@ -18,6 +18,10 @@ session_start();
 \Auth::setUser();
 
 $router = new AltoRouter();
+if (isset($routerBase) && !empty($routerBase)) {
+    $router->setBasePath($routerBase);
+}
+
 $router->map('GET', '/?', function() {
 	\Core::callController('home', 'view');
 });

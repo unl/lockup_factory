@@ -11,7 +11,6 @@ class Core {
 	public static function callController($controller, $action, $params = NULL) {
 		$controller_name = 'Controllers\\' . ucfirst($controller) . 'Controller';
 		$action_name = $action . 'Action';
-
 		# if that controller exists and it has that method, call it
 		$controller_filename = __DIR__ . '/' . str_replace(array('_', '\\'), '/', $controller_name) . '.php';
 		if (file_exists($controller_filename) && is_callable($controller_name.'::'.$action_name)) {
@@ -23,7 +22,7 @@ class Core {
 		}
 	}
 
-	public static function renderPage($main_content) {
+	public static function renderPage(Controllers\ControllerOutput $controllerOutput) {
 		include __DIR__ . '/Views/main_template.php';
 	}
 

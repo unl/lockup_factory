@@ -1,49 +1,41 @@
 <?php
 use UNL\Templates\Templates;
 
-$page = Templates::factory('Fixed', Templates::VERSION_4_1);
+$page = Templates::factory('App', Templates::VERSION_5);
 
 # this should be the server root, that is, the public directory of where static files come from.
-# the templates library will stick /wdn/templates_4.1 on there for you
+# the templates library will stick /wdn/templates_5.0 on there for you
 $wdn_include_path = \Core::ROOT . '/public';
-if (file_exists($wdn_include_path)) {
+if (file_exists($wdn_include_path . '/wdn/templates_5.0')) {
     $page->setLocalIncludePath($wdn_include_path);
 }
 
+$baseURL = '/';
+$appControlURL = '';
+
+// Hacks for when in dev env uncomment but don't commit
+// TODO: Make app dev friendly
+//$baseURL = $controllerOutput->getBaseURL();
+//$appControlURL = $baseURL;
+
 # Document titles
 $page->doctitle = '<title>UNL Lockup Factory</title>';
-$page->titlegraphic = 'UNL Lockup Factory';
-$page->pagetitle = '';
+$page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup Factory</a>';
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
 # css
-$page->addStyleSheet('/css/main.css');
+$page->addStyleSheet($baseURL . 'css/main.css');
 
 # javascript
-$page->head .= '<script type="text/javascript">WDN.setPluginParam("idm", "logout", "/logout/");</script>' . PHP_EOL;
-$page->head .= '<script type="text/javascript">WDN.initializePlugin("notice");</script>' . PHP_EOL;
-
-# other
-
-# breadcrumbs
-$page->breadcrumbs = '<ul>';
-foreach (\Core::$breadcrumbs as $crumb) { 
-	$page->breadcrumbs .= '<li>';
-	if (!empty($crumb['href'])) {
-		$page->breadcrumbs .= '<a href="' . $crumb['href'] . '">' . $crumb['text'] . '</a>';
-	} else {
-		$page->breadcrumbs .= $crumb['text'];
-	}
-	$page->breadcrumbs .= '</li>';
-}
-$page->breadcrumbs .= '</ul>';
+$page->addScriptDeclaration('WDN.setPluginParam("idm", "logout", "/logout/");');
+$page->addScriptDeclaration('WDN.initializePlugin("notice");');
 
 # navigation
-$page->navlinks = '
+$page->appcontrols = '
 <ul>
-<li><a href="/lockups/create/">New Lockup</a></li>
-<li><a href="/lockups/manage/">Manage Lockups</a></li>
-<li><a href="/lockups/library/">Lockup Library</a></li>
+<li><a href="' .  $appControlURL . '/lockups/create/">New Lockup</a></li>
+<li><a href="' .  $appControlURL . '/lockups/manage/">Manage Lockups</a></li>
+<li><a href="' .  $appControlURL . '/lockups/library/">Lockup Library</a></li>
 </ul>'
 ;
 
@@ -86,13 +78,18 @@ if (($notice = \Core::getNotice()) != NULL) {
         </div>
     ';
 }
-$page->maincontentarea .= $main_content;
 
+$page->maincontentarea .= $controllerOutput->getContent();
+$scriptState = $controllerOutput->getScriptState();
+if ($scriptState instanceof \Models\ScriptState) {
+    $scriptState->applyScripts($page);
+    $scriptState->applyScriptDeclarations($page);
+}
 
 # set footer
 ob_start();
 include \Core::ROOT . '/src/Views/localfooter.php';
-$page->leftcollinks = ob_get_clean();
+$page->contactinfo = ob_get_clean();
 
 # echo everything
 echo $page;

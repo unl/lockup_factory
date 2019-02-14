@@ -1,6 +1,10 @@
 <?php
 
-global $ENV = 'production';
+global $ENV;
+$ENV = 'production';
+
+// Set your project lives in a sub-folder of your web root
+//$routerBase = '/unl_lockup_factory/public/';
 
 # standard autoloader
 function autoload($class)

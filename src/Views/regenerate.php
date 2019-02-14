@@ -1,7 +1,7 @@
-<div class="wdn-band">
-	<div class="wdn-inner-wrapper">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
+	<div class="dcf-wrapper">
 		<h3 class="page-title">Please Regenerate This Lockup
-			<small class="wdn-subhead"><?php echo $context->lockup->getName(); ?></small>
+			<small class="dcf-subhead"><?php echo $context->lockup->getName(); ?></small>
 		</h3>
 		<div id="explanation">
 			<p>
@@ -15,11 +15,11 @@
 			<div class="vi-header">
 				Actions
 			</div>
-			<div class="tools wdn-center">
+			<div class="tools dcf-txt-center">
 				<?php if ($context->lockup->isFullyApproved()): ?>
-				<form method="POST" action="/lockups/regenerate/" id="regenerate" class="wdn-center">
+				<form method="POST" action="/lockups/regenerate/" id="regenerate" class="dcf-txt-center">
 					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-					<button type="submit" class="wdn-button wdn-button-triad" id="submit-regenerate">Regenerate Files</button>
+					<button type="submit" class="dcf-btn wdn-button-triad" id="submit-regenerate">Regenerate Files</button>
 					<div style="display: none;" id="going-message">
 						<img src="/images/spinner.svg" style="height: 16px;">
 						<label style="font-style: italic;">And off we go! This will take a little while. Please be patient, we'll redirect you when this is complete.</label>
@@ -31,7 +31,8 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<?php
+$context->scriptState->loadScriptDeclaration("
 require(['jquery'], function ($) {
     $(document).ready(function () {
     	$('#regenerate').submit(function (submit) {
@@ -39,5 +40,5 @@ require(['jquery'], function ($) {
     		$('#submit-regenerate').attr('disabled', 'disabled');
     	});
     }
-)});
-</script>
+)});");
+?>

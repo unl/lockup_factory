@@ -1,7 +1,7 @@
-<div class="wdn-band">
-	<div class="wdn-inner-wrapper">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
+	<div class="dcf-wrapper">
 	<h3 class="page-title">Your files for "<?php echo $context->lockup->getName(); ?>" Lockup</h3>
-	<div class="wdn-center">
+	<div class="dcf-txt-center">
    		<div class="center">
 			<img src="<?php echo $context->lockup->getPNGDownloadURL() ?>">
 		</div>

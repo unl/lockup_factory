@@ -1,15 +1,15 @@
-<div class="wdn-band">
-	<div class="wdn-inner-wrapper">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
+	<div class="dcf-wrapper">
 		<h3 class="page-title">Preview for "<?php echo $context->lockup->getName() ?>" Lockup</h3>
-		<div class="bp2-wdn-grid-set-halves wdn-center">
-            <div class="wdn-col center">
+		<div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw dcf-txt-center">
+            <div class="center">
             	<?php if ($context->lockup->style != 'acronym_subject_2_1' && $context->lockup->style != 'acronym_social' && $context->lockup->style != 'extension_4h'): ?>
 					<?php echo $context->lockup->preview_svg; ?>
 				<?php else: ?>
 					No horizontal version of this lockup.
 				<?php endif; ?>
 			</div>
-			<div class="wdn-col center">
+			<div class="center">
 				<?php echo $context->lockup->vert_preview_svg; ?>
 			</div>
 		</div>
@@ -44,13 +44,13 @@
 				$creative_approval_words = 'Feedback received';
 			}
 		?>
-		<div class="bp2-wdn-grid-set-halves">
-			<div class="wdn-col" style="margin-bottom: 1em;">
+		<div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
+			<div style="margin-bottom: 1em;">
 				<div class="approval-bug <?php echo $comm_approval_status; ?>">
 					<strong><?php echo $comm_approval_words; ?></strong><br>from<br><strong><?php echo $context->lockup->approver == NULL ? '(communicator not specified)' : $context->lockup->getApproverName(); ?></strong>
 				</div>
 			</div>
-			<div class="wdn-col">
+			<div>
 				<div class="approval-bug <?php echo $creative_approval_status; ?>">
 					<strong><?php echo $creative_approval_words; ?></strong><br>from<br><strong>University Communications</strong>
 				</div>
@@ -62,15 +62,15 @@
 			<div class="vi-header">
 			Actions
 			</div>
-			<div class="tools wdn-center">
+			<div class="tools dcf-txt-center">
 				<?php if ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin()): ?>
-					<div><a class="wdn-button wdn-button-triad" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
+					<div><a class="dcf-btn wdn-button-triad" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
 				<?php endif; ?>
 				<?php if ($context->lockup->isFullyApproved() && ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin())): ?>
-				<form method="POST" action="/lockups/generate/" id="generate" class="wdn-center" style="background-color: #DDDDDD">
+				<form method="POST" action="/lockups/generate/" id="generate" class="dcf-txt-center" style="background-color: #DDDDDD">
 					<div><label>You have permission to generate this lockup. Click "Generate Files" below to begin.</label></div>
 					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-					<button type="submit" class="wdn-button wdn-button-complement" id="submit-generate">Generate Files</button><br>
+					<button type="submit" class="dcf-btn wdn-button-complement" id="submit-generate">Generate Files</button><br>
 					<input type="checkbox" checked="checked" id="publish-lockup" name="publish-lockup"><label for="publish-lockup">Publish lockup for all UNL users?</label>
 					<div style="display: none;" id="going-message">
 						<img src="/images/spinner.svg" style="height: 16px;">
@@ -80,23 +80,23 @@
 				<br>
 				<?php endif; ?>
 
-				<form id="approve" class="wdn-center">
+				<form id="approve" class="dcf-txt-center">
 					<?php if ((\Auth::$current_user->isApprover() && $context->lockup->approver_id == \Auth::$current_user->id) || 
 								(\Auth::$current_user->isCreative()) || 
 								\Auth::$current_user->isAdmin()): ?>
-						<button id="approve-lockup" type="button" class="wdn-button wdn-button-complement">Approve This Lockup</button>
-						<button id="leave-feedback" type="button" class="wdn-button wdn-button-triad">Just Leave Feedback</button>
-						<button id="deny-lockup" type="button" class="wdn-button wdn-button-brand">Deny This Lockup</button>
+						<button id="approve-lockup" type="button" class="dcf-btn wdn-button-complement">Approve This Lockup</button>
+						<button id="leave-feedback" type="button" class="dcf-btn wdn-button-triad">Just Leave Feedback</button>
+						<button id="deny-lockup" type="button" class="dcf-btn dcf-btn-primary">Deny This Lockup</button>
 						<div style="margin-top: 1em;"><label>Feedback will be left whichever option you choose above.</label></div>
 					<?php endif; ?>
 					<fieldset>
 						<legend><?php if (\Auth::$current_user->isApprover() && $context->lockup->approver_id == \Auth::$current_user->id || \Auth::$current_user->isCreative()) echo 'Leave '; ?>Feedback</legend>
-						<div class="bp2-wdn-grid-set-halves">
-							<div class="wdn-col">
+						<div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
+							<div>
 								<label for="communicator-feedback">Communicator Feedback</label>
 								<textarea <?php if (!(\Auth::$current_user->isApprover() && $context->lockup->approver_id == \Auth::$current_user->id)) echo 'disabled' ?> rows=10 id="communicator-feedback" name="communicator_feedback"><?php echo $context->lockup->communicator_feedback; ?></textarea>
 							</div>
-							<div class="wdn-col">
+							<div>
 								<label for="creative-feedback">Creative Feedback</label>
 								<textarea <?php if (!\Auth::$current_user->isCreative()) echo 'disabled' ?> rows=10 id="creative-feedback" name="creative_feedback"><?php echo $context->lockup->creative_feedback; ?></textarea>
 							</div>
@@ -108,61 +108,62 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<?php
+$context->scriptState->loadScriptDeclaration("
 require(['jquery'], function ($) {
     $(document).ready(function () {
-    	$('#generate').submit(function (submit) {
-    		$('#going-message').show();
-    		$('#submit-generate').attr('disabled', 'disabled');
-    	});
+      $('#generate').submit(function (submit) {
+        $('#going-message').show();
+        $('#submit-generate').attr('disabled', 'disabled');
+      });
 
-    	$('#approve-lockup').click(function (click) {
-    		click.preventDefault();
-    		$.ajax({
-    			url: '/lockups/approve/',
-    			type: 'POST',
-    			data: {
-    				id: <?php echo $context->lockup->id; ?>,
-    				communicator_feedback: $('#communicator-feedback').val(),
-    				creative_feedback: $('#creative-feedback').val()
-    			},
-    			complete: function () {
-    				window.location = window.location;
-    			}
-    		});
-    	});
+      $('#approve-lockup').click(function (click) {
+        click.preventDefault();
+        $.ajax({
+          url: '/lockups/approve/',
+          type: 'POST',
+          data: {
+            id: " . $context->lockup->id . ",
+            communicator_feedback: $('#communicator-feedback').val(),
+            creative_feedback: $('#creative-feedback').val()
+          },
+          complete: function () {
+            window.location = window.location;
+          }
+        });
+      });
 
-    	$('#leave-feedback').click(function (click) {
-    		click.preventDefault();
-    		$.ajax({
-    			url: '/lockups/feedback/',
-    			type: 'POST',
-    			data: {
-    				id: <?php echo $context->lockup->id; ?>,
-    				communicator_feedback: $('#communicator-feedback').val(),
-    				creative_feedback: $('#creative-feedback').val()
-    			},
-    			complete: function () {
-    				window.location = window.location;
-    			}
-    		});
-    	});
+      $('#leave-feedback').click(function (click) {
+        click.preventDefault();
+        $.ajax({
+          url: '/lockups/feedback/',
+          type: 'POST',
+          data: {
+            id: " . $context->lockup->id . ",
+            communicator_feedback: $('#communicator-feedback').val(),
+            creative_feedback: $('#creative-feedback').val()
+          },
+          complete: function () {
+            window.location = window.location;
+          }
+        });
+      });
 
-    	$('#deny-lockup').click(function (click) {
-    		click.preventDefault();
-    		$.ajax({
-    			url: '/lockups/deny/',
-    			type: 'POST',
-    			data: {
-    				id: <?php echo $context->lockup->id; ?>,
-    				communicator_feedback: $('#communicator-feedback').val(),
-    				creative_feedback: $('#creative-feedback').val()
-    			},
-    			complete: function () {
-    				window.location = window.location;
-    			}
-    		});
-    	});
+      $('#deny-lockup').click(function (click) {
+        click.preventDefault();
+        $.ajax({
+          url: '/lockups/deny/',
+          type: 'POST',
+          data: {
+            id: " . $context->lockup->id . ",
+            communicator_feedback: $('#communicator-feedback').val(),
+            creative_feedback: $('#creative-feedback').val()
+          },
+          complete: function () {
+            window.location = window.location;
+          }
+        });
+      });
     });
-});
-</script>
+});");
+?>

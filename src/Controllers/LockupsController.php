@@ -405,7 +405,7 @@ CREATIVE FEEDBACK:
 COMMUNICATOR FEEDBACK:
 ' . $lockup->communicator_feedback . '
 <br><br>
-If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or IIM at 2-9878 or iim@listserv.unl.edu 
+If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
 <br><br>
 UNL Lockup Factory';
 
@@ -463,7 +463,7 @@ CREATIVE FEEDBACK:
 COMMUNICATOR FEEDBACK:
 ' . $lockup->communicator_feedback . '
 <br><br>
-If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or IIM at 2-9878 or iim@listserv.unl.edu
+If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
 <br><br>
 UNL Lockup Factory';
 
@@ -512,7 +512,7 @@ CREATIVE FEEDBACK:
 COMMUNICATOR FEEDBACK:
 ' . $lockup->communicator_feedback . '
 <br><br>
-If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or IIM at 2-9878 or iim@listserv.unl.edu
+If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
 <br><br>
 UNL Lockup Factory';
 

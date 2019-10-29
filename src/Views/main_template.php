@@ -23,6 +23,9 @@ $page->doctitle = '<title>UNL Lockup Factory</title>';
 $page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup Factory</a>';
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
+// Add WDN Deprecated Styles
+$page->head .= '<link rel="preload" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css"></noscript>';
+
 # css
 $page->addStyleSheet($baseURL . 'css/main.css');
 

@@ -1,6 +1,6 @@
 <div class="dcf-bleed">
     <section class="wdn-hero is-video center">
-        <video class="wdn-hero-video" autoplay="" loop="" poster="features/2016-spring-break-service/hero/2016-spring-break-service-md-min.jpg">
+        <video class="wdn-hero-video" muted autoplay="" loop="" poster="features/2016-spring-break-service/hero/2016-spring-break-service-md-min.jpg">
             <source src="/videos/factory_milling.mp4">
         </video>
         <div class="wdn-hero-text">

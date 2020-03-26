@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b362f88167fa055a89a87e1f728c7e04",
+    "content-hash": "1fee95e109099d7af553ddf71f0a989d",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -117,9 +117,7 @@
             "version": "1.4.3",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/Archive_Tar-1.4.3.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/Archive_Tar-1.4.3.tgz"
             },
             "require": {
                 "php": ">=5.2.0.0"
@@ -146,9 +144,7 @@
             "version": "1.4.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/Console_Getopt-1.4.1.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/Console_Getopt-1.4.1.tgz"
             },
             "require": {
                 "php": ">=5.4.0.0"
@@ -175,9 +171,7 @@
             "version": "2.3.0",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/HTTP_Request2-2.3.0.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/HTTP_Request2-2.3.0.tgz"
             },
             "require": {
                 "pear-pear.php.net/net_url2": ">=2.2.0.0",
@@ -206,9 +200,7 @@
             "version": "2.2.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/Net_URL2-2.2.1.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/Net_URL2-2.2.1.tgz"
             },
             "require": {
                 "php": ">=5.1.4.0"
@@ -235,9 +227,7 @@
             "version": "1.10.6",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/PEAR-1.10.6.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/PEAR-1.10.6.tgz"
             },
             "require": {
                 "ext-pcre": "*",
@@ -274,9 +264,7 @@
             "version": "1.1.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/Structures_Graph-1.1.1.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/Structures_Graph-1.1.1.tgz"
             },
             "require": {
                 "php": ">=5.3.0.0"
@@ -303,9 +291,7 @@
             "version": "1.4.3",
             "dist": {
                 "type": "file",
-                "url": "http://pear.php.net/get/XML_Util-1.4.3.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "http://pear.php.net/get/XML_Util-1.4.3.tgz"
             },
             "require": {
                 "ext-pcre": "*",
@@ -552,16 +538,16 @@
         },
         {
             "name": "unl/php-wdn-templates",
-            "version": "v5.0.0",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/unl/phpunltemplates.git",
-                "reference": "2928e588f409c2628bfeccb5293ab0dd34a506c5"
+                "reference": "44e42acb1252e41569810660998adb00d108aa06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/2928e588f409c2628bfeccb5293ab0dd34a506c5",
-                "reference": "2928e588f409c2628bfeccb5293ab0dd34a506c5",
+                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/44e42acb1252e41569810660998adb00d108aa06",
+                "reference": "44e42acb1252e41569810660998adb00d108aa06",
                 "shasum": ""
             },
             "require": {
@@ -569,8 +555,7 @@
                 "unl/php-dwt-parser": "1.0.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "^0.7.0"
+                "phpunit/phpunit": "~5.0"
             },
             "type": "library",
             "autoload": {
@@ -584,9 +569,14 @@
             ],
             "authors": [
                 {
+                    "name": "Jeff Sturek (jsturek)",
+                    "email": "jsturek8@unl.edu",
+                    "role": "Developer"
+                },
+                {
                     "name": "Kevin Abel (kabel)",
                     "email": "kabel2@unl.edu",
-                    "role": "Developer"
+                    "role": "Retired Developer"
                 },
                 {
                     "name": "Brett Bieber (saltybeagle)",
@@ -601,7 +591,7 @@
             ],
             "description": "A PHP library for rendering the UNL templates",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2018-12-12T16:32:30+00:00"
+            "time": "2020-03-11T16:55:17+00:00"
         },
         {
             "name": "unl/unl_cache_lite",
@@ -731,6 +721,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2016-04-20T17:26:42+00:00"
         },
         {
@@ -785,6 +776,7 @@
                 "events",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2018-04-25T15:33:34+00:00"
         }
     ],

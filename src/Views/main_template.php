@@ -1,12 +1,12 @@
 <?php
 use UNL\Templates\Templates;
 
-$page = Templates::factory('AppLocal', Templates::VERSION_5_1);
+$page = Templates::factory('AppLocal', Templates::VERSION_5_2);
 
 # this should be the server root, that is, the public directory of where static files come from.
-# the templates library will stick /wdn/templates_5.1 on there for you
+# the templates library will stick /wdn/templates_5.2 on there for you
 $wdn_include_path = \Core::ROOT . '/public';
-if (file_exists($wdn_include_path . '/wdn/templates_5.1')) {
+if (file_exists($wdn_include_path . '/wdn/templates_5.2')) {
     $page->setLocalIncludePath($wdn_include_path);
 }
 
@@ -24,7 +24,7 @@ $page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
 // Add WDN Deprecated Styles
-$page->head .= '<link rel="preload" href="/wdn/templates_5.1/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="/wdn/templates_5.1/css/deprecated.css"></noscript>';
+$page->head .= '<link rel="preload" href="/wdn/templates_5.2/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="/wdn/templates_5.2/css/deprecated.css"></noscript>';
 
 # css
 $page->addStyleSheet($baseURL . 'css/main.css');

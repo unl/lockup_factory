@@ -43,7 +43,7 @@
     <?php endif; ?>
     </form>
     <?php if (\Auth::$current_user->isAdmin()): ?>
-        <h4>All Lockups</h4>
+        <h4 class="dcf-mt-6">All Lockups</h4>
         <table>
             <thead>
                 <tr>

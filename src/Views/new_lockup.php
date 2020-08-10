@@ -301,7 +301,7 @@
             </fieldset>
             
             <?php if (\Auth::$current_user !== NULL): ?>
-                <button type="submit" class="dcf-btn dcf-btn-primary">Submit Lockup</button>
+                <button type="submit" class="dcf-btn dcf-btn-primary dcf-mt-6">Submit Lockup</button>
             <?php else: ?>
                 <a class="dcf-btn dcf-btn-primary" href="https://shib.unl.edu/idp/profile/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Login</a>
             <?php endif; ?>

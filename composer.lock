@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fee95e109099d7af553ddf71f0a989d",
+    "content-hash": "418f404820492c5b99c30c47e5f21fbf",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -538,16 +538,16 @@
         },
         {
             "name": "unl/php-wdn-templates",
-            "version": "v5.1.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/unl/phpunltemplates.git",
-                "reference": "44e42acb1252e41569810660998adb00d108aa06"
+                "reference": "7648850d99cc8b6f03307a7feca7d31b18e9a233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/44e42acb1252e41569810660998adb00d108aa06",
-                "reference": "44e42acb1252e41569810660998adb00d108aa06",
+                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/7648850d99cc8b6f03307a7feca7d31b18e9a233",
+                "reference": "7648850d99cc8b6f03307a7feca7d31b18e9a233",
                 "shasum": ""
             },
             "require": {
@@ -591,7 +591,7 @@
             ],
             "description": "A PHP library for rendering the UNL templates",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2020-03-11T16:55:17+00:00"
+            "time": "2020-07-16T20:24:35+00:00"
         },
         {
             "name": "unl/unl_cache_lite",

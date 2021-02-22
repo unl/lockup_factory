@@ -92,7 +92,7 @@ class Lockup extends \ActiveRecord\Model {
 		} else if ($this->isFullyApproved()) {
 			return 'Fully Approved';
 		} else {
-			return 'Communicator: ' . ucwords(join(explode('_', $this->status), ' ')) . ';<br>Creative: ' . ucwords(join(explode('_', $this->creative_status), ' '));
+			return 'Communicator: ' . ucwords(join(' ', explode('_', $this->status))) . ';<br>Creative: ' . ucwords(join(' ', explode('_', $this->creative_status)));
 		}
 	}
 

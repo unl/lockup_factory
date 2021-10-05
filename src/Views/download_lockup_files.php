@@ -3,7 +3,7 @@
 	<h3 class="page-title">Your files for "<?php echo $context->lockup->getName(); ?>" Lockup</h3>
 	<div class="dcf-txt-center">
    		<div class="center">
-			<img src="<?php echo $context->lockup->getPNGDownloadURL() ?>">
+			<img src="<?php echo $context->lockup->getPNGDownloadURL() ?>" role="presentation">
 		</div>
 		<br>
 		<table>

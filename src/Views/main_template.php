@@ -45,39 +45,32 @@ $page->appcontrols = '
 # set output
 $page->maincontentarea = '';
 if (($notice = \Core::getNotice()) != NULL) {
-    $class = '';
+    $class = 'dcf-notice-info';
     switch ($notice['level']) {
         case 'success':
-            $class = 'affirm';
+            $class = 'dcf-notice-success';
             break;
         case 'failure':
-            $class = 'negate';
+            $class = 'dcf-notice-danger';
             break;
         case 'alert':
-            $class = 'alert';
+            $class = 'dcf-notice-warning';
+            break;
+        default:
+            $class = 'dcf-notice-info';
             break;
     }
     $page->maincontentarea .= '
-        <div id="notice" class="wdn_notice ' . $class . '">
-            <div class="close">
-            <a href="#" title="Close this notice">Close this notice</a>
-            </div>
-            <div class="message">
-            <h4>' . $notice['header'] . '</h4>
+        <div id="notice" class="dcf-mt-4 dcf-notice ' . $class . '" hidden>
+            <h2>' . $notice['header'] . '</h2>
             <div class="message-content">' . html_entity_decode($notice['messageHTML']) . '</div>
-            </div>
         </div>
     ';
 } else {
     $page->maincontentarea .= '
-        <div id="notice" class="wdn_notice" style="display: none;">
-            <div class="close">
-            <a href="#" title="Close this notice">Close this notice</a>
-            </div>
-            <div class="message">
-            <h4>Message Header</h4>
+        <div id="notice" class="dcf-mt-4 dcf-notice dcf-notice-info" hidden style="display: none!important;">
+            <h2>Message Header</h2>
             <div class="message-content">Message Content</div>
-            </div>
         </div>
     ';
 }

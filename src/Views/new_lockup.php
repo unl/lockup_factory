@@ -180,11 +180,9 @@
 
             <fieldset id="lockup-text" class="dcf-pt-4 dcf-pb-4">
                 <legend class="dcf-legend">Lockup Text</legend>
-                <div id="text-notice" class="wdn_notice alert" style="display: none;" tab-index="-1">
-                    <div class="message">
-                        <h4>Invalid Text Entered</h4>
-                        <div class="message-content"></div>
-                    </div>
+                <div id="text-notice" class="dcf-mt-4 dcf-notice dcf-notice-warning" hidden style="display: none!important;" tab-index="-1">
+                    <h2>Invalid Text Entered</h2>
+                    <div class="message-content"></div>
                 </div>
 
                 <div id="organization-field">
@@ -343,11 +341,6 @@ require(['jquery'], function ($) {
                 $('#text-notice').show();
                 window.location.hash = 'text-notice';
             }
-        });
-
-        // temporary hack, until framework is improved to allow for closeable notices that do not remove HTML
-        $('#text-notice').click(function (click) {
-            $(this).fadeOut();
         });
 
         $('input[name=type]').change(function (change) {

@@ -6,18 +6,8 @@
 
 
 stages:
-  - Test
   - Security
   - QA
-
-
-PHP Lint:
-  stage: Test
-  image: its-registry.unl.edu/unl-its/docker-ci/php-lint:7.0
-  tags:
-    - dockeraa
-  script:
-    - php-lint -d . -e .php -e .phtml
 
 Dependency Check:
   stage: Security

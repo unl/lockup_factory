@@ -6,21 +6,8 @@
 
 
 stages:
-  - Security
   - QA
-
-Dependency Check:
-  stage: Security
-  image: its-registry.unl.edu/unl-its/docker-ci/dependency-check
-  tags:
-    - docker
-  cache:
-    policy: push
-    paths:
-      - dep_check
-  script:
-    - dependency-check -noupdate -f JSON -f XML -f HTML -s . -o ./dep_check --project "$CI_PROJECT_TITLE" --enableExperimental
-
+  
 SonarQube:
   stage: QA
   image: its-registry.unl.edu/unl-its/docker-ci/static-code-analysis:php

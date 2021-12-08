@@ -95,29 +95,31 @@
         <?php if ($all_pages > 1): ?>
             <div style="text-align: center;">
                 <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                    <nav class="dcf-pagination dcf-txt-center dcf-mt-3">
+                        <ol class="dcf-list-bare dcf-list-inline">
                         <?php if($context->all_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('all_page' => $context->all_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                            <li><a class="dcf-pagination-prev" href="<?php echo outputPages(array_merge($page_array, array('all_page' => $context->all_page - 1))); ?>">Prev</a></li>
                         <?php endif; ?>
                         <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
                         <?php for ($i = 1; $i <= $all_pages; $i++): ?>
                                 <?php if ($i == $context->all_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                    <li><span class="dcf-pagination-selected"><?php echo $i; ?></span></li>
                                 <?php elseif ($i <= 3 || $i >= $all_pages - 2 || $i == $context->all_page - 1 || 
                                             $i == $context->all_page - 2 || $i == $context->all_page + 1 || $i == $context->all_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('all_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('all_page' => $i))); ?>"><?php echo $i; ?></a></li>
                                 <?php elseif ($i < $context->all_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $before_ellipsis_shown = TRUE; ?>
                                 <?php elseif ($i > $context->all_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $after_ellipsis_shown = TRUE; ?>
                                 <?php endif; ?>
                         <?php endfor; ?>
                         <?php if($context->all_page != $all_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('all_page' => $context->all_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                            <li><a class="dcf-pagination-next" href="<?php echo outputPages(array_merge($page_array, array('all_page' => $context->all_page + 1))); ?>">Next</a></li>
                         <?php endif; ?>
-                    </ul>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         <?php endif; ?>
@@ -147,29 +149,31 @@
         <?php if ($approver_pages > 1): ?>
             <div style="text-align: center;">
                 <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                    <nav class="dcf-pagination dcf-txt-center dcf-mt-3">
+                        <ol class="dcf-list-bare dcf-list-inline">
                         <?php if($context->approver_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                            <li><a class="dcf-pagination-prev" href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page - 1))); ?>">Prev</a></li>
                         <?php endif; ?>
                         <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
                         <?php for ($i = 1; $i <= $approver_pages; $i++): ?>
                                 <?php if ($i == $context->approver_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                    <li><span class="dcf-pagination-selected"><?php echo $i; ?></span></li>
                                 <?php elseif ($i <= 3 || $i >= $approver_page - 2 || $i == $context->approver_page - 1 || 
                                             $i == $context->approver_page - 2 || $i == $context->approver_page + 1 || $i == $context->approver_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $i))); ?>"><?php echo $i; ?></a></li>
                                 <?php elseif ($i < $context->approver_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $before_ellipsis_shown = TRUE; ?>
                                 <?php elseif ($i > $context->approver_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $after_ellipsis_shown = TRUE; ?>
                                 <?php endif; ?>
                         <?php endfor; ?>
                         <?php if($context->approver_page != $approver_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                            <li><a class="dcf-pagination-next" href="<?php echo outputPages(array_merge($page_array, array('approver_page' => $context->approver_page + 1))); ?>">Next</a></li>
                         <?php endif; ?>
-                    </ul>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         <?php endif; ?>
@@ -200,29 +204,31 @@
         <?php if ($creative_pages > 1): ?>
             <div style="text-align: center;">
                 <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                    <nav class="dcf-pagination dcf-txt-center dcf-mt-3">
+                        <ol class="dcf-list-bare dcf-list-inline">
                         <?php if($context->creative_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                            <li><a class="dcf-pagination-prev" href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page - 1))); ?>">Prev</a></li>
                         <?php endif; ?>
                         <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
                         <?php for ($i = 1; $i <= $creative_pages; $i++): ?>
                                 <?php if ($i == $context->creative_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                    <li><span class="dcf-pagination-selected"><?php echo $i; ?></span></li>
                                 <?php elseif ($i <= 3 || $i >= $context->creative_page - 2 || $i == $context->creative_page - 1 || 
                                             $i == $context->creative_page - 2 || $i == $context->creative_page + 1 || $i == $context->creative_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $i))); ?>"><?php echo $i; ?></a></li>
                                 <?php elseif ($i < $context->creative_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $before_ellipsis_shown = TRUE; ?>
                                 <?php elseif ($i > $context->creative_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $after_ellipsis_shown = TRUE; ?>
                                 <?php endif; ?>
                         <?php endfor; ?>
                         <?php if($context->creative_page != $creative_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                            <li><a class="dcf-pagination-next" href="<?php echo outputPages(array_merge($page_array, array('creative_page' => $context->creative_page + 1))); ?>">Next</a></li>
                         <?php endif; ?>
-                    </ul>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         <?php endif; ?>
@@ -272,29 +278,31 @@
         <?php if ($my_pages > 1): ?>
             <div style="text-align: center;">
                 <div style="display: inline-block;">
-                    <ul id="pending-pagination" class="wdn_pagination" data-tab="pending" style="padding-left: 0;">
+                    <nav class="dcf-pagination dcf-txt-center dcf-mt-3">
+                        <ol class="dcf-list-bare dcf-list-inline">
                         <?php if($context->my_page != 1): ?>
-                            <li class="arrow prev"><a href="<?php echo outputPages(array_merge($page_array, array('page' => $context->my_page - 1))); ?>" title="Go to the previous page">← prev</a></li>
+                            <li><a class="dcf-pagination-prev" href="<?php echo outputPages(array_merge($page_array, array('page' => $context->my_page - 1))); ?>">Prev</a></li>
                         <?php endif; ?>
                         <?php $before_ellipsis_shown = FALSE; $after_ellipsis_shown = FALSE; ?>
                         <?php for ($i = 1; $i <= $my_pages; $i++): ?>
                                 <?php if ($i == $context->my_page): ?>
-                                    <li class="selected"><span><?php echo $i; ?></span></li>
+                                    <li><span class="dcf-pagination-selected"><?php echo $i; ?></span></li>
                                 <?php elseif ($i <= 3 || $i >= $my_pages - 2 || $i == $context->my_page - 1 || 
                                             $i == $context->my_page - 2 || $i == $context->my_page + 1 || $i == $context->my_page + 2): ?>
-                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('page' => $i))); ?>" title="Go to page <?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                    <li><a href="<?php echo outputPages(array_merge($page_array, array('page' => $i))); ?>"><?php echo $i; ?></a></li>
                                 <?php elseif ($i < $context->my_page && !$before_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $before_ellipsis_shown = TRUE; ?>
                                 <?php elseif ($i > $context->my_page && !$after_ellipsis_shown): ?>
-                                    <li><span class="ellipsis">...</span></li>
+                                    <li><span class="dcf-pagination-ellipsis">...</span></li>
                                     <?php $after_ellipsis_shown = TRUE; ?>
                                 <?php endif; ?>
                         <?php endfor; ?>
                         <?php if($context->my_page != $my_pages): ?>
-                            <li class="arrow next"><a href="<?php echo outputPages(array_merge($page_array, array('page' => $context->my_page + 1))); ?>" title="Go to the next page">next →</a></li>
+                            <li><a  class="dcf-pagination-next" href="<?php echo outputPages(array_merge($page_array, array('page' => $context->my_page + 1))); ?>">Next</a></li>
                         <?php endif; ?>
-                    </ul>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         <?php endif; ?>
@@ -305,6 +313,7 @@
 
 <?php
 $context->scriptState->loadScriptDeclaration("
+WDN.initializePlugin('pagination');
 require(['jquery'], function ($) {
     $(document).ready(function () {
         $('#clear-search').click(function (click) {

@@ -6,7 +6,7 @@
 			<img src="<?php echo $context->lockup->getPNGDownloadURL() ?>" role="presentation">
 		</div>
 		<br>
-		<table>
+        <table class="dcf-table dcf-table-bordered">
 			<thead>
 				<tr>
 					<th>Download Entire Package as ZIP</th>
@@ -19,7 +19,7 @@
 			</tbody>
 		</table>
 		<br>
-		<table>
+		<table class="dcf-table dcf-table-bordered">
 			<thead>
 				<tr>
 					<th><strong>Please Read!</strong> Instructions for Pantone Lockups</th>
@@ -44,7 +44,7 @@
 			</tbody>
 		</table>
 		<br>
-    	<table>
+        <table class="dcf-table dcf-table-bordered">
 			<thead>
 				<tr>
 					<th>Download Specific File</th>

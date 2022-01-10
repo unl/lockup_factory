@@ -64,15 +64,21 @@
 			</div>
 			<div class="tools dcf-txt-center">
 				<?php if ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin()): ?>
-					<div><a class="dcf-btn wdn-button-triad" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
+					<div><a class="dcf-btn dcf-btn-secondary" href="<?php echo $context->lockup->getEditURL(); ?>">Edit Lockup</a></div><br>
 				<?php endif; ?>
 				<?php if ($context->lockup->isFullyApproved() && ($context->lockup->user_id == \Auth::$current_user->id || \Auth::$current_user->isAdmin())): ?>
-				<form method="POST" action="/lockups/generate/" id="generate" class="dcf-txt-center" style="background-color: #DDDDDD">
-					<div><label>You have permission to generate this lockup. Click "Generate Files" below to begin.</label></div>
-					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-					<button type="submit" class="dcf-btn wdn-button-complement" id="submit-generate">Generate Files</button><br>
-					<input type="checkbox" checked="checked" id="publish-lockup" name="publish-lockup"><label for="publish-lockup">Publish lockup for all UNL users?</label>
-					<div style="display: none;" id="going-message">
+
+				<form method="POST" action="/lockups/generate/" id="generate" class="dcf-form dcf-txt-center dcf-p-4 dcf-b-1 dcf-b-solid dcf-m-auto" style="max-width: 500px">
+					<p>You have permission to generate this lockup. Click "Generate Files" below to begin.</p>
+					<input type="hidden" value="<?php echo $context->lockup->id ?>" name="id">
+					<button type="submit" class="dcf-btn dcf-btn-secondary" id="submit-generate">Generate Files</button>
+                    <div class="dcf-form-group">
+                        <div class="dcf-mt-3 dcf-input-checkbox dcf-m-auto" style="max-width: 300px">
+                            <input type="checkbox" checked="checked" id="publish-lockup" name="publish-lockup">
+                            <label for="publish-lockup">Publish lockup for all UNL users?</label>
+                        </div>
+                    </div>
+                    <div style="display: none;" id="going-message">
 						<img src="/images/spinner.svg" style="height: 16px;">
 						<label style="font-style: italic;">And off we go! This will take a little while. Please be patient, we'll redirect you when this is complete.</label>
 					</div>
@@ -80,12 +86,12 @@
 				<br>
 				<?php endif; ?>
 
-				<form id="approve" class="dcf-txt-center">
+				<form id="approve" class="dcf-form dcf-txt-center">
 					<?php if ((\Auth::$current_user->isApprover() && $context->lockup->approver_id == \Auth::$current_user->id) || 
 								(\Auth::$current_user->isCreative()) || 
 								\Auth::$current_user->isAdmin()): ?>
-						<button id="approve-lockup" type="button" class="dcf-btn wdn-button-complement">Approve This Lockup</button>
-						<button id="leave-feedback" type="button" class="dcf-btn wdn-button-triad">Just Leave Feedback</button>
+						<button id="approve-lockup" type="button" class="dcf-btn dcf-btn-secondary">Approve This Lockup</button>
+						<button id="leave-feedback" type="button" class="dcf-btn dcf-btn-secondary">Just Leave Feedback</button>
 						<button id="deny-lockup" type="button" class="dcf-btn dcf-btn-primary">Deny This Lockup</button>
 						<div style="margin-top: 1em;"><label>Feedback will be left whichever option you choose above.</label></div>
 					<?php endif; ?>

@@ -9,7 +9,7 @@
         "tedivm/stash": "0.12.*",
         "unl/php-wdn-templates": "^5.3",
         "unl/unl_cache_lite": "0.1.*",
-        "php-activerecord/php-activerecord": "^1.1",
+        "unl/php-activerecord": "dev-master",
         "altorouter/altorouter": "1.1.0",
         "phpmailer/phpmailer": "^5.2"
     },

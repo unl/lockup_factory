@@ -244,7 +244,7 @@ class Lockup extends \ActiveRecord\Model {
 		$frontend_output = array();
 
 		$return_var = NULL;
-		
+
 		exec('inkscape -h800 --export-png=' . $new_png . ' ' . $starting_svg . ' 2>&1', $backend_output, $return_var);
 		if ($return_var == 0) {
 			# attempt to write this to the DB
@@ -363,13 +363,18 @@ class Lockup extends \ActiveRecord\Model {
 		}
 
 		# cleanup these files
-		unlink($new_jpg);
-		unlink($new_pdf);
-		unlink($new_png);
-		unlink($new_eps);
-		unlink($new_svg);
+		$this->removeFile($new_jpg);
+		$this->removeFile($new_pdf);
+		$this->removeFile($new_png);
+		$this->removeFile($new_eps);
+		$this->removeFile($new_svg);
 
 		return $frontend_output;
 	}
 
+	private function removeFile($file) {
+		if (file_exists($file)) {
+			unlink($file);
+		}
+	}
 }

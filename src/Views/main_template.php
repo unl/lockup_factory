@@ -24,7 +24,7 @@ $page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
 # css
-$page->addStyleSheet($baseURL . 'css/main.css');
+$page->addStyleSheet($baseURL . 'css/main.css?v=20220110');
 
 # javascript
 $page->addScriptDeclaration('WDN.setPluginParam("idm", "logout", "/logout/");');

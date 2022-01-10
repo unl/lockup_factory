@@ -1,10 +1,10 @@
 <div class="dcf-bleed">
-    <section class="wdn-hero is-video center">
-        <video class="wdn-hero-video" muted autoplay="" loop="" poster="features/2016-spring-break-service/hero/2016-spring-break-service-md-min.jpg">
+    <section class="lockup-hero is-video center">
+        <video class="lockup-hero-video" muted autoplay="" loop="" poster="features/2016-spring-break-service/hero/2016-spring-break-service-md-min.jpg">
             <source src="/videos/factory_milling.mp4">
         </video>
-        <div class="wdn-hero-text">
-            <h2 class="wdn-hero-heading">
+        <div class="lockup-hero-text">
+            <h2 class="lockup-hero-heading">
                 <span class="hero-line">UNL Lockup Factory</span>
             </h2>
         </div>

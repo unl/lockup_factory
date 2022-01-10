@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3c7a8fc44c3bf68a94eb2d5dcbe7244",
+    "content-hash": "2cf28c0ff1c77bb4defe29104a3e1654",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -299,50 +299,6 @@
             "time": "2019-12-10T10:24:42+00:00"
         },
         {
-            "name": "php-activerecord/php-activerecord",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jpfuentes2/php-activerecord.git",
-                "reference": "e6d2dad090617336dee730190be0294c5f132c69"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jpfuentes2/php-activerecord/zipball/e6d2dad090617336dee730190be0294c5f132c69",
-                "reference": "e6d2dad090617336dee730190be0294c5f132c69",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "pear/log": "~1.12",
-                "pear/pear_exception": "1.0-beta1",
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "ActiveRecord.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "php-activerecord is an open source ORM library based on the ActiveRecord pattern.",
-            "homepage": "http://www.phpactiverecord.org/",
-            "keywords": [
-                "activerecord",
-                "orm"
-            ],
-            "support": {
-                "issues": "https://github.com/jpfuentes2/php-activerecord/issues",
-                "source": "https://github.com/jpfuentes2/php-activerecord/tree/master"
-            },
-            "time": "2017-06-11T22:05:37+00:00"
-        },
-        {
             "name": "phpmailer/phpmailer",
             "version": "v5.2.27",
             "source": {
@@ -474,6 +430,50 @@
             "time": "2015-01-17T07:51:57+00:00"
         },
         {
+            "name": "unl/php-activerecord",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/unl/php-activerecord.git",
+                "reference": "7f5b9484ca093890186853ba435727909746540d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/unl/php-activerecord/zipball/7f5b9484ca093890186853ba435727909746540d",
+                "reference": "7f5b9484ca093890186853ba435727909746540d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "pear/log": "~1.12",
+                "pear/pear_exception": "1.0-beta1",
+                "phpunit/phpunit": "4.*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "ActiveRecord.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Fork of php-activerecord/php-activerecord is an open source ORM library based on the ActiveRecord pattern.",
+            "homepage": "http://www.phpactiverecord.org/",
+            "keywords": [
+                "activerecord",
+                "orm"
+            ],
+            "support": {
+                "source": "https://github.com/unl/php-activerecord/tree/master"
+            },
+            "time": "2021-12-21T20:24:37+00:00"
+        },
+        {
             "name": "unl/php-dwt-parser",
             "version": "v1.0.1",
             "source": {
@@ -526,16 +526,16 @@
         },
         {
             "name": "unl/php-wdn-templates",
-            "version": "v5.3.0",
+            "version": "v5.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/unl/phpunltemplates.git",
-                "reference": "090d6c7c8ac8ab2828165bd06574ecb48caf1a88"
+                "reference": "6e8d54a1405f69da508520c53dc059e66efa5ac1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/090d6c7c8ac8ab2828165bd06574ecb48caf1a88",
-                "reference": "090d6c7c8ac8ab2828165bd06574ecb48caf1a88",
+                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/6e8d54a1405f69da508520c53dc059e66efa5ac1",
+                "reference": "6e8d54a1405f69da508520c53dc059e66efa5ac1",
                 "shasum": ""
             },
             "require": {
@@ -581,9 +581,9 @@
             "homepage": "http://wdn.unl.edu/",
             "support": {
                 "issues": "https://github.com/unl/phpunltemplates/issues",
-                "source": "https://github.com/unl/phpunltemplates/tree/v5.3.0"
+                "source": "https://github.com/unl/phpunltemplates/tree/v5.3.3"
             },
-            "time": "2021-01-27T17:05:21+00:00"
+            "time": "2021-03-29T21:02:08+00:00"
         },
         {
             "name": "unl/unl_cache_lite",
@@ -776,11 +776,12 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "jasig/phpcas": 20
+        "jasig/phpcas": 20,
+        "unl/php-activerecord": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

@@ -28,23 +28,23 @@
         $str = '?';
         return $str . implode('&', array_map('outputParam', array_keys($array), $array));
     }
-
-    // TODO: No 5.0 pagination css, so using 4.1
-    $context->scriptState->loadScriptDeclaration("WDN.loadCSS('https://unlcms.unl.edu/wdn/templates_4.1/css/modules/pagination.css');");
 ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
 	<div class="dcf-wrapper">
     <h3 class="page-title">Manage Lockups</h3>
-    <form>
-    <input style="width: auto;" value="<?php echo $context->search_term ?>" type="text" placeholder="Search..." name="search_term">
-    <button type="submit" class="dcf-btn wdn-button-triad">Search</button>
-    <?php if (!empty($context->search_term)): ?>
-    <button id="clear-search" class="dcf-btn dcf-btn-primary" type="button">&times;</button>
-    <?php endif; ?>
+    <form class="dcf-form">
+        <label for="search-term">Search Lockups</label>
+        <div class="dcf-input-group">
+            <input value="<?php echo $context->search_term ?>" type="text" name="search_term" id="search-term">
+            <button type="submit" class="dcf-btn dcf-btn-primary" >Search</button>
+	        <?php if (!empty($context->search_term)): ?>
+                <button id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">&times;</button>
+	        <?php endif; ?>
+        </div>
     </form>
     <?php if (\Auth::$current_user->isAdmin()): ?>
         <h4 class="dcf-mt-6">All Lockups</h4>
-        <table>
+        <table class="dcf-table dcf-table-bordered">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -69,21 +69,21 @@
                     <td><?php echo $lockup->version; ?></td>
                     <td class="table-actions right" style="min-width: 250px;">
                         <?php if ($lockup->isEditable()): ?>
-                            <a class="dcf-btn wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
+                            <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && $lockup->isPublished()): ?>
-                        <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="dcf-btn">Unpublish</button>
+                        <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="dcf-form delete-form">
+                            <button type="submit" class="dcf-btn dcf-btn-primary">Unpublish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && !$lockup->isPublished()): ?>
-                        <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="dcf-btn wdn-button-complement">Publish</button>
+                        <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="dcf-form delete-form">
+                            <button type="submit" class="dcf-btn dcf-btn-secondary">Publish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
-                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="delete-form">
+                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="dcf-form delete-form">
                             <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
@@ -126,7 +126,7 @@
     <?php else: ?>
         <?php if (\Auth::$current_user->isApprover()): ?>
         <h4>Lockups Needing Communicator Approval</h4>
-        <table>
+        <table class="dcf-table dcf-table-bordered">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -181,7 +181,7 @@
         <?php endif; ?>
         <?php if (\Auth::$current_user->isCreative()): ?>
         <h4>Lockups Needing Creative Approval</h4>
-        <table>
+        <table class="dcf-table dcf-table-bordered">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -235,7 +235,7 @@
         <br>
         <?php endif; ?>
         <h4>My Lockups</h4>
-        <table>
+        <table class="dcf-table dcf-table-bordered">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -252,21 +252,21 @@
                     <td><?php echo $lockup->getFullStatusText(); ?></td>
                     <td class="table-actions right" style="min-width: 200px;">
                         <?php if ($lockup->isEditable()): ?>
-                            <a class="dcf-btn wdn-button-triad" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
+                            <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lockup->getEditURL(); ?>">Edit</a>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && $lockup->isPublished()): ?>
-                        <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="dcf-btn">Unpublish</button>
+                        <form action="<?php echo $lockup->getUnpublishURL(); ?>" method="POST" class="dcf-form delete-form">
+                            <button type="submit" class="dcf-btn dcf-btn-primary">Unpublish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
                         <?php if ($lockup->isGenerated() && !$lockup->isPublished()): ?>
-                        <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="delete-form">
-                            <button type="submit" class="dcf-btn wdn-button-complement">Publish</button>
+                        <form action="<?php echo $lockup->getPublishURL(); ?>" method="POST" class="dcf-form delete-form">
+                            <button type="submit" class="dcf-btn dcf-btn-secondary">Publish</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>
                         <?php endif; ?>
-                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="delete-form">
+                        <form action="<?php echo $lockup->getDeleteURL(); ?>" method="POST" class="dcf-form delete-form">
                             <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
                             <input type="hidden" name="id" value="<?php echo $lockup->id ?>">
                         </form>

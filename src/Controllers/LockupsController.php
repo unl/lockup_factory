@@ -147,7 +147,12 @@ class LockupsController extends Controller {
 			\Core::redirect('/lockups/create/');
 		}
 
-		$model->save();
+		try {
+			$model->save();
+		} catch (\Exception $e) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Error', 'The lockup failed to create.');
+			\Core::redirect('/lockups/create/');
+		}
 		\Core::redirect($model->getPreviewURL());
 	}
 
@@ -322,7 +327,12 @@ class LockupsController extends Controller {
 			\Core::redirect($lockup_model->getEditURL());
 		}
 
-		$lockup_model->save();
+		try {
+			$lockup_model->save();
+		} catch (\Exception $e) {
+			self::flashNotice(parent::NOTICE_LEVEL_ERROR, 'Error', 'The lockup failed to update.');
+			\Core::redirect($lockup_model->getEditURL());
+		}
 
 		\Core::redirect($lockup_model->getPreviewURL());
 	}
@@ -541,7 +551,7 @@ UNL Lockup Factory';
 		}
 
 		$frontend_output = $lockup_model->createAllVersions();
-		self::storeGenerateOutput(join($frontend_output, '&#013; &#010;'));
+		self::storeGenerateOutput(join('&#013; &#010;', $frontend_output));
 
 		$lockup_model->status = Lockup::GENERATED;
 		$lockup_model->creative_status = Lockup::GENERATED;
@@ -579,7 +589,7 @@ UNL Lockup Factory';
 
 		# then run the generate functionality again
 		$frontend_output = $lockup_model->createAllVersions();
-		self::storeGenerateOutput(join($frontend_output, '&#013; &#010;'));
+		self::storeGenerateOutput(join('&#013; &#010;', $frontend_output));
 
 		$lockup_model->version = self::LOCKUP_VERSION;
 		$lockup_model->save();

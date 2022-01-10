@@ -1,3 +1,4 @@
+<?php $infoIconSVG = \UNL\Templates\Icons::get(\UNL\Templates\Icons::ICON_INFO, '{"title": "Info Tooltip", "size": 6}'); ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
 	<div class="dcf-wrapper">
         <h3 class="page-title">Create New Lockup</h3>
@@ -187,7 +188,8 @@
 
                 <div id="organization-field">
                     <label for="organization">Organization</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             31 characters max
                         </div>
@@ -196,7 +198,8 @@
                 </div>
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             31 characters max
                         </div>
@@ -205,7 +208,8 @@
                 </div>
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>
@@ -215,7 +219,8 @@
                 </div>
                 <div id="subject-second-line-field" style="display: none;">
                     <label for="subject-second-line">Subject Second Line</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>
@@ -225,7 +230,8 @@
                 </div>
                 <div id="acronym-field" style="display: none;">
                     <label for="acronym">Acronym</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             10 characters max
                         </div>
@@ -235,7 +241,8 @@
                 </div>
                 <div id="acronym-second-line-field" style="display: none;">
                     <label for="acronym-second-line">Acronym Second Line</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             10 characters max
                         </div>
@@ -245,7 +252,8 @@
                 </div>
                 <div id="acronym-subject-field" style="display: none;">
                     <label for="acronym-subject">Subject Acronym</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             15 characters max
                         </div>
@@ -255,7 +263,8 @@
                 </div>
                 <div id="extension-county-field" style="display: none;">
                     <label for="extension-county">Extension County</label>
-                    <div class="tooltip wdn-icon-info italic hang-right">
+                    <div class="tooltip italic hang-right">
+	                    <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>

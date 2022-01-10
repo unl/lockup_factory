@@ -117,13 +117,14 @@ img.height-40 {
 }
 
 svg.preview {
-	border: 2px dashed #DDDDDD;
+	background-color: #FFF;
+	border: 2px dashed var(--b);
 	max-width: 100%;
 	/* disable for now, not displaying correctly in current 5.0 implementation */
 	/*max-height: 100%;*/
 }
 
-.wdn-hero {
+.lockup-hero {
     position: relative;
     overflow: hidden;
     height: 25.24em;
@@ -140,7 +141,7 @@ svg.preview {
     }
 }
 
-.wdn-hero-text {
+.lockup-hero-text {
     position: relative;
     bottom: auto;
     display: -webkit-flex;
@@ -153,7 +154,7 @@ svg.preview {
     text-align: center;
 }
 
-.wdn-hero-heading {
+.lockup-hero-heading {
     z-index: 1;
     margin: 0;
     font-size: 2.67em;
@@ -167,7 +168,7 @@ svg.preview {
 	}
 }
 
-.is-video.wdn-hero .wdn-hero-video {
+.is-video.lockup-hero .lockup-hero-video {
     position: absolute;
     top: 0;
     left: 0;
@@ -177,9 +178,9 @@ svg.preview {
 	> div {
 	    position: absolute;
 	    display: none;
-	    background-color: #fff;
-	    color: #000;
-	    box-shadow: 0px 1px 4px RGBA(0,0,0,0.2);
+	    background-color: var(--bg-body);
+	    color: var(--body);
+	    box-shadow: 0px 1px 4px var(--b);
 	    padding: .75em;
 	    bottom: 160%;
 	    left: -91px;
@@ -189,7 +190,7 @@ svg.preview {
 	}
 
 	> div:before {
-	    background-color: white;
+	    background-color: var(--bg-body);
 	    content: "";
 	    display: block;
 	    width: 15px; 
@@ -210,7 +211,7 @@ svg.preview {
 	    content:"";
 	    height: 12px;
 	    width: 40px;
-	    background-color: #fff;
+	    background-color: var(--bg-body);
 	    display: block;
 	    position: absolute;
 	    bottom: 0px;
@@ -246,18 +247,14 @@ svg.preview {
 	    margin-left: -24px;
 	}
 
-	background-color: #1B9AE8;
-    border-radius: 2em;
-    height: 1.5em;
-    width: 1.5em;
-    padding: 0 0.2em;
-    color: #fff;
+    background-color: var(--bg-body);
+    color: #1B9AE8;
     display: inline-block;
     text-align: center;
-    font-size: 0.85em;
-    line-height: 1.6em;
     position: relative;
+    line-height: 1.6em;
     font-size: .8125rem;
+
     ul li {
 	    margin-bottom: .75em;
 	}
@@ -281,17 +278,17 @@ svg.preview {
 }
 
 .toolbox, .visual-island {
-    background: #f9f8f5;
+    background: var(--bg-dialog);
     margin-bottom: 1em;
     word-wrap: break-word;
 	padding: 0 !important;
 	.tools, .details {
 		padding: 1em;
-		border-left: 1px solid #d5d5d2;
-		border-right: 1px solid #d5d5d2;
-		border-bottom: 1px solid #d5d5d2;
+		border-left: 1px solid var(--b);
+		border-right: 1px solid var(--b);
+		border-bottom: 1px solid var(--b);
 		&.top-border {
-			border-top: 1px solid #d5d5d2;
+			border-top: 1px solid var(--b);
 		}
 	}
 
@@ -299,13 +296,13 @@ svg.preview {
 		display: block;
 		font-size: .802em !important;
 		margin: 0;
-		border-bottom: 1px solid #474746;
+		border-bottom: 1px solid var(--heading);
 		font-family: "Gotham SSm A","Gotham SSm B",Verdana,"Verdana Ref",Geneva,Tahoma,"Lucida Grande","Lucida Sans Unicode","Lucida Sans","DejaVu Sans","Bitstream Vera Sans","Liberation Sans",sans-serif;
 		width: 100%;
-		background-color: #474746;
+		background-color: var(--heading);
 		padding: 1em;
 		text-transform: uppercase;
-		color:#fff;
+		color: var(--inverse);
 		font-weight: 400;
 		font-style: normal;
 		text-align: center;
@@ -327,7 +324,7 @@ svg.preview {
 }
 
 @media (min-width: 0px) {
-	.wdn-hero {
+	.lockup-hero {
 	    height: 5em;
 	    height: 10vh;
 	    max-height: 8em;
@@ -335,7 +332,7 @@ svg.preview {
 }
 
 @media (min-height: 480px) and (min-width: 480px) {
-	.wdn-hero {
+	.lockup-hero {
 	    height: 15em;
 	    height: 30vh;
 	    max-height: 22em;
@@ -343,7 +340,7 @@ svg.preview {
 }
 
 @media (min-height: 718px) and (min-width: 960px) {
-	.wdn-hero {
+	.lockup-hero {
 	    height: 25.24em;
 	    height: 56vh;
 	    max-height: 31.474em;
@@ -351,7 +348,7 @@ svg.preview {
 }
 
 @media (min-height: 895px) and (min-width: 1044px) {
-	.wdn-hero {
+	.lockup-hero {
 	    height: 31.474em;
 	    height: 75vh;
 	    max-height: 33.645em;
@@ -360,17 +357,17 @@ svg.preview {
 
 
 @media (min-width: 480px) {
-	.wdn-hero-heading {
+	.lockup-hero-heading {
 	    font-size: 3.16em;
 	}
 }
 @media (min-width: 768px) {
-	.wdn-hero-heading {
+	.lockup-hero-heading {
 	    font-size: 4.21em;
 	}
 }
 @media (min-width: 1044px) {
-	.wdn-hero-heading {
+	.lockup-hero-heading {
 	    font-size: 4.74em;
 	}
 }

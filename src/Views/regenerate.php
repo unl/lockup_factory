@@ -17,9 +17,9 @@
 			</div>
 			<div class="tools dcf-txt-center">
 				<?php if ($context->lockup->isFullyApproved()): ?>
-				<form method="POST" action="/lockups/regenerate/" id="regenerate" class="dcf-txt-center">
-					<input type="text" class="hidden" value="<?php echo $context->lockup->id ?>" name="id">
-					<button type="submit" class="dcf-btn wdn-button-triad" id="submit-regenerate">Regenerate Files</button>
+				<form method="POST" action="/lockups/regenerate/" id="regenerate" class="dcf-form dcf-txt-center">
+					<input type="hidden" value="<?php echo $context->lockup->id ?>" name="id">
+					<button type="submit" class="dcf-btn dcf-btn-secondary" id="submit-regenerate">Regenerate Files</button>
 					<div style="display: none;" id="going-message">
 						<img src="/images/spinner.svg" style="height: 16px;">
 						<label style="font-style: italic;">And off we go! This will take a little while. Please be patient, we'll redirect you when this is complete.</label>

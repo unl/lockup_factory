@@ -22,48 +22,52 @@ if (isset($routerBase) && !empty($routerBase)) {
     $router->setBasePath($routerBase);
 }
 
+if (isset($siteNotice)) {
+    \Core::$siteNotice = $siteNotice;
+}
+
 $router->map('GET', '/?', function() {
-	\Core::callController('home', 'view');
+    \Core::callController('home', 'view');
 });
 $router->map('GET', '/logout/?', function() {
-	\Auth::logout();
+    \Auth::logout();
 });
 $router->map('GET', '/[a:controller]/[a:action]/?', function($controller, $action) {
-	\Core::callController($controller, $action, array_merge(array(), $_GET));
+    \Core::callController($controller, $action, array_merge(array(), $_GET));
 });
 $router->map('GET', '/[a:controller]/[a:action]/[**:trailing]', function($controller, $action, $trailing) {
-	# convert "trailing" into an array of params
-	$params = array();
-	$key = NULL;
-	$even = TRUE;
+    # convert "trailing" into an array of params
+    $params = array();
+    $key = NULL;
+    $even = TRUE;
 
-	$array = explode('/', $trailing);
-	for ($i = 0; $i < count($array); $i++) {
-		if ($even) {
-			$key = $array[$i];
-		} else {
-			$params[$key] = $array[$i];
-		}
-		$even = !$even;
-	}
+    $array = explode('/', $trailing);
+    for ($i = 0; $i < count($array); $i++) {
+        if ($even) {
+            $key = $array[$i];
+        } else {
+            $params[$key] = $array[$i];
+        }
+        $even = !$even;
+    }
 
-	\Core::callController($controller, $action, array_merge($_GET, $params));
+    \Core::callController($controller, $action, array_merge($_GET, $params));
 });
 $router->map('POST', '/[a:controller]/[a:action]/?', function($controller, $action) {
-	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
+    \Core::callController($controller, 'post' . ucfirst($action), $_POST);
 });
 $router->map('POST', '/[a:controller]/[a:action]/[**:trailing]', function($controller, $action, $trailing) {
-	\Core::callController($controller, 'post' . ucfirst($action), $_POST);
+    \Core::callController($controller, 'post' . ucfirst($action), $_POST);
 });
 
 $match = $router->match();
 
 # call closure or throw 404 status
 if($match && is_callable($match['target'])) {
-	call_user_func_array($match['target'], $match['params']); 
+    call_user_func_array($match['target'], $match['params']);
 } else {
-	# no route was matched
-	echo '404 on match';
-	exit;
+    # no route was matched
+    echo '404 on match';
+    exit;
 }
 

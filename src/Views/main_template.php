@@ -24,7 +24,7 @@ $page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup
 $page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
 
 # css
-$page->addStyleSheet($baseURL . 'css/main.css?v=20220110');
+$page->addStyleSheet($baseURL . 'css/main.css?v=20220125');
 
 # javascript
 $page->addScriptDeclaration('WDN.setPluginParam("idm", "logout", "/logout/");');
@@ -77,6 +77,15 @@ $scriptState = $controllerOutput->getScriptState();
 if ($scriptState instanceof \Models\ScriptState) {
     $scriptState->applyScripts($page);
     $scriptState->applyScriptDeclarations($page);
+}
+
+if (isset(\Core::$siteNotice) && \Core::$siteNotice->display) {
+    $page->displayDCFNoticeMessage(
+        \Core::$siteNotice->title,
+        \Core::$siteNotice->message,
+        \Core::$siteNotice->type,
+        \Core::$siteNotice->noticePath,
+        \Core::$siteNotice->containerID);
 }
 
 # set footer

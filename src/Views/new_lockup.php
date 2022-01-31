@@ -1,6 +1,6 @@
 <?php $infoIconSVG = \UNL\Templates\Icons::get(\UNL\Templates\Icons::ICON_INFO, '{"title": "Info Tooltip", "size": 6}'); ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
-	<div class="dcf-wrapper">
+    <div class="dcf-wrapper">
         <h3 class="page-title">Create New Lockup</h3>
 
         <form class="dcf-form" id="create-lockup" method="POST" action="">
@@ -166,7 +166,7 @@
                 </div>
                 <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
                     <div>
-                        <label class="center>
+                        <label class="center">
                             <input type="radio" name="type" value="acronym_social" id="type-acronym-social" <?php if ($context->lockup->style == 'acronym_social') echo 'checked="checked"'; ?>>
                             <img class="horiz" src="<?php echo $context->baseURL; ?>images/acronym_social_vert_example.png" role="presentation">
                             <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/acronym_social_vert_example.png" role="presentation">
@@ -199,7 +199,7 @@
                 <div id="organization-second-line-field" style="display: none;">
                     <label for="organization-second-line">Organization Second Line</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             31 characters max
                         </div>
@@ -209,7 +209,7 @@
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>
@@ -220,7 +220,7 @@
                 <div id="subject-second-line-field" style="display: none;">
                     <label for="subject-second-line">Subject Second Line</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>
@@ -231,7 +231,7 @@
                 <div id="acronym-field" style="display: none;">
                     <label for="acronym">Acronym</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             10 characters max
                         </div>
@@ -242,7 +242,7 @@
                 <div id="acronym-second-line-field" style="display: none;">
                     <label for="acronym-second-line">Acronym Second Line</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             10 characters max
                         </div>
@@ -253,7 +253,7 @@
                 <div id="acronym-subject-field" style="display: none;">
                     <label for="acronym-subject">Subject Acronym</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             15 characters max
                         </div>
@@ -264,7 +264,7 @@
                 <div id="extension-county-field" style="display: none;">
                     <label for="extension-county">Extension County</label>
                     <div class="tooltip italic hang-right">
-	                    <?php echo $infoIconSVG; ?>
+                        <?php echo $infoIconSVG; ?>
                         <div>
                             40 characters max
                         </div>
@@ -317,7 +317,7 @@
                 <a class="dcf-btn dcf-btn-primary" href="https://shib.unl.edu/idp/profile/cas/login?service=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">Login</a>
             <?php endif; ?>
         </form>
-	</div>
+    </div>
 </div>
 
 <?php

@@ -48,6 +48,8 @@ class SvgGenerator {
 
     const CENTER_DIVIDER = "M51,0 L51,39 Z";
 
+	const RECOGNIZED_STUDENT_ORGANIZATION = 'Recognized Student Organization';
+
     public static $lockup_templates_directory = __DIR__ . '/LockupTemplates';
 
     public static function createPreviewLockup($template, $lockup, $orient = 'horiz') {
@@ -219,8 +221,8 @@ class SvgGenerator {
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
-                    $svg->addText('Recognized Student Organization', 44, 26);
-                    $secondary_text_width = $svg->textDimensions('Recognized Student Organization')[0];
+                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 44, 26);
+                    $secondary_text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
 
                     $svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width) + 44) . " 38");
                     $svg_file->height = 38;
@@ -311,6 +313,32 @@ class SvgGenerator {
                         $svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width, $fourth_width) + 44);
                     }
                     break;
+	            case 'org_recognized_student_2_1':
+		            $svg->setFontSVG(self::TUNGSTEN);
+		            $svg->setLetterSpacing(0.05);
+		            $svg->setFontSize(12);
+		            $svg->setFontColor($main_text_color);
+		            $svg->addText($lockup->org_name, 44, -5.8);
+		            $main_text_width = $svg->textDimensions($lockup->org_name)[0];
+
+		            $svg->addText($lockup->org_second_line, 44, 5.2);
+		            $third_width = $svg->textDimensions($lockup->org_second_line)[0];
+
+		            $svg->setFontSVG(self::MERCURY);
+		            $svg->setLetterSpacing(0);
+		            $svg->setFontSize(8.125);
+		            $svg->setFontColor($secondary_text_color);
+		            $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 44, 26);
+		            $secondary_text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
+
+		            $svg->addAttribute('viewBox', "0 0 " . (max($main_text_width, $secondary_text_width, $third_width) + 44) . " 38");
+		            $svg_file->height = 38;
+		            $svg_file->width = max($main_text_width, $secondary_text_width, $third_width) + 44;
+		            if (!$preview) {
+			            $svg->addAttribute('height', 38);
+			            $svg->addAttribute('width', max($main_text_width, $secondary_text_width, $third_width) + 44);
+		            }
+		            break;
                 case 'acronym':
                     $svg->setFontSVG(self::TUNGSTEN);
                     $svg->setLetterSpacing(0.05);
@@ -451,8 +479,8 @@ class SvgGenerator {
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
-                    $text_width = $svg->textDimensions('Recognized Student Organization')[0];
-                    $svg->addText('Recognized Student Organization', 100 - ($text_width / 2), 55);
+                    $text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
+                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 100 - ($text_width / 2), 55);
                     break;
                 case 'org_subject_1_2':
                     $svg->setFontSVG(self::TUNGSTEN);
@@ -511,6 +539,24 @@ class SvgGenerator {
                     $text_width = $svg->textDimensions($lockup->subject_second_line)[0];
                     $svg->addText($lockup->subject_second_line, 100 - ($text_width / 2), 70);
                     break;
+	            case 'org_recognized_student_2_1':
+		            $svg->setFontSVG(self::TUNGSTEN);
+		            $svg->setLetterSpacing(0.05);
+		            $svg->setFontSize(12);
+		            $svg->setFontColor($main_text_color);
+		            $text_width = $svg->textDimensions($lockup->org_name)[0];
+		            $svg->addText($lockup->org_name, 100 - ($text_width / 2), 37);
+
+		            $text_width = $svg->textDimensions($lockup->org_second_line)[0];
+		            $svg->addText($lockup->org_second_line, 100 - ($text_width / 2), 48);
+
+		            $svg->setFontSVG(self::MERCURY);
+		            $svg->setLetterSpacing(0);
+		            $svg->setFontSize(8.125);
+		            $svg->setFontColor($secondary_text_color);
+		            $text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
+		            $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 100 - ($text_width / 2), 66);
+		            break;
                 case 'acronym':
                     $svg->setFontSVG(self::TUNGSTEN);
                     $svg->setLetterSpacing(0.05);

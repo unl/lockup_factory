@@ -74,7 +74,7 @@
                             <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/org_recognized_student_vert_example.png" role="presentation">
                         </label><br>
                         <label for="type-org-recognized-student">
-                            Recognized Student Organization lockup: primary and secondary hierarchy for your recognized student organization name in a single line design.
+                            Recognized Student Organization lockup: primary hierarchy for your recognized student organization name in a single line design.
                         </label>
                     </div>
                     <div>
@@ -96,6 +96,17 @@
                         </label><br>
                         <label for="type-org-subject-2-2">
                             Primary and Secondary ID lockup (D): primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a two-line design.
+                            <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="type" value="org_recognized_student_2_1" id="type-org-recognized-student-2-1" <?php if ($context->lockup->style == 'org_recognized_student_2_1') echo 'checked="checked"'; ?>>
+                            <img class="horiz height-38" src="<?php echo $context->baseURL; ?>images/org_recognized_student_2-1_example.png" role="presentation">
+                            <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/org_recognized_student_2-1_vert_example.png" role="presentation">
+                        </label><br>
+                        <label for="type-org-recognized-student-2-1">
+                            Recognized Student Organization lockup: primary hierarchy for your recognized student organization name in a two line design.
                             <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
                         </label>
                     </div>
@@ -202,7 +213,7 @@
                             31 characters max
                         </div>
                     </div>
-                    <input class="dcf-input-text" type="text" name="organization_second_line" maxlength="31" id="organization-second-line">
+                    <input class="dcf-input-text" type="text" name="organization_second_line" maxlength="31" id="organization-second-line" value="<?php echo $context->lockup->organization_second_line; ?>">
                 </div>
                 <div id="subject-field" style="display: none;">
                     <label for="subject">Subject</label>
@@ -410,6 +421,15 @@ require(['jquery'], function ($) {
                 $('#organization-second-line-field').show();
                 $('#subject-field').show();
                 $('#subject-second-line-field').show();
+                $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
+                $('#acronym-subject-field').hide();
+                $('#extension-county-field').hide();
+            } else if ($('#type-org-recognized-student-2-1').is(':checked')) {
+                $('#organization-field').show();
+                $('#organization-second-line-field').show();
+                $('#subject-field').hide();
+                $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
                 $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();

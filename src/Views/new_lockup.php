@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
+                <div class="dcf-grid-full dcf-grid-halves@sm dcf-grid-thirds@lg dcf-col-gap-vw dcf-row-gap-10 dcf-txt-sm">
                     <div>
                         <label>
                             <input type="radio" name="type" value="org_only" id="type-org-only" <?php if ($context->lockup->style == 'org_only' || empty($context->lockup->style)) echo 'checked="checked"'; ?>>
@@ -33,7 +33,7 @@
                         </label><br>
                         <label for="type-org-only">
                             Primary ID lockup (A): primary hierarchy for your full College, Department, Unit or Subject name in a single line design.
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -44,10 +44,8 @@
                         <label for="type-org-two-line">
                             Primary ID lockup (B): primary hierarchy for your full College, Department, Unit or Subject name in a two-line design.
                             <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
-                        </label><br><br>
+                        </label>
                     </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
                     <div>
                         <label>
                             <input type="radio" name="type" value="org_subject" id="type-org-subject" <?php if ($context->lockup->style == 'org_subject') echo 'checked="checked"'; ?>>
@@ -56,7 +54,7 @@
                         </label><br>
                         <label for="type-org-subject">
                             Primary and Secondary ID lockup (A): primary and secondary hierarchy for your full College, Department, Unit or Subject name in a single line design.
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -67,10 +65,18 @@
                         <label for="type-org-subject-1-2">
                             Primary and Secondary ID lockup (B): primary hierarchy for your full College, Department, Unit or Subject name in one line and secondary hierarchy in a two-line design.
                             <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
-                        </label><br><br>
+                        </label>
                     </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
+                    <div>
+                        <label>
+                            <input type="radio" name="type" value="org_recognized_student" id="type-org-recognized-student" <?php if ($context->lockup->style == 'org_recognized_student') echo 'checked="checked"'; ?>>
+                            <img class="horiz height-38" src="<?php echo $context->baseURL; ?>images/org_recognized_student_example.png" role="presentation">
+                            <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/org_recognized_student_vert_example.png" role="presentation">
+                        </label><br>
+                        <label for="type-org-recognized-student">
+                            Recognized Student Organization lockup: primary and secondary hierarchy for your recognized student organization name in a single line design.
+                        </label>
+                    </div>
                     <div>
                         <label>
                             <input type="radio" name="type" value="org_subject_2_1" id="type-org-subject-2-1" <?php if ($context->lockup->style == 'org_subject_2_1') echo 'checked="checked"'; ?>>
@@ -80,7 +86,7 @@
                         <label for="type-org-subject-2-1">
                             Primary and Secondary ID lockup (C): primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a single line design.
                             <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -91,10 +97,8 @@
                         <label for="type-org-subject-2-2">
                             Primary and Secondary ID lockup (D): primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a two-line design.
                             <br><em>*Additional line should be used when ID is too long to fit on one line.</em>
-                        </label><br><br>
+                        </label>
                     </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
                     <div>
                         <label>
                             <input type="radio" name="type" value="acronym" id="type-acronym" <?php if ($context->lockup->style == 'acronym') echo 'checked="checked"'; ?>>
@@ -104,7 +108,7 @@
                         <label for="type-acronym">
                             Merchandise lockup* (A): primary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design. Use this version also to create casual lockups for social media. i.e. CASNR, IANR, COJMC.
                             <br><em>*Restricted to merchandise and social media use only.</em>
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -114,10 +118,8 @@
                         </label><br>
                         <label for="type-acronym-subject"">
                             Merchandise lockup (B): primary and secondary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design. Restricted to merchandise use only. i.e. CASNR/ALEC, CEHS/CYFS.
-                        </label><br><br>
+                        </label>
                     </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
                     <div>
                         <label>
                             <input type="radio" name="type" value="acronym_subject_2_1" id="type-acronym-subject-2-1" <?php if ($context->lockup->style == 'acronym_subject_2_1') echo 'checked="checked"'; ?>>
@@ -128,7 +130,7 @@
                             Embroidery lockup: primary hierarchy for your full College, Department, Unit or Subject name in two lines and secondary hierarchy in a single and optional two-line design.*
                             <br><em>*Embroidery requires larger text, so we recommend keeping text to a minimum and as few lines of text as possible.</em>
                             <br><em>**This lockup is vertical style ONLY.</em>
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -138,19 +140,7 @@
                         </label><br>
                         <label for="type-extension">
                             Extension lockup: primary hierarchy for Extension and secondary hierarchy for the counties in a single line design.
-                        </label><br><br>
-                    </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
-                    <div>
-                        <label>
-                            <input type="radio" name="type" value="ncta" id="type-ncta" <?php if ($context->lockup->style == 'ncta') echo 'checked="checked"'; ?>>
-                            <img class="horiz height-38" src="<?php echo $context->baseURL; ?>images/ncta_example.png" role="presentation">
-                            <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/ncta_vert_example.png" role="presentation">
-                        </label><br>
-                        <label for="type-extension">
-                            NCTA lockup: primary hierarchy for NCTA and secondary hierarchy for the subject in a single line design.
-                        </label><br><br>
+                        </label>
                     </div>
                     <div>
                         <label>
@@ -161,10 +151,18 @@
                         <label for="type-extension-4h">
                             Extension/4H lockup: primary hierarchy for Extension and secondary hierarchy for the counties in a single line design. 4H logo included.
                             <br><em>*This lockup is vertical style ONLY.</em>
-                        </label><br><br>
+                        </label>
                     </div>
-                </div>
-                <div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw">
+                    <div>
+                        <label>
+                            <input type="radio" name="type" value="ncta" id="type-ncta" <?php if ($context->lockup->style == 'ncta') echo 'checked="checked"'; ?>>
+                            <img class="horiz height-38" src="<?php echo $context->baseURL; ?>images/ncta_example.png" role="presentation">
+                            <img class="vert" style="display: none;" src="<?php echo $context->baseURL; ?>images/ncta_vert_example.png" role="presentation">
+                        </label><br>
+                        <label for="type-extension">
+                            NCTA lockup: primary hierarchy for NCTA and secondary hierarchy for the subject in a single line design.
+                        </label>
+                    </div>
                     <div>
                         <label class="center">
                             <input type="radio" name="type" value="acronym_social" id="type-acronym-social" <?php if ($context->lockup->style == 'acronym_social') echo 'checked="checked"'; ?>>
@@ -174,7 +172,7 @@
                         <label for="type-acronym-social">
                             Social lockup: primary hierarchy for the shorthand abbreviation of your College, Department, Unit or Subject name in a single line, short character design.
                             <br><em>*This lockup is vertical style ONLY.</em>
-                        </label><br><br>
+                        </label>
                     </div>
                 </div>
             </fieldset>
@@ -385,6 +383,15 @@ require(['jquery'], function ($) {
                 $('#organization-second-line-field').hide();
                 $('#subject-field').show();
                 $('#subject-second-line-field').show();
+                $('#acronym-field').hide();
+                $('#acronym-second-line-field').hide();
+                $('#acronym-subject-field').hide();
+                $('#extension-county-field').hide();
+            } else if ($('#type-org-recognized-student').is(':checked')) {
+                $('#organization-field').show();
+                $('#organization-second-line-field').hide();
+                $('#subject-field').hide();
+                $('#subject-second-line-field').hide();
                 $('#acronym-field').hide();
                 $('#acronym-second-line-field').hide();
                 $('#acronym-subject-field').hide();

@@ -1,6 +1,6 @@
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
 	<div class="dcf-wrapper">
-		<h3 class="page-title">Preview for "<?php echo $context->lockup->getName() ?>" Lockup</h3>
+		<h3 class="page-title">Preview for "<?php echo trim($context->lockup->getName()) ?>" Lockup</h3>
 		<div class="dcf-grid-full dcf-grid-halves@sm dcf-col-gap-vw dcf-txt-center">
             <div class="center">
             	<?php if ($context->lockup->style != 'acronym_subject_2_1' && $context->lockup->style != 'acronym_social' && $context->lockup->style != 'extension_4h'): ?>

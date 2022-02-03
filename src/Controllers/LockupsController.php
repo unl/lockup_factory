@@ -114,6 +114,10 @@ class LockupsController extends Controller {
                 $valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
                 $valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
                 break;
+	        case 'org_recognized_student_2_1':
+		        $valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+		        $valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
+		        break;
             case 'acronym':
                 $valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
                 break;
@@ -297,6 +301,10 @@ class LockupsController extends Controller {
                 $valid = $valid && self::checkTextFieldLength($post_params, 'subject', 40);
                 $valid = $valid && self::checkTextFieldLength($post_params, 'subject_second_line', 40);
                 break;
+	        case 'org_recognized_student_2_1':
+		        $valid = $valid && self::checkTextFieldLength($post_params, 'organization', 31);
+		        $valid = $valid && self::checkTextFieldLength($post_params, 'organization_second_line', 31);
+		        break;
             case 'acronym':
                 $valid = $valid && self::checkTextFieldLength($post_params, 'acronym', 10);
                 break;

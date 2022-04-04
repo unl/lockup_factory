@@ -1,0 +1,2 @@
+!function(){var n=function(){var n=document.getElementById("unl-css-critical");n.parentNode.removeChild(n)},e=document.getElementById("unl-css-core");onloadCSS(e,function(){n()})}();
+//# sourceMappingURL=clearCriticalCSS.js.map

@@ -1,0 +1,53 @@
+@import '../../scss/pre.tmp.scss';
+
+
+.unl-event-time,
+.unl-event-location {
+  margin-top: #{ms(-12)}em;
+  overflow-wrap: break-word;
+}
+
+
+.wdn-calendar .unl-event-teaser-li:not(:last-child) {
+  @include mb-4;
+}
+
+
+
+.unl-event-teaser {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.unl-event-date {
+  @include mb-3;
+}
+
+
+@supports (display:grid) {
+
+  .unl-event-teaser {
+    display: grid;
+    @include col-gap-4;
+    grid-template: 'a b' auto 'a c' 1fr / $length-em-8 1fr;
+    @include mb-0;
+  }
+
+
+  .unl-event-title {
+    grid-area: b;
+  }
+
+
+  .unl-event-date {
+    grid-area: a;
+    @include mb-0;
+  }
+
+
+  .unl-event-details {
+    grid-area: c;
+  }
+
+}

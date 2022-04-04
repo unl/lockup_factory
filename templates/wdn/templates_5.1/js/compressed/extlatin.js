@@ -1,0 +1,2 @@
+define(["jquery","css!js-css/extlatin"],function(e,s,t){var n=!1;return{initialize:function(){if(!n){n=!0;var s=e("<link>",{rel:"stylesheet",href:"https://cloud.typography.com/7717652/719648/css/fonts.css"});e("head").append(s)}}}});
+//# sourceMappingURL=extlatin.js.map

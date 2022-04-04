@@ -1,0 +1,1 @@
+{"version":3,"sources":["?"],"names":["define","fn","document","attachEvent","readyState","addEventListener"],"mappings":"AAEAA,UAAW,WACT,MAAO,UAAeC,IAChBC,SAASC,YAAsC,aAAxBD,SAASE,WAAoD,YAAxBF,SAASE,YACvEH,IAEAC,SAASG,iBAAiB,mBAAoBJ","file":"ready.js"}

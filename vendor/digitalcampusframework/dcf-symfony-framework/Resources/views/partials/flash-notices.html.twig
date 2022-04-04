@@ -1,0 +1,9 @@
+{# read and display all flash messages as dcf notice #}
+{% for label, flashMessages in app.flashes %}
+    {% for flashMessage in flashMessages %}
+        <div class="dcf-mt-3 dcf-notice dcf-notice-{{ label }}" hidden>
+            <h2>{{ flashMessage.header }}</h2>
+            <div>{{ flashMessage.message }}</div>
+        </div>
+    {% endfor %}
+{% endfor %}

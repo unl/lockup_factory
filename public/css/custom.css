@@ -1,0 +1,65 @@
+@font-face {
+    font-family: Tungsten;
+    font-weight: 600;
+    src: url('/fonts/tungsten600.ttf');
+ }
+.img-thumb {
+    border-radius: 6px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 50;
+    cursor: pointer;
+}
+.img-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: .5s;
+    /* cursor: pointer; */
+}
+
+.img-thumb-active {
+    background-color: rgba(0, 0, 0, .07);
+    z-index: 100;
+}
+
+.svgTabs {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.tabs-button {
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: center;
+}
+
+.tabs-button-active {
+    background: var(--bg-brand-alpha);
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.horiz .lockups-preview .preview {
+    width: 100%;
+    max-width: 300px;
+}
+.vert .lockups-preview .preview {
+    width: 100%;
+    max-width: 200px;
+}
+
+.table-preview .preview {
+    max-height: 150px;
+}
+
+.lockups-preview {
+    background-color: #fff;
+    display:inline-block;
+    border: 3px dashed var(--b);
+}

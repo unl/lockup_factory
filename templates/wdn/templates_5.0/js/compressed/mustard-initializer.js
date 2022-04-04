@@ -1,0 +1,2 @@
+!function(){var t=document.createElement("script");t.async=!1,t.src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default%2CArray.prototype.map%2CArray.prototype.find%2CArray.prototype.filter%2CElement.prototype.matches",document.body.appendChild(t)}(),require(["require"],function(){"objectFit"in document.body.style||require(["mustard/ofi"],function(){objectFitImages()}),require(["utility-scripts/testForWebP"],function(){})});
+//# sourceMappingURL=mustard-initializer.js.map

@@ -1,0 +1,49 @@
+{% block body %}
+<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+    <h3>Manage your lockups</h3>
+    <p>Welcome {{ user }} </p>
+    <table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Preview
+            </th>
+            <th>
+                Approver
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        {% for item in lockups_array%}
+        <tr>
+            <td>
+                {{item.getId}}
+            </td>
+            <td>
+            <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+            </td>
+            <td>
+                {{item.getApprover}}
+            </td>
+            <td>
+            {{(item.getStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>
+                <p><strong>Creative</strong>: Awaiting Approval</p>" | raw : "" | raw}}
+            </td>
+            <td>
+                <a href="/lockups/preview/{{item.getId}}"><button class="dcf-btn dcf-btn-secondary">View</button></a>
+                <form action="/lockups/delete/" method="POST" style="display: inline;">
+                    <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
+                    <input type="hidden" name="id" value="{{item.getId}}">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,2 @@
+!function(){var n=function(){document.getElementById("wdn-critical-styles").remove()},t=loadCSS("https://unlcms.unl.edu/wdn/templates_4.1/css/all.css?dep=$DEP_VERSION$");onloadCSS(t,function(){n()})}();
+//# sourceMappingURL=load-deferred-css.js.map

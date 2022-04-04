@@ -27,13 +27,16 @@ class LockupsGenerator
         $array = array(
             "fields" => "",
             "h" => null,
-            "v" => null
+            "v" => null,
+            "template" => null
         );
 
         $lockup = $this->doctrine->getRepository(Lockups::class)->find($id);
         if ($lockup->getTemplate()->getStyle() == "h") {
             $array["h"] = $lockup->getTemplate();
+            $array["template"] = $lockup->getTemplate()->getSlug();
         } else {
+            $array["template"] = $lockup->getTemplate()->getSlug();
             $array["v"] = $lockup->getTemplate();
         }
 
@@ -58,19 +61,59 @@ class LockupsGenerator
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
         $array = $this->fetchLockupDetails($id);
-        if ($array["h"] != null)
-        {
+        if ($array["h"] != null) {
             $horizontal = $this->SvgGenerator->createLockup($array["h"]->getSlug(), $array['fields'], 'h', 'RGB', false, true);
-            $this->lockupsConverter->saveSvg($horizontal, "Nh_". $lockups->getId());
+            // $this->lockupsConverter->saveSvg($horizontal, "Nh_". $lockups->getId());
             $lockups->setPreviewH($horizontal);
         }
-        if ($array["v"] != null)
-        {
+        if ($array["v"] != null) {
             $vertical = $this->SvgGenerator->createLockup($array["v"]->getSlug(), $array['fields'], 'v', 'RGB', false, true);
-            $this->lockupsConverter->saveSvg($vertical, "Nv_". $lockups->getId());
+            // $this->lockupsConverter->saveSvg($vertical, "Nv_". $lockups->getId());
 
             $lockups->setPreviewV($vertical);
         }
+        $this->generateLockups($id);
+        $this->doctrine->getManager()->persist($lockups);
+        $this->doctrine->getManager()->flush();
+        return "";
+    }
+
+    public function generateLockups(int $id): string
+    {
+        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+        // set status to generating
+        $lockups->setGenerating(1);
+        $this->doctrine->getManager()->persist($lockups);
+        $this->doctrine->getManager()->flush();
+
+        $array = $this->fetchLockupDetails($id);
+
+        $orients = array('h', 'v');
+        $styles = array('RGB', 'pms186cp', '4c', 'blk');
+        if ($array["template"] == "v_social") {
+            $styles = array('RGB');
+        }
+
+
+        //the actual process
+        foreach ($orients as $orient) {
+            if (!(($array["template"] == 'v_acronym_2_subject' || $array["template"] == 'v_extension_4h' || $array["template"] == 'v_social') && $orient == 'h')) // no horizontal for this style
+            {
+                foreach ($styles as $style) {
+                    $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, false);
+                    $this->lockupsConverter->saveSvg($svgFile, $id . $orient . $style, false, $style);
+
+                    if ($array['template'] != 'v_social')
+                    {
+                    $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, true);
+                    $this->lockupsConverter->saveSvg($svgFile, $id . $orient . $style . "_rev", false, $style);
+                    }
+                }
+            }
+        }
+
+        $lockups->setGenerating(0);
+        $lockups->setIsGenerated(1);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
         return "";

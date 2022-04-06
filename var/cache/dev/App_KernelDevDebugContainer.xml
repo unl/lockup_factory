@@ -398,7 +398,9 @@
       <argument type="service" id="doctrine"/>
       <argument type="service" id="App\Service\LockupsConverter"/>
     </service>
-    <service id="App\Service\SvgGenerator" class="App\Service\SvgGenerator" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\SvgGenerator" class="App\Service\SvgGenerator" autowire="true" autoconfigure="true">
+      <argument type="service" id="kernel"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener">
       <tag name="kernel.event_subscriber"/>

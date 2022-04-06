@@ -1,7 +1,7 @@
 {% block body %}
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
     <h3>Edit lockup</h3>
-    <div class="dcf-notice dcf-notice-info dcf-d-grid dcf-ml-auto dcf-mr-auto dcf-mb-6 dcf-rounded dcf-notice-initialized dcf-w-max-lg"
+    <div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "dcf-notice-success" : "dcf-notice-info"}} dcf-d-grid dcf-ml-auto dcf-mr-auto dcf-mb-6 dcf-rounded dcf-notice-initialized dcf-w-max-lg"
         id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd" role="alertdialog"
         aria-labelledby="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd-heading">
         <div class="dcf-notice-icon"><svg class="dcf-h-100% dcf-w-100%" aria-hidden="true" focusable="false" height="24"
@@ -12,8 +12,8 @@
             </svg></div>
         <div class="dcf-notice-body">
             <h4 class="dcf-notice-heading dcf-txt-h6 dcf-mb-0 text-white"
-                id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd-heading">Info</h4>
-            <div class="dcf-notice-message dcf-txt-xs">Your lockup is being reviewed by your Communicator Contact and
+                id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd-heading">{{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "Approved" : "Info"}}</h4>
+            <div class="dcf-notice-message dcf-txt-xs">Your lockup {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}} by your Communicator Contact and
                 University Communications.
             </div>
         </div>
@@ -31,11 +31,11 @@
             <h4>
                 Preview Lockup
             </h4>
-            {% if SVG.getPreviewH != null%}
+            {% if Lockup.getPreviewH != null%}
             <div class="horiz">
             <div style="display: inline-block">
             <div class="lockups-preview dcf-p-7">
-                {{ SVG.getPreviewH | raw }}
+                {{ Lockup.getPreviewH | raw }}
             </div>
             <p class="dcf-txt-center">
                 <i>
@@ -45,11 +45,11 @@
                         
             </div>
             {% endif %}
-            {% if SVG.getPreviewV != null%}
+            {% if Lockup.getPreviewV != null%}
             <div class="vert">
             <div style="display: inline-block">
                             <div class="lockups-preview dcf-p-7">
-                {{ SVG.getPreviewV | raw }}
+                {{ Lockup.getPreviewV | raw }}
                 </div>
                 <p class="dcf-txt-center">
                 <i>
@@ -66,21 +66,54 @@
             </h4>
             <div class="dcf-mb-5">
             <button class="dcf-btn dcf-btn-secondary">Edit Lockup</button>
+            <button class="dcf-btn dcf-btn-primary"> Download Lockup</button>
             </div>
             <h4>
                 Details
             </h4>
+            {% if ((Lockup.getCommunicatorStatus == 0) and (Lockup.getCommunicatorFeedback != null)) %}
             <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
+                <strong>Communicator</strong>: Feedback received<br>
+
+            </div>
+            {% elseif (Lockup.getCommunicatorStatus == 1)%}
+            <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
+                <strong>Communicator</strong>: Approved</div>
+            {% else %}
+                        <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
                 <strong>Communicator</strong>: Awaiting Approval<br>
             </div>
-            
-            <div>
-                <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca; font-style: italic;" disabled="" rows="5" id="communicator-feedback" name="communicator_feedback">Feedback from communicator will be posted here.</textarea>
+            {% endif %}
+                                    <div>
+                        {% if Lockup.getCommunicatorFeedback != null %}
+                                    <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca;" disabled="" rows="5" id="creative-feedback" name="creative_feedback">{{Lockup.getCommunicatorFeedback}}</textarea>
+
+                        {% else %}
+                                        <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca; font-style: italic;" disabled="" rows="5" id="communicator-feedback" name="communicator_feedback">Feedback from communicator will be posted here.</textarea>
+                        {% endif %}
             </div>
             <br>
+            {% if ((Lockup.getCreativeStatus == 0) and (Lockup.getCreativeFeedback != null)) %}
+            <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
+                <strong>Creative</strong>: Feedback received<br>
+
+            </div>
+            {% elseif (Lockup.getCreativeStatus == 1)%}
             <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
                 <strong>Creative</strong>: Approved</div>
-            <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #000;border-color: #c7c8ca;" disabled="" rows="5" id="creative-feedback" name="creative_feedback">Just kidding. Your lockups not approved.</textarea>
+            {% else %}
+                        <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
+                <strong>Creative</strong>: Awaiting Approval<br>
+            </div>
+            {% endif %}
+                                                            <div>
+                        {% if Lockup.getCreativeFeedback != null %}
+                                    <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca;" disabled="" rows="5" id="creative-feedback" name="creative_feedback">{{Lockup.getCreativeFeedback}}</textarea>
+
+                        {% else %}
+                                        <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca; font-style: italic;" disabled="" rows="5" id="communicator-feedback" name="communicator_feedback">Feedback from creative will be posted here.</textarea>
+                        {% endif %}
+            </div>
         </div>
         
     </div>

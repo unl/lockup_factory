@@ -4,8 +4,9 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/var/
-/vendor/
+/var/cache/*
+/var/logs/*
+/vendor/*
 /migrations/*.php
 ###< symfony/framework-bundle ###
 
@@ -16,5 +17,4 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-/public/tmp/
-/public/lockups/
+/public/lockups/*

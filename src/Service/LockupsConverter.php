@@ -21,30 +21,73 @@ class LockupsConverter
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
     }
 
-    public function generateCompleteFolder() : bool
+    private function createFolder(string $folderName): string
     {
-        if (!file_exists($this->saveDirectory . "/id")) {
-            mkdir($this->saveDirectory . "/id");
+        if (!file_exists($folderName)) {
+            mkdir($folderName, 0777, true);
         }
-        return false;
+        return $folderName;
     }
 
-    public function saveSvg(string $svgFile, string $fileName): bool
+    public function saveSvg(string $SVG, string $fileName, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        $svgPath = $this->saveDirectory . "/" . $fileName . '.svg';
+        $svgPath = $this->createFolder($this->saveDirectory . "/" . $fileName . '/') . $orient . $fileName . $color . '.svg';
         $myfile = fopen($svgPath, "w") or die("Internal error");
-        fwrite($myfile, $svgFile);
+        fwrite($myfile, $SVG);
         fclose($myfile);
-        $this->convertAll($svgPath, $fileName);
+        $this->convertAll($svgPath, $fileName, $orient, $rev, $color);
+        unlink($svgPath);
         return true;
     }
-    public function convertAll(string $SvgPath, string $newFileName, bool $rev = false, string $color = "RGB"): bool
+
+    public function convertAll(string $SvgPath, string $newFileName, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        $pngFileName = $this->saveDirectory . "/" . $newFileName . ".png";
-        $jpgFileName = $this->saveDirectory . "/" . $newFileName . ".jpg";
-        $epsFileName = $this->saveDirectory . "/" . $newFileName . ".eps";
-        $aiFileName = $this->saveDirectory . "/" . $newFileName . ".ai";
-        $pdfFileName = $this->saveDirectory . "/" . $newFileName . ".pdf";
+        $pathName = "";
+        $backupFileName = $newFileName;
+        if ($orient == "h") {
+            $pathName = $pathName . "Nh_" . $newFileName . "/";
+            $newFileName = "Nh_" . $newFileName;
+        } else {
+            $pathName = $pathName . "Nv_" . $newFileName . "/";
+            $newFileName = "Nv_" . $newFileName;
+        }
+        switch ($color) {
+            case "RGB":
+                $pathName = $pathName . "/" . "RGB (HEX)/";
+                $newFileName = $newFileName . "__RGB";
+                break;
+            case "pms186cp":
+                $pathName = $pathName . "/" . "PMS186cp/";
+                $newFileName = $newFileName . "__pms186cp";
+                break;
+            case "4c":
+                $pathName = $pathName . "/" . "4c CMYK/";
+                $newFileName = $newFileName . "__4c";
+                break;
+            case "blk":
+                $newFileName = $newFileName . "__blk";
+                if ($rev) {
+                    $pathName = $pathName . "/" . "Rev/";
+                } else {
+                    $pathName = $pathName . "/" . "Black/";
+                }
+                break;
+        }
+        $pathName = $this->saveDirectory . "/" . $backupFileName . "/" . $pathName;
+        $this->createFolder($pathName);
+        if ($rev == true) {
+            $newFileName = $newFileName . "_rev";
+        }
+        $svgFileName = $pathName . $newFileName . ".svg";
+        $pngFileName = $pathName . $newFileName . ".png";
+        $jpgFileName = $pathName . $newFileName . ".jpg";
+        $epsFileName = $pathName . $newFileName . ".eps";
+        $aiFileName = $pathName . $newFileName . ".ai";
+        $pdfFileName = $pathName . $newFileName . ".pdf";
+
+
+        #for svg
+        exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgFileName . '"' . '2>&1', $backend_output, $return_var);
 
 
         #for png
@@ -52,20 +95,34 @@ class LockupsConverter
 
         #for jpg | convert is a imagemagick function
         $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
-        exec('convert ' . $pngFileName . ' ' . $bg . ' ' . $jpgFileName . ' 2>&1', $backend_output, $return_var);
+        exec('convert "' . $pngFileName . '" ' . $bg . ' "' . $jpgFileName . '" 2>&1', $backend_output, $return_var);
 
         #for eps
-        exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsFileName . '"'. '2>&1', $backend_output, $return_var);
+        exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsFileName . '"' . '2>&1', $backend_output, $return_var);
+
+        # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
+        if ($color == '4c' || $color == 'pms186cp') {
+            $file = fopen($epsFileName, 'r');
+            $data = fread($file, filesize($epsFileName));
+            $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
+            $data = str_replace('0.0705882 0.603922 0.388235 rg', '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
+            $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
+            fclose($file);
+
+            $file = fopen($epsFileName, 'w');
+            fwrite($file, $data);
+            fclose($file);
+        }
 
         #for .ai
         copy($epsFileName, $aiFileName);
-        
+
         #for pdf
         $options = '';
-		if ($color == '4c') {
-			$options = '-dProcessColorModel=/DeviceCMYK ';
-		}
-		exec('ps2pdf ' . $options . $epsFileName . ' ' . $pdfFileName . ' 2>&1', $backend_output, $return_var);
+        if ($color == '4c') {
+            $options = '-dProcessColorModel=/DeviceCMYK ';
+        }
+        exec('ps2pdf ' . $options . ' "' . $epsFileName . '" "' . $pdfFileName . '" 2>&1', $backend_output, $return_var);
 
         return true;
     }

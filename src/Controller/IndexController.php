@@ -84,6 +84,10 @@ class IndexController extends BaseController
         $lockups->setDepartment($department);
         $lockups->setInstitution($institution);
         $lockups->setUser($auth->getUser());
+        $lockups->setCommunicatorStatus(0);
+        $lockups->setCreativeStatus(0);
+        $lockups->setIsGenerated(0);
+        $lockups->setGenerating(0);
         $errors = $validator->validate($lockups);
         if (count($errors) > 0) {
             return $this->render('base.html.twig', [
@@ -165,7 +169,7 @@ class IndexController extends BaseController
         return $this->render('base.html.twig', [
             'page_template' => "previewLockups.html.twig",
             'page_name' => "ManageLockups",
-            'SVG' => $lockup
+            'Lockup' => $lockup
         ]);
     }
     /**

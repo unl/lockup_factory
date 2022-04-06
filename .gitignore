@@ -6,7 +6,7 @@
 /public/bundles/
 /var/cache/*
 /var/logs/*
-/vendor/*
+/vendor/
 /migrations/*.php
 ###< symfony/framework-bundle ###
 

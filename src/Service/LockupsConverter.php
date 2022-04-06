@@ -91,6 +91,7 @@ class LockupsConverter
 
 
         #for png
+
         exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngFileName . '"' . '2>&1', $backend_output, $return_var);
 
         #for jpg | convert is a imagemagick function

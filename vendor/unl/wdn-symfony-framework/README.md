@@ -1,1 +1,0 @@
-# wdn-symfony-framework

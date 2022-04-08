@@ -31,7 +31,7 @@ class LockupsConverter
 
     public function saveSvg(string $SVG, string $fileName, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        $svgPath = $this->createFolder($this->saveDirectory . "/" . $fileName . '/') . $orient . $fileName . $color . '.svg';
+        $svgPath = $this->createFolder($this->saveDirectory . "/" . $fileName . "lockups" . '/') . $orient . $fileName . $color . '.svg';
         $myfile = fopen($svgPath, "w") or die("Internal error");
         fwrite($myfile, $SVG);
         fclose($myfile);
@@ -54,18 +54,18 @@ class LockupsConverter
         switch ($color) {
             case "RGB":
                 $pathName = $pathName . "/" . "RGB (HEX)/";
-                $newFileName = $newFileName . "__RGB";
+                $newFileName = $newFileName . "RGB";
                 break;
             case "pms186cp":
                 $pathName = $pathName . "/" . "PMS186cp/";
-                $newFileName = $newFileName . "__pms186cp";
+                $newFileName = $newFileName . "pms186cp";
                 break;
             case "4c":
                 $pathName = $pathName . "/" . "4c CMYK/";
-                $newFileName = $newFileName . "__4c";
+                $newFileName = $newFileName . "4c";
                 break;
             case "blk":
-                $newFileName = $newFileName . "__blk";
+                $newFileName = $newFileName . "blk";
                 if ($rev) {
                     $pathName = $pathName . "/" . "Rev/";
                 } else {
@@ -73,7 +73,7 @@ class LockupsConverter
                 }
                 break;
         }
-        $pathName = $this->saveDirectory . "/" . $backupFileName . "/" . $pathName;
+        $pathName = $this->saveDirectory . "/" . $backupFileName . "lockups" . "/" . $pathName;
         $this->createFolder($pathName);
         if ($rev == true) {
             $newFileName = $newFileName . "_rev";
@@ -87,19 +87,19 @@ class LockupsConverter
 
 
         #for svg
-        exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgFileName . '"' . '2>&1', $backend_output, $return_var);
+        exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgFileName . '"' . ' 2>&1', $backend_output, $return_var);
 
 
         #for png
 
-        exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngFileName . '"' . '2>&1', $backend_output, $return_var);
+        exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngFileName . '"' . ' 2>&1', $backend_output, $return_var);
 
         #for jpg | convert is a imagemagick function
         $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
         exec('convert "' . $pngFileName . '" ' . $bg . ' "' . $jpgFileName . '" 2>&1', $backend_output, $return_var);
 
         #for eps
-        exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsFileName . '"' . '2>&1', $backend_output, $return_var);
+        exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsFileName . '"' . ' 2>&1', $backend_output, $return_var);
 
         # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
         if ($color == '4c' || $color == 'pms186cp') {

@@ -93,6 +93,16 @@ class LockupsGenerator
         if ($array["template"] == "v_social") {
             $styles = array('RGB');
         }
+        // set the name
+        if ($lockups->getInstitution() != "")
+        {
+            $lockups_name = $lockups->getInstitution();
+        } else {
+            $lockups_name = $lockups->getDepartment();
+
+        }
+        $lockups_name = str_replace(" ", "_", $lockups_name);
+        $lockups_name = $lockups_name . "__";
 
 
         //the actual process
@@ -101,12 +111,12 @@ class LockupsGenerator
             {
                 foreach ($styles as $style) {
                     $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, false);
-                    $this->lockupsConverter->saveSvg($svgFile, $id , $orient, false, $style);
+                    $this->lockupsConverter->saveSvg($svgFile, $lockups_name , $orient, false, $style);
 
                     if ($array['template'] != 'v_social') // no reverse for this style
                     {
                     $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, true);
-                    $this->lockupsConverter->saveSvg($svgFile, $id , $orient, true, $style);
+                    $this->lockupsConverter->saveSvg($svgFile, $lockups_name , $orient, true, $style);
                     }
                 }
             }

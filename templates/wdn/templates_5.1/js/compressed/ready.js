@@ -1,2 +1,0 @@
-define([],function(){return function(e){(document.attachEvent?"complete"===document.readyState:"loading"!==document.readyState)?e():document.addEventListener("DOMContentLoaded",e)}});
-//# sourceMappingURL=ready.js.map

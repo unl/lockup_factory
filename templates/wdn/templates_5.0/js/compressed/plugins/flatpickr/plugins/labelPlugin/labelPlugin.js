@@ -1,2 +1,0 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.labelPlugin=e()}(this,function(){"use strict";function t(){return function(t){return{onReady:function(){var e=t.input.id;e&&(t.mobileInput?(t.input.removeAttribute("id"),t.mobileInput.id=e):t.altInput&&(t.input.removeAttribute("id"),t.altInput.id=e))}}}}return t});
-//# sourceMappingURL=labelPlugin.js.map

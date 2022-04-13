@@ -72,7 +72,7 @@ class LockupsGenerator
 
             $lockups->setPreviewV($vertical);
         }
-        $this->generateLockups($id);
+        // $this->generateLockups($id);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
         return "";

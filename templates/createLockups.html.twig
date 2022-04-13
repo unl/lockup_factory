@@ -48,8 +48,8 @@
         </div>
         <div class="dcf-col-75%-end dcf-p-6 dcf-2nd@md">
             <h5 class="dcf-mb-6">Preview</h5>
-             <!-- error tag -->
-             {% if error_msg['title'] != ""%}
+            <!-- error tag -->
+            {% if error_msg['title'] != ""%}
             <div class="dcf-notice dcf-notice-danger" hidden>
                 <h2>{{ error_msg['title'] }}</h2>
                 <div>{{ error_msg['body'] }}</div>
@@ -85,7 +85,7 @@
                 </div>
                 {% endfor %}
             </div>
-            <form method="POST" action="/">
+            <form method="POST" action="">
                 <!--  name stores the post form data -->
                 <input type="hidden" id="lockupTemplateId" name="lockuptemplate" value="1">
                 <div class="dcf-mt-6">
@@ -177,7 +177,7 @@
     let Svg = []; // select the fields accross all SVGs
     let InputDiv = []; // used to store the input field div container. used for showing and hiding input fields.
     let InputField = []; // used to store the input field itself. used for updating values accross field and SVGs.
-    let backupInputField = [] // used to store the user inputted data. mainly used for form validation on the server side.
+    let backupInputField = [] // used to store the user inputted data. mainly used for form validation and filtering.
 
     for (let k = 0; k < inputArray.length; k++) {
         Svg[k] = document.getElementsByClassName(inputArray[k]['slug']);
@@ -196,7 +196,7 @@
         for (let i = 0; i < Svg[k].length; i++) {
             if (inputArray[k]['Uppercase'] == 1) {
                 Svg[k][i].innerHTML = InputField[k].value.toUpperCase();
-                backupInputField[k] = InputField[k].value.toUpperCase();
+                backupInputField[k] = InputField[k].value;
             } else {
                 Svg[k][i].innerHTML = InputField[k].value;
                 backupInputField[k] = InputField[k].value;
@@ -217,16 +217,26 @@
     }
 
     function selectLockupTemplate(event) {
-        let selectedSvgTab = document.getElementById(event.target.id + "svg");
-        templateFormInput.value = event.target.id;
+        // try catch because event object isn't passed when calling the function manually during edit lockups page
+        try {
+            elementId = event.target.id;
+        } catch (error) {
+            elementId = event.id;
+        }
+        console.log(elementId);
+        let selectedSvgTab = document.getElementById(elementId + "svg");
+        templateFormInput.value = elementId;
         // remove the active tag from all the lockups
         for (let i = 0; i < lockupTemplates.length; i++) {
             let childElement = lockupTemplates[i].getElementsByClassName("img-thumb");
             childElement[0].classList.remove("img-thumb-active");
         }
         // add the active tag to the selected element
-        event.target.classList.add("img-thumb-active");
-
+        try {
+            event.target.classList.add("img-thumb-active");
+        } catch (error) {
+            event.classList.add("img-thumb-active");
+        }
         // change the SVG tabs too
         // first set display: none to all SVG tabs
         for (let i = 0; i < lockupSvgTabs.length; i++) {
@@ -247,7 +257,6 @@
             if (selectedSvgTab.getElementsByClassName(inputArray[j]['slug']).length != 0) {
                 InputDiv[j].style.display = "block";
                 InputField[j].value = backupInputField[j];
-
             }
         }
     }
@@ -274,8 +283,41 @@
 </script>
 
 <script>
-// this is a code for edit lockups and error handling where lockup fields are updated accordinly.
+    // this is a code for edit lockups and error handling where lockup fields are updated accordinly.
+    {% if lockup_style|length > 2 %} {# reads json value as text so length of "[]" = 2#}
+        let lockupsData = {{ fields|raw}};
+        let lockupStyle = "{{ lockup_style['style'] }}";
+        let lockupCategory = "{{ lockup_style['category'] }}";
+        let lockupTemplateID = "{{ lockup_style['template_id'] }}";
 
+        if (lockupStyle == "h") {
+            switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
+        } else if (lockupStyle == "v") {
+            switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
+        }
+
+        if (lockupCategory != "") {
+            category_list.value = lockupCategory;
+            updateCategoryListing()
+        }
+
+        if (lockupTemplateID != "") {
+            let tempElement = document.getElementById(lockupTemplateID);
+            console.log(tempElement);
+            selectLockupTemplate(tempElement);
+        }
+
+        {% if fields|length > 2 %}
+        for (let j = 0; j < inputArray.length; j++) {
+            for (let i = 0; i < lockupsData.length; i++) {
+                if (lockupsData[i]['fields']['slug'] == inputArray[j]['slug']) {
+                            InputField[j].value = lockupsData[i]['value'];
+                            updateSvgs(j);
+                }
+            }
+        }
+        {% endif %}
+    {% endif %}
 </script>
 
 {% endblock %}

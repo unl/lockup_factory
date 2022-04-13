@@ -1,2 +1,0 @@
-require(["dcf-lazyLoad"],function(){var a=document.querySelectorAll("[loading=lazy], .dcf-lazy-load"),l={rootMargin:"0px 0px 50px 0px",threshold:[0,.5]},o=[];new DCFLazyLoad(a,l,o).initialize()});
-//# sourceMappingURL=lazy-load.js.map

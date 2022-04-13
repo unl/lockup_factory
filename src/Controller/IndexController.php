@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Length;
 use WDN\Bundle\FrameworkBundle\Controller\BaseController;
+use Symfony\Component\Console\Output\OutputInterface;
+
 
 use App\Service\Auth;
 use App\Service\LockupsGenerator;
@@ -37,9 +39,9 @@ class IndexController extends BaseController
     /**
      * @Route("/", name="homePage", methods={"GET"})
      */
-    public function homePage(ManagerRegistry $doctrine, Auth $auth, array $errorMsg = array("title" => "")): Response
+    public function homePage(ManagerRegistry $doctrine, Auth $auth, array $errorMsg = array("title" => ""), array $fields = [], array $lockupStyle = []): Response
     {
-        
+
         $auth->requireAuth();
         $lockups = $doctrine->getRepository(LockupTemplates::class)->findAll();
         $lockups_fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
@@ -50,6 +52,9 @@ class IndexController extends BaseController
         $serializer = new Serializer($normalizers, $encoders);
         $jsonContent = $serializer->serialize($lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'Uppercase', 'Value']]);
 
+
+        $fields = $serializer->serialize($fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['value', 'fields' => ['slug']]]);
+
         return $this->render('base.html.twig', [
             'page_template' => "createLockups.html.twig",
             'page_name' => "CreateLockups",
@@ -57,8 +62,10 @@ class IndexController extends BaseController
             'lockups_fields' => $lockups_fields,
             'json_lockups_fields' => $jsonContent,
             'categories' => $lockups_categories,
-            'error_msg' => $errorMsg
-            
+            'error_msg' => $errorMsg,
+            'fields' => $fields,
+            'lockup_style' => $lockupStyle
+
         ]);
     }
 
@@ -96,33 +103,12 @@ class IndexController extends BaseController
         $lockups->setIsGenerated(0);
         $lockups->setGenerating(0);
         $errors = $validator->validate($lockups);
-        if (count($errors) > 0) {
-            $errorMsg['title'] = "Error";
-            $errorMsg['body'] = "You have an error in your submission.";
-            $response = $this->forward('App\Controller\IndexController::homePage', [
-                'errorMsg' => $errorMsg
-            ]);
-            return $response;
-        }
-        foreach ($fields as $item) {
-            if (($request->request->get($item->getSlug())) == "") {
-                $errorMsg['title'] = "Empty Field";
-                $errorMsg['body'] = "Please enter the ". $item->getName() . " field.";
-                $response = $this->forward('App\Controller\IndexController::homePage', [
-                    'errorMsg' => $errorMsg
-                ]);
-                return $response;
-            }
-        }
-        if (($department == "") && ($institution == ""))
-        {
-            $errorMsg['title'] = "Error";
-            $errorMsg['body'] = "Please enter your Institution/Department name.";
-            $response = $this->forward('App\Controller\IndexController::homePage', [
-                'errorMsg' => $errorMsg
-            ]);
-            return $response;
-        }
+
+        $lockupsStyle = array(
+            'style' => $template->getStyle(),
+            'category' => $template->getCategory()->getSlug(),
+            'template_id' => $template->getId()
+        );
 
         foreach ($fields as $item) {
             if (($request->request->get($item->getSlug())) != "" && (($request->request->get($item->getSlug())) != "0")) {
@@ -130,10 +116,54 @@ class IndexController extends BaseController
                 $arr[$count]->setLockup($lockups);
                 $arr[$count]->setFields($item);
                 $arr[$count]->setValue($request->request->get($item->getSlug()));
-                $entityManager->persist($arr[$count]);
+                // $entityManager->persist($arr[$count]); don't persist it now as it might casue an error
                 $count++;
             }
         }
+        if (count($errors) > 0) {
+            $errorMsg['title'] = "Error";
+            $errorMsg['body'] = "You have an error in your submission.";
+            $response = $this->forward('App\Controller\IndexController::homePage', [
+                'errorMsg' => $errorMsg,
+                'fields' => $arr,
+                'lockupStyle' => $lockupsStyle
+            ]);
+            return $response;
+        }
+
+
+        foreach ($fields as $item) {
+            if (($request->request->get($item->getSlug())) == "") {
+                $errorMsg['title'] = "Empty Field";
+                $errorMsg['body'] = "Please enter the " . $item->getName() . " field.";
+                $response = $this->forward('App\Controller\IndexController::homePage', [
+                    'errorMsg' => $errorMsg,
+                    'fields' => $arr,
+                    'lockupStyle' => $lockupsStyle
+
+                ]);
+                return $response;
+            }
+        }
+
+
+        if (($department == "") && ($institution == "")) {
+            $errorMsg['title'] = "Error!";
+            $errorMsg['body'] = "Please enter your Institution/Department name.";
+            $response = $this->forward('App\Controller\IndexController::homePage', [
+                'errorMsg' => $errorMsg,
+                'fields' => $arr,
+                'lockupStyle' => $lockupsStyle
+
+            ]);
+            return $response;
+        }
+
+        // now we can finally persist the contents of the array now
+        foreach ($arr as $eachField) {
+            $entityManager->persist($eachField);
+        }
+
 
         $lockup_fields = $doctrine->getRepository(LockupsFields::class)->findAll($lockups->getId());
         $entityManager->persist($lockups);
@@ -216,4 +246,46 @@ class IndexController extends BaseController
             'page_name' => "LockupsLibrary"
         ]);
     }
+    /**
+     * @Route("/lockups/edit/{id}", name="editLockups", methods={"GET"})
+     */
+    public function editLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
+    {
+        $auth->requireAuth();
+        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+        $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+        $lockupsStyle = array(
+            'style' => $lockup->getTemplate()->getStyle(),
+            'category' => $lockup->getTemplate()->getCategory()->getSlug(),
+            'template_id' => $lockup->getTemplate()->getId()
+        );
+        $response = $this->forward('App\Controller\IndexController::homePage', [
+            'fields' => $lockupFields,
+            'lockupStyle' => $lockupsStyle
+
+        ]);
+        return $response;
+    }
+
+        /**
+     * @Route("/lockups/edit/{id}", name="editedLockups", methods={"POST"})
+     */
+    public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
+    {
+        $auth->requireAuth();
+        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+        $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+        $lockupsStyle = array(
+            'style' => $lockup->getTemplate()->getStyle(),
+            'category' => $lockup->getTemplate()->getCategory()->getSlug(),
+            'template_id' => $lockup->getTemplate()->getId()
+        );
+        $response = $this->forward('App\Controller\IndexController::homePage', [
+            'fields' => $lockupFields,
+            'lockupStyle' => $lockupsStyle
+
+        ]);
+        return $response;
+    }
+    
 }

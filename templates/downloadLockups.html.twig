@@ -1,0 +1,43 @@
+{% block body %}
+<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+    <h3>Download Lockup Files</h3>
+    <div class="dcf-w-max-xl dcf-mr-auto dcf-ml-auto">
+    <div class="dcf-grid dcf-grid-halves">
+                {% if Lockup.getPreviewH != null%}
+            <div class="horiz">
+                <div style="display: inline-block">
+                    <div class="lockups-preview dcf-p-7">
+                        {{ Lockup.getPreviewH | raw }}
+                    </div>
+                    <p class="dcf-txt-center">
+                        <i>
+                            Horizontal
+                        </i>
+                    </p>
+                </div>
+
+            </div>
+            {% endif %}
+            {% if Lockup.getPreviewV != null%}
+            <div class="vert">
+                <div style="display: inline-block">
+                    <div class="lockups-preview dcf-p-7">
+                        {{ Lockup.getPreviewV | raw }}
+                    </div>
+                    <p class="dcf-txt-center">
+                        <i>
+                            Vertical
+                        </i>
+                    </p>
+                </div>
+            </div>
+
+            {% endif %}
+            </div>
+            </div>
+            <div class="dcf-txt-center">
+            <a href="#" class="dcf-btn dcf-btn-primary">Generate Files</a>
+            </div>
+
+</div>
+{% endblock %}

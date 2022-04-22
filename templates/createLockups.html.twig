@@ -2,8 +2,8 @@
 {% block body %}
 
 <div class="dcf-wrapper dcf-bleed dcf-pb-7">
-    <div class="dcf-grid dcf-1st@md">
-        <div class="dcf-col-25%-start dcf-rounded dcf-pr-6 dcf-pl-6 dcf-pb-6">
+    <div class="dcf-grid">
+        <div class="dcf-col-100% dcf-col-25%-start@md dcf-rounded dcf-pr-6 dcf-pl-6 dcf-pb-6">
             <h5 class="dcf-mb-5">Select your template</h5>
             <div class="dcf-mb-6">
                 <div class="dcf-grid dcf-grid-halves dcf-mb-5">
@@ -18,8 +18,9 @@
                     {% endfor %}
                 </select>
             </div>
-            <div style="height: 60vh; overflow-y: auto;">
+            <div style="max-height: 60vh; overflow-y: auto;">
                 <div id="horizontal-tab">
+                <div class="dcf-grid-halves dcf-grid dcf-grid-full@md">
                     {% for item in lockups %}
                     {% if item.getStyle == "h" %}
                     <div class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{item.getCategory.getSlug}}"
@@ -31,8 +32,10 @@
                     </div>
                     {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
                 <div id="vertical-tab" style="display: none;">
+                                <div class="dcf-grid-halves dcf-grid dcf-grid-full@md">
                     {% for item in lockups %}
                     {% if item.getStyle == "v" %}
                     <div class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{item.getCategory.getSlug}}"
@@ -43,10 +46,11 @@
                     </div>
                     {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="dcf-col-75%-end dcf-p-6 dcf-2nd@md">
+        <div class="dcf-col-100% dcf-col-75%-end@md dcf-p-6">
             <h5 class="dcf-mb-6">Preview</h5>
             <!-- error tag -->
             {% if error_msg['title'] != ""%}
@@ -81,7 +85,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    <p class="dcf-mt-5 dcf-txt-3xs"> <i class="dxf-txt-left">{{item.getDescription}}</i></p>
+                    <p class="dcf-mt-5 dcf-txt-2xs"> <i class="dxf-txt-left">{{item.getDescription}}</i></p>
                 </div>
                 {% endfor %}
             </div>
@@ -94,22 +98,21 @@
                         style="display: {{(item.getId == 1) ? " block" : "none" }};">
                         <label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
                         <input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}"
-                            maxlength="{{ item.getLength }}" placeholder="{{item.getPlaceholder}}" {#
-                            {{(item.getUppercase==1) ? "style=\" text-transform:uppercase\""}} #}>
+                            maxlength="{{ item.getLength }}" placeholder="{{item.getPlaceholder}}">
                         <p style="font-size: .8em;font-style: italic;">Maximum {{ item.getLength }} characters.</p>
                     </div>
                     {% endfor %}
                     <hr>
                     <div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
-                        <div id="institution" class="dcf-mb-3">
+                        <div class="dcf-mb-3">
                             <label for="exampleFormControlInput1"
                                 class="form-label">College/Organization/Institution</label>
-                            <input type="text" class="dcf-input-text dcf-w-100%" name="institution">
+                            <input id="institution"  type="text" class="dcf-input-text dcf-w-100%" name="institution">
                         </div>
 
-                        <div id="department" class="dcf-mb-3">
+                        <div class="dcf-mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Department</label>
-                            <input type="text" class="dcf-input-text dcf-w-100%" name="department">
+                            <input id="department" type="text" class="dcf-input-text dcf-w-100%" name="department">
                         </div>
                     </div>
                     <div class="dcf-mb-3">
@@ -282,6 +285,7 @@
 
 </script>
 
+
 <script>
     // this is a code for edit lockups and error handling where lockup fields are updated accordinly.
     {% if lockup_style|length > 2 %} {# reads json value as text so length of "[]" = 2#}
@@ -289,13 +293,16 @@
         let lockupStyle = "{{ lockup_style['style'] }}";
         let lockupCategory = "{{ lockup_style['category'] }}";
         let lockupTemplateID = "{{ lockup_style['template_id'] }}";
+        let lockupInstitution = "{{ lockup_style['institution'] }}";
+        let lockupDepartment = "{{ lockup_style['department'] }}";
+
 
         if (lockupStyle == "h") {
             switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
         } else if (lockupStyle == "v") {
             switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
         }
-
+        
         if (lockupCategory != "") {
             category_list.value = lockupCategory;
             updateCategoryListing()
@@ -307,12 +314,22 @@
             selectLockupTemplate(tempElement);
         }
 
+        if (lockupInstitution != "") {
+            let tempElement = document.getElementById("institution");
+            tempElement.value = lockupInstitution;
+        }
+
+        if (lockupDepartment != "") {
+            let tempElement = document.getElementById("department");
+            tempElement.value = lockupDepartment;
+        }
+
         {% if fields|length > 2 %}
         for (let j = 0; j < inputArray.length; j++) {
             for (let i = 0; i < lockupsData.length; i++) {
                 if (lockupsData[i]['fields']['slug'] == inputArray[j]['slug']) {
-                            InputField[j].value = lockupsData[i]['value'];
-                            updateSvgs(j);
+                    InputField[j].value = lockupsData[i]['value'];
+                    updateSvgs(j);
                 }
             }
         }

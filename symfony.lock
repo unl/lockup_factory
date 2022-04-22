@@ -109,6 +109,9 @@
     "phpdocumentor/type-resolver": {
         "version": "1.6.0"
     },
+    "phpmailer/phpmailer": {
+        "version": "v6.6.0"
+    },
     "phpstan/phpdoc-parser": {
         "version": "1.2.0"
     },

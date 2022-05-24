@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 
-
+use App\Entity\LockupFiles;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Lockups;
 use App\Entity\Users;
@@ -105,11 +105,13 @@ class IndexController extends BaseController
         $errors = $validator->validate($lockups);
 
         $lockupsStyle = array(
+            'lockup_id' => $lockups->getId(),
             'style' => $template->getStyle(),
             'category' => $template->getCategory()->getSlug(),
             'template_id' => $template->getId(),
             'institution' => $institution,
-            'department' => $department
+            'department' => $department,
+            'approver' => $approver
         );
 
         foreach ($fields as $item) {
@@ -176,10 +178,17 @@ class IndexController extends BaseController
 
         // end of error checking
         if ($id != 0) {
+            // delete existing fields
             $delete_lockup_fields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
             $delete_entityManager = $doctrine->getManager();
 
             foreach ($delete_lockup_fields as $item) {
+                $delete_entityManager->remove(($item));
+            }
+
+            //delete existing files
+            $delete_lockup_files = $doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
+            foreach ($delete_lockup_files as $item) {
                 $delete_entityManager->remove(($item));
             }
             $delete_entityManager->flush();
@@ -194,8 +203,14 @@ class IndexController extends BaseController
         $entityManager->persist($lockups);
         $entityManager->flush();
         $lockupsGenerator->createPreview($lockups->getId());
+        if ($id != 0) {
+            return $this->redirectToRoute('previewLockups', [
+                'id' => $id
+            ], 302); 
+        }
         return $this->redirectToRoute('manageLockups', [], 302);
     }
+
     /**
      * @Route("/lockups/create", name="createLockups")
      */
@@ -207,6 +222,7 @@ class IndexController extends BaseController
             '<html><body>The create lockups route Lucky number: ' . $number . '</body></html>'
         );
     }
+
     /**
      * @Route("/lockups/manage", name="manageLockups")
      */
@@ -244,6 +260,7 @@ class IndexController extends BaseController
 
         return $this->redirectToRoute('manageLockups', [], 302);
     }
+
     /**
      * @Route("/lockups/preview/{id}", name="previewLockups")
      */
@@ -266,6 +283,7 @@ class IndexController extends BaseController
             'user' => $auth
         ]);
     }
+
     /**
      * @Route("/logout", name="logout")
      */
@@ -274,6 +292,7 @@ class IndexController extends BaseController
         $auth->logout();
         return $this->redirectToRoute('homePage', [], 302);
     }
+
     /**
      * @Route("/lockups/library", name="lockupsLibrary")
      */
@@ -283,6 +302,7 @@ class IndexController extends BaseController
             'page_name' => "LockupsLibrary"
         ]);
     }
+
     /**
      * @Route("/lockups/edit/{id}", name="editLockups", methods={"GET"})
      */
@@ -292,11 +312,13 @@ class IndexController extends BaseController
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
         $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
         $lockupsStyle = array(
+            'lockup_id' => $lockup->getId(),
             'style' => $lockup->getTemplate()->getStyle(),
             'category' => $lockup->getTemplate()->getCategory()->getSlug(),
             'template_id' => $lockup->getTemplate()->getId(),
             'institution' => $lockup->getInstitution(),
-            'department' => $lockup->getDepartment()
+            'department' => $lockup->getDepartment(),
+            'approver' => $lockup->getApprover()
         );
         $response = $this->forward('App\Controller\IndexController::homePage', [
             'fields' => $lockupFields,
@@ -320,7 +342,7 @@ class IndexController extends BaseController
     }
 
     /**
-     * @Route("/lockups/download/{id}", name="editedLockups", methods={"GET"})
+     * @Route("/lockups/download/{id}", name="downloadLockups", methods={"GET"})
      */
     public function downloadLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
     {
@@ -331,6 +353,65 @@ class IndexController extends BaseController
             'page_template' => "downloadLockups.html.twig",
             'Lockup' => $lockup
         ]);
+    }
+
+    /**
+     * @Route("/lockups/generate/{id}", name="generateLockups", methods={"GET"})
+     */
+    public function generateLockups(int $id, ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response
+    {
+        // $auth->requireAuth();
+
+        $lockupsGenerator->generateLockups($id);
+
+        return $this->redirectToRoute('downloadLockups', [
+            'id' => $id
+        ], 302);
+    }
+
+   /**
+     * @Route("/lockups/actions/", name="lockupsAction", methods={"POST"})
+     */
+    public function lockupsActions(ManagerRegistry $doctrine, Request $request, Auth $auth): RedirectResponse
+    {
+        $auth->requireAuth();
+        $id = $request->request->get('id');
+        $action = $request->request->get('action');
+        $creative_feedback = $request->request->get('creative_feedback');
+        $communicator_feedback = $request->request->get('communicator_feedback');
+
+        $lockups = $doctrine->getRepository(Lockups::class)->find($id);
+
+        if ($action == "approve" && $auth->isCreative()) {
+            $lockups->setCreativeStatus(1);
+            $lockups->setCreativeFeedback($creative_feedback);
+        } else if ($action == "approve" && $auth->isApprover()) {
+            $lockups->setCommunicatorStatus(1);
+            $lockups->setCommunicatorFeedback($creative_feedback);
+        } else if  ($action == "update" && $auth->isCreative()) {
+            $lockups->setCreativeFeedback($creative_feedback);
+        } else if ($action == "update" && $auth->isApprover()) {
+            $lockups->setCommunicatorFeedback($communicator_feedback);
+        }else if ($action == "feedback" && $auth->isApprover()) {
+            $lockups->setCommunicatorFeedback(0);
+            $lockups->setCommunicatorFeedback($communicator_feedback);
+        }else if ($action == "feedback" && $auth->isCreative()) {
+            $lockups->setCreativeStatus(0);
+            $lockups->setCommunicatorFeedback($communicator_feedback);
+        }else if ($action == "deny" && $auth->isApprover()) {
+            $lockups->setCommunicatorFeedback(0);
+            $lockups->setCommunicatorFeedback($communicator_feedback);
+        }else if ($action == "deny"  && $auth->isCreative()) {
+            $lockups->setCreativeStatus(0);
+            $lockups->setCreativeFeedback($creative_feedback);
+        }
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($lockups);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('previewLockups', [
+            'id' => $id
+        ], 302); 
     }
 
     public function errorPage(string $errorTitle = "", string $errorBody = ""): Response

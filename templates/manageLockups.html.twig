@@ -1,37 +1,30 @@
 {% block body %}
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
     <h3>Manage your lockups</h3>
-    <p>Welcome {{ user }} </p>
+    <p>Welcome {{ user }}</p>
     <table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+    <thead>
         <tr>
-            <th>
-                Title
-            </th>
-            <th>
-                Preview
-            </th>
-            <th>
-                Approver
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                Actions
-            </th>
+            <th scope="col">Title</th>
+            <th scope="col">Preview</th>
+            <th scope="col">Approver</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
+        </thead>
+        <tbody>
         {% for item in lockups_array%}
         <tr>
-            <td>
+            <td data-label="Title">
                 {{item.getId}}
             </td>
-            <td>
+            <td data-label="Preview">
             <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
             </td>
-            <td>
+            <td data-label="Approver">
                 {{item.getApprover}}
             </td>
-            <td>
+            <td data-label="Status">
             {{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
             {{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
             {{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
@@ -41,7 +34,7 @@
                             {{(item.getCreativeStatus == 2) ? "<p><strong>Creative</strong>: Rejected</p>" | raw}}
 
             </td>
-            <td>
+            <td data-label="Actions">
                 <a href="/lockups/preview/{{item.getId}}"><button class="dcf-btn dcf-btn-secondary">View</button></a>
                 <form action="/lockups/delete/" method="POST" style="display: inline;">
                     <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
@@ -50,6 +43,7 @@
             </td>
         </tr>
         {% endfor %}
+        <tbody>
     </table>
 </div>
 {% endblock %}

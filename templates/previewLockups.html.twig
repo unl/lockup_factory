@@ -77,11 +77,32 @@
             <div class="dcf-mb-5">
                 {% if (user.isApprover == false and user.isCreative == false) %}
                 <a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+                {% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
                 <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
+                {% endif %}
                 {% else %}
-                <a href="#" class="dcf-btn dcf-btn-primary">Approve This Lockup</a>
-                <a href="#" class="dcf-btn dcf-btn-secondary">Leave Feedback Only</a>
-                <a href="#" class="dcf-btn dcf-btn-secondary">Deny This Lockup</a>
+                <form action="/lockups/actions/" method="POST" style="display: inline;">
+                    <button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
+                    <input type="hidden" name="id" value="{{Lockup.getId}}">
+                    <input type="hidden" name="action" value="approve">
+                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                </form>
+                                <form action="/lockups/actions/" method="POST" style="display: inline;">
+                    <button type="submit" class="dcf-btn dcf-btn-secondary">Leave Feedback Only</button>
+                    <input type="hidden" name="id" value="{{Lockup.getId}}">
+                    <input type="hidden" name="action" value="feedback">
+                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                </form>
+                                <form action="/lockups/actions/" method="POST" style="display: inline;">
+                    <button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
+                    <input type="hidden" name="id" value="{{Lockup.getId}}">
+                    <input type="hidden" name="action" value="deny">
+                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                </form>
+                {# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
                 {% endif %}
             </div>
             <h4>
@@ -106,12 +127,12 @@
 
                 {% if (user.isApprover == true)%}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback"
-                    name="communicator_feedback"
+                    name="communicator-feedback"
                     placeholder="Write your feedback.">{{Lockup.getCommunicatorFeedback}}</textarea>
                 {% else %}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2"
                     style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca;" disabled="" rows="5"
-                    id="creative-feedback" name="creative_feedback">{{Lockup.getCommunicatorFeedback}}</textarea>
+                    id="communicator-feedback" name="communicator-feedback">{{Lockup.getCommunicatorFeedback}}</textarea>
 
                 {% endif %}
 
@@ -119,12 +140,12 @@
 
                 {% if (user.isApprover == true)%}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback"
-                    name="communicator_feedback" placeholder="Write your feedback."></textarea>
+                    name="communicator-feedback" placeholder="Write your feedback."></textarea>
                 {% else %}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2"
                     style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca; font-style: italic;"
                     disabled="" rows="5" id="communicator-feedback"
-                    name="communicator_feedback">Feedback from communicator will be posted here.</textarea>
+                    name="communicator-feedback">Feedback from communicator will be posted here.</textarea>
                 {% endif %}
 
                 {% endif %}
@@ -148,12 +169,12 @@
                 {% if Lockup.getCreativeFeedback != null %}
                                 {% if (user.isCreative == true)%}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="creative-feedback"
-                    name="creative_feedback"
+                    name="creative-feedback"
                     placeholder="Write your feedback.">{{Lockup.getCreativeFeedback}}</textarea>
                 {% else %}
                                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2"
                     style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca;" disabled="" rows="5"
-                    id="creative-feedback" name="creative_feedback">{{Lockup.getCreativeFeedback}}</textarea>
+                    id="creative-feedback" name="creative-feedback">{{Lockup.getCreativeFeedback}}</textarea>
 
                 {% endif %}
 
@@ -161,18 +182,24 @@
 
                                 {% if (user.isCreative == true)%}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="creative-feedback"
-                    name="creative_feedback" placeholder="Write your feedback."></textarea>
+                    name="creative-feedback" placeholder="Write your feedback."></textarea>
                 {% else %}
                 <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2"
                     style="background-color: #F0F0EF; color: #424240;border-color: #c7c8ca; font-style: italic;"
                     disabled="" rows="5" id="creative-feedback"
-                    name="creative_feedback">Feedback from creative will be posted here.</textarea>
+                    name="creative-feedback">Feedback from creative will be posted here.</textarea>
                 {% endif %}
                 {% endif %}
             </div>
             <div>
     {% if (user.isApprover == true or user.isCreative == true) %}
-            <a href="#" class="dcf-btn dcf-btn-secondary dcf-mt-2">Update Feedback</a>
+                   <form action="/lockups/actions/" method="POST" style="display: inline;">
+                    <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Update Feedback</button>
+                    <input type="hidden" name="id" value="{{Lockup.getId}}">
+                    <input type="hidden" name="action" value="update">
+                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                </form>
             {% endif %}
             </div>
         </div>
@@ -180,3 +207,25 @@
     </div>
 </div>
 {% endblock %}
+
+<script>
+let communicator_feedback = document.getElementById("communicator-feedback");
+let creative_feedback = document.getElementById("creative-feedback");
+let communicator_feedback_class = document.getElementsByClassName("communicator-feedback-class");
+let creative_feedback_class = document.getElementsByClassName("creative-feedback-class");
+
+communicator_feedback.addEventListener("input", updateFeedbacks);
+creative_feedback.addEventListener("input", updateFeedbacks);
+
+updateFeedbacks()
+
+function updateFeedbacks() {
+    for (let i = 0; i < communicator_feedback_class.length; i ++) {
+        communicator_feedback_class[i].value = communicator_feedback.value;
+    }
+    for (let i = 0; i < creative_feedback_class.length; i ++) {
+        creative_feedback_class[i].value = creative_feedback.value;
+    }
+}
+
+</script>

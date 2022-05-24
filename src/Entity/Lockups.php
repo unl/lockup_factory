@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LockupsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LockupsRepository::class)]
@@ -55,6 +57,17 @@ class Lockups
 
     #[ORM\Column(type: 'integer', options:["default"=> 0])]
     private $CommunicatorStatus;
+
+    #[ORM\OneToMany(mappedBy: 'lockup', targetEntity: LockupFiles::class, orphanRemoval: true)]
+    private $lockupFiles;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $zipUrl;
+
+    public function __construct()
+    {
+        $this->lockupFiles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -225,6 +238,48 @@ class Lockups
     public function setCommunicatorStatus(?int $CommunicatorStatus): self
     {
         $this->CommunicatorStatus = $CommunicatorStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LockupFiles>
+     */
+    public function getLockupFiles(): Collection
+    {
+        return $this->lockupFiles;
+    }
+
+    public function addLockupFile(LockupFiles $lockupFile): self
+    {
+        if (!$this->lockupFiles->contains($lockupFile)) {
+            $this->lockupFiles[] = $lockupFile;
+            $lockupFile->setLockup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLockupFile(LockupFiles $lockupFile): self
+    {
+        if ($this->lockupFiles->removeElement($lockupFile)) {
+            // set the owning side to null (unless already changed)
+            if ($lockupFile->getLockup() === $this) {
+                $lockupFile->setLockup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getZipUrl(): ?string
+    {
+        return $this->zipUrl;
+    }
+
+    public function setZipUrl(?string $zipUrl): self
+    {
+        $this->zipUrl = $zipUrl;
 
         return $this;
     }

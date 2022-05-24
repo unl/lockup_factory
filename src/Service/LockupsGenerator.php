@@ -56,7 +56,6 @@ class LockupsGenerator
         return $array;
     }
 
-
     public function createPreview(int $id): string
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
@@ -104,6 +103,8 @@ class LockupsGenerator
         $lockups_name = str_replace(" ", "_", $lockups_name);
         $lockups_name = $lockups_name . "__";
 
+        //remove the existing folder
+        $this->lockupsConverter->deteleFolder($lockups_name);
 
         //the actual process
         foreach ($orients as $orient) {
@@ -111,12 +112,12 @@ class LockupsGenerator
             {
                 foreach ($styles as $style) {
                     $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, false);
-                    $this->lockupsConverter->saveSvg($svgFile, $lockups_name , $orient, false, $style);
+                    $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name , $orient, false, $style);
 
                     if ($array['template'] != 'v_social') // no reverse for this style
                     {
                     $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, true);
-                    $this->lockupsConverter->saveSvg($svgFile, $lockups_name , $orient, true, $style);
+                    $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name , $orient, true, $style);
                     }
                 }
             }
@@ -126,6 +127,8 @@ class LockupsGenerator
         $lockups->setIsGenerated(1);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
+
+        $this->lockupsConverter->createZip($lockups->getId(), $lockups_name);
         return "";
     }
 }

@@ -36,8 +36,69 @@
             </div>
             </div>
             <div class="dcf-txt-center">
-            <a href="#" class="dcf-btn dcf-btn-primary">Generate Files</a>
+            <div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
+            {% if Lockup.getIsGenerated == 0 %}
+            {# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
+            <button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
+            <button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
+            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
+
+            {% elseif Lockup.getIsGenerated == 1 %}
+            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn">Download All (.zip)</a>
+            
+            <table class="dcf-table dcf-table-striped dcf-table-bordered">
+            <thead>
+            <tr>
+            <th>Name</th>
+            <th>Format</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in Lockup.getLockupFiles%}
+            <tr>
+            <td><a href="{{item.getUrl}}">{{ item.getFileName}}</a></td>
+            <td>{{ item.getFormat}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+            {% endif %}
             </div>
 
 </div>
 {% endblock %}
+
+
+<script>
+let generateBtn = document.getElementById("generateBtn");
+let generatingBtn = document.getElementById("generatingBtn");
+let generatingLoader = document.getElementById("generatingLoader");
+let generatedBtn = document.getElementById("generatedBtn");
+generateBtn.addEventListener("click", generateLockup);
+
+function generateLockup() {
+
+
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener('loadstart', () => {
+        generateBtn.style.display = "none";
+        generatingBtn.style.display = "inline-block";
+        generatingLoader.style.display = "block";
+    });
+    xhr.addEventListener('progress', () => {
+        generateBtn.style.display = "none";
+        generatingBtn.style.display = "inline-block";
+        generatingLoader.style.display = "block";
+    });
+    xhr.addEventListener('loadend', () => {
+        generateBtn.style.display = "none";
+        generatingBtn.style.display = "none";
+        generatingLoader.style.display = "none";
+        location.reload();
+    });
+    
+    xhr.open("GET", "/lockups/generate/{{ Lockup.getId }}");
+    xhr.send();
+    return xhr;
+}
+</script>

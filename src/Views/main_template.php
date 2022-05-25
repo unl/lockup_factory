@@ -21,7 +21,7 @@ $appControlURL = '';
 # Document titles
 $page->doctitle = '<title>UNL Lockup Factory</title>';
 $page->titlegraphic = '<a class="dcf-txt-h5" href="' .  $baseURL . '">UNL Lockup Factory</a>';
-$page->affiliation = '<a href="http://ucomm.unl.edu">University Communication</a>';
+$page->affiliation = '<a href="https://ucomm.unl.edu">University Communication &amp; Marketing</a>';
 
 # css
 $page->addStyleSheet($baseURL . 'css/main.css?v=20220125');

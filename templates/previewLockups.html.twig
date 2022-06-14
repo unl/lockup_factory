@@ -2,6 +2,12 @@
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
     {% if (user.isApprover == false and user.isCreative == false) %}
     <h3>Edit lockup</h3>
+    <div class="dcf-w-max-lg dcf-ml-auto dcf-mr-auto">
+    <div class="dcf-notice dcf-notice-success dcf-w-max-lg" hidden>
+  <h2>Success!</h2>
+  <div>You've successfully completed an action.</div>
+</div>
+</div>
     <div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "
         dcf-notice-success" : "dcf-notice-info" }} dcf-d-grid dcf-ml-auto dcf-mr-auto dcf-mb-6 dcf-rounded
         dcf-notice-initialized dcf-w-max-lg" id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd" role="alertdialog"
@@ -153,16 +159,16 @@
             <br>
             {% if ((Lockup.getCreativeStatus == 0) and (Lockup.getCreativeFeedback != null)) %}
             <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Creative</strong>: Feedback received<br>
+                <strong>Creative (University Communications)</strong>: Feedback received<br>
 
             </div>
             {% elseif (Lockup.getCreativeStatus == 1)%}
             <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Creative</strong>: Approved
+                <strong>Creative (University Communications)</strong>: Approved
             </div>
             {% else %}
             <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Creative</strong>: Awaiting Approval<br>
+                <strong>Creative (University Communications)</strong>: Awaiting Approval<br>
             </div>
             {% endif %}
             <div>

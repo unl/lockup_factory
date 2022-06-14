@@ -103,15 +103,16 @@
                     </div>
                     {% endfor %}
                     <hr>
+                    <b class="dcf-mb-4 dcf-d-block">For the filename </b>
                     <div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
                         <div class="dcf-mb-3">
                             <label for="exampleFormControlInput1"
-                                class="form-label">College/Organization/Institution</label>
+                                class="form-label">College/Organization/Institution Acronym</label>
                             <input id="institution"  type="text" class="dcf-input-text dcf-w-100%" name="institution">
                         </div>
 
                         <div class="dcf-mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Department</label>
+                            <label for="exampleFormControlInput1" class="form-label">Lockup Name</label>
                             <input id="department" type="text" class="dcf-input-text dcf-w-100%" name="department">
                         </div>
                     </div>
@@ -144,7 +145,9 @@
                         </select>
                     </div>
                     {% if lockup_style|length > 2 %}
+                    {% if lockup_style['lockup_id'] != null %}
                     <a href="/lockups/preview/{{ lockup_style['lockup_id'] }}" class="dcf-btn dcf-btn-secondary">Go Back</a>
+                    {% endif %}
                     {% endif %}
                     <button class="dcf-btn dcf-btn-primary">Submit</button>
                 </div>
@@ -152,6 +155,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- tabs script -->
 <script>

@@ -9,5 +9,10 @@
     {% include page_template %}
     {% endif %}
     {% endblock %}
+    <script>
+  window.addEventListener('inlineJSReady', function() {
+    WDN.initializePlugin('notice');
+  }, false);
+</script>
 </div>
 {% endblock %}

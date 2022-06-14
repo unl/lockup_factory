@@ -16,7 +16,7 @@
         {% for item in lockups_array%}
         <tr>
             <td data-label="Title">
-                {{item.getId}}
+                {{item.getDepartment}} {{item.getInstitution}}
             </td>
             <td data-label="Preview">
             <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
@@ -29,9 +29,9 @@
             {{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
             {{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
 
-                            {{(item.getCreativeStatus == 0) ? "<p><strong>Creative</strong>: Awaiting Approval</p>" | raw}}
-                            {{(item.getCreativeStatus == 1) ? "<p><strong>Creative</strong>: Approved</p>" | raw}}
-                            {{(item.getCreativeStatus == 2) ? "<p><strong>Creative</strong>: Rejected</p>" | raw}}
+                            {{(item.getCreativeStatus == 0) ? "<p><strong>Creative (University Communications)</strong>: Awaiting Approval</p>" | raw}}
+                            {{(item.getCreativeStatus == 1) ? "<p><strong>Creative (University Communications)</strong>: Approved</p>" | raw}}
+                            {{(item.getCreativeStatus == 2) ? "<p><strong>Creative (University Communications)</strong>: Rejected</p>" | raw}}
 
             </td>
             <td data-label="Actions">

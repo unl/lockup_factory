@@ -152,9 +152,21 @@ class IndexController extends BaseController
         }
 
 
-        if (($department == "") && ($institution == "")) {
+        if (($department =! "") && ($institution == "")) {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please enter your Institution/Department name.";
+            $response = $this->forward('App\Controller\IndexController::homePage', [
+                'errorMsg' => $errorMsg,
+                'fields' => $arr,
+                'lockupStyle' => $lockupsStyle
+
+            ]);
+            return $response;
+        }
+
+        if (($department == "") && ($institution =! "")) {
+            $errorMsg['title'] = "Error!";
+            $errorMsg['body'] = "Please enter your Lockup Name.";
             $response = $this->forward('App\Controller\IndexController::homePage', [
                 'errorMsg' => $errorMsg,
                 'fields' => $arr,
@@ -208,7 +220,10 @@ class IndexController extends BaseController
                 'id' => $id
             ], 302); 
         }
-        return $this->redirectToRoute('manageLockups', [], 302);
+        // return $this->redirectToRoute('manageLockups', [], 302);
+        return $this->redirectToRoute('previewLockups', [
+            'id' => $lockups->getId()
+        ], 302); 
     }
 
     /**
@@ -230,6 +245,7 @@ class IndexController extends BaseController
     {
         $auth->requireAuth();
         $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
+        $product = array_reverse($product);
         return $this->render('base.html.twig', [
             'page_template' => "manageLockups.html.twig",
             'page_name' => "ManageLockups",

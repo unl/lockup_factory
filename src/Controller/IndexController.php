@@ -8,7 +8,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Lockups;
 use App\Entity\Users;
 use App\Entity\LockupsFields;
+use App\Repository\LockupsFieldsRepository;
 use App\Entity\LockupTemplates;
+use App\Entity\Feedbacks;
 use App\Entity\LockupTemplatesCategories;
 use App\Entity\LockupTemplatesFields;
 use Doctrine\ORM\Cache\Lock;
@@ -102,6 +104,7 @@ class IndexController extends BaseController
         $lockups->setCreativeStatus(0);
         $lockups->setIsGenerated(0);
         $lockups->setGenerating(0);
+        $lockups->setPublic(1);
         $errors = $validator->validate($lockups);
 
         $lockupsStyle = array(
@@ -151,6 +154,17 @@ class IndexController extends BaseController
             }
         }
 
+        if (($department == "") && ($institution =! "")) {
+            $errorMsg['title'] = "Error!";
+            $errorMsg['body'] = "Please enter your Lockup Name.";
+            $response = $this->forward('App\Controller\IndexController::homePage', [
+                'errorMsg' => $errorMsg,
+                'fields' => $arr,
+                'lockupStyle' => $lockupsStyle
+
+            ]);
+            return $response;
+        }
 
         if (($department =! "") && ($institution == "")) {
             $errorMsg['title'] = "Error!";
@@ -164,17 +178,7 @@ class IndexController extends BaseController
             return $response;
         }
 
-        if (($department == "") && ($institution =! "")) {
-            $errorMsg['title'] = "Error!";
-            $errorMsg['body'] = "Please enter your Lockup Name.";
-            $response = $this->forward('App\Controller\IndexController::homePage', [
-                'errorMsg' => $errorMsg,
-                'fields' => $arr,
-                'lockupStyle' => $lockupsStyle
 
-            ]);
-            return $response;
-        }
 
         if (($approver == 0)) {
             $errorMsg['title'] = "Error!";
@@ -241,16 +245,44 @@ class IndexController extends BaseController
     /**
      * @Route("/lockups/manage", name="manageLockups")
      */
-    public function manageLockups(ManagerRegistry $doctrine, Auth $auth): Response
+    public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, LockupsFieldsRepository $lockupsFieldsRepository): Response
     {
         $auth->requireAuth();
+        $search = (string)$request->query->get('search_term');
+        if ($search != "") {
+            $searchResult = $lockupsFieldsRepository->searchField($search);
+            $searchLockupResult = [];
+            $searchArr = [];
+            
+            foreach($searchResult as $searchItem) {
+                array_push($searchArr, $searchItem->getLockup()->getId());
+            }
+
+            $searchArr = array_unique($searchArr);
+
+            foreach($searchArr as $arrItem) {
+                $temp = $doctrine->getRepository(Lockups::class)->find($arrItem);
+                if ($temp->getUser()->getId() == $auth->getUser()->getId()) {
+                    array_push($searchLockupResult, $doctrine->getRepository(Lockups::class)->find($arrItem));
+                }
+            }
+
+            return $this->render('base.html.twig', [
+                'page_template' => "manageLockups.html.twig",
+                'page_name' => "ManageLockups",
+                'lockups_array' => $searchLockupResult,
+                'user' => $auth->getUsername(),
+                'search' => $search
+            ]); 
+        }
         $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
         $product = array_reverse($product);
         return $this->render('base.html.twig', [
             'page_template' => "manageLockups.html.twig",
             'page_name' => "ManageLockups",
             'lockups_array' => $product,
-            'user' => $auth->getUsername()
+            'user' => $auth->getUsername(),
+            'search' => ""
         ]);
     }
 
@@ -312,10 +344,40 @@ class IndexController extends BaseController
     /**
      * @Route("/lockups/library", name="lockupsLibrary")
      */
-    public function lockupsLibrary(): Response
+    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request): Response
     {
+        $search = (string)$request->query->get('search_term');
+        if ($search != "") {
+            $searchResult = $lockupsFieldsRepository->searchField($search);
+            $searchLockupResult = [];
+            $searchArr = [];
+            
+            foreach($searchResult as $searchItem) {
+                array_push($searchArr, $searchItem->getLockup()->getId());
+            }
+
+            $searchArr = array_unique($searchArr);
+
+            foreach($searchArr as $arrItem) {
+                $temp = $doctrine->getRepository(Lockups::class)->find($arrItem);
+                    array_push($searchLockupResult, $doctrine->getRepository(Lockups::class)->find($arrItem));
+            }
+
+            return $this->render('base.html.twig', [
+                'page_template' => "lockupsLibrary.html.twig",
+                'page_name' => "LockupsLibrary",
+                'lockups_array' => $searchLockupResult,
+                'search' => $search
+            ]); 
+        }
+
+        $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
+
         return $this->render('base.html.twig', [
-            'page_name' => "LockupsLibrary"
+            'page_template' => "lockupsLibrary.html.twig",
+            'page_name' => "LockupsLibrary",
+            'lockups_array' => $publicLockups,
+            'search' => ""
         ]);
     }
 
@@ -393,36 +455,61 @@ class IndexController extends BaseController
         $auth->requireAuth();
         $id = $request->request->get('id');
         $action = $request->request->get('action');
-        $creative_feedback = $request->request->get('creative_feedback');
-        $communicator_feedback = $request->request->get('communicator_feedback');
+        $creative_feedback = $request->request->get('creative-feedback');
+        $communicator_feedback = $request->request->get('communicator-feedback');
 
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
 
+        $feedback = new Feedbacks;
+        $feedback->setUser($auth->getUser());
+        $feedback->setLockup($lockups);
+        $feedback->setTime(date("Y-m-d H:i:s"));
+        $msg = "";
+        if ($auth->isCreative()) {
+            $feedback->setType("creative");
+            if ($action == "approve") {
+                $msg = "LOCKUP APPROVED";
+            } else if ($action == "deny") {
+                $msg = "LOCKUP DENIED";
+            } else if ($action == "update") {
+            $msg = $creative_feedback;
+            }
+            $feedback->setValue($msg);
+
+        } else if ($auth->isApprover()) {
+            $feedback->setType("approver");
+            if ($action == "approve") {
+                $msg = "LOCKUP APPROVED";
+            } else if ($action == "deny") {
+                $msg = "LOCKUP DENIED";
+            } else if ($action == "update") {
+            $msg = $communicator_feedback;
+            }
+            $feedback->setValue($msg);
+        }
+
         if ($action == "approve" && $auth->isCreative()) {
             $lockups->setCreativeStatus(1);
-            $lockups->setCreativeFeedback($creative_feedback);
         } else if ($action == "approve" && $auth->isApprover()) {
             $lockups->setCommunicatorStatus(1);
-            $lockups->setCommunicatorFeedback($creative_feedback);
         } else if  ($action == "update" && $auth->isCreative()) {
             $lockups->setCreativeFeedback($creative_feedback);
         } else if ($action == "update" && $auth->isApprover()) {
             $lockups->setCommunicatorFeedback($communicator_feedback);
         }else if ($action == "feedback" && $auth->isApprover()) {
             $lockups->setCommunicatorFeedback(0);
-            $lockups->setCommunicatorFeedback($communicator_feedback);
         }else if ($action == "feedback" && $auth->isCreative()) {
             $lockups->setCreativeStatus(0);
-            $lockups->setCommunicatorFeedback($communicator_feedback);
         }else if ($action == "deny" && $auth->isApprover()) {
-            $lockups->setCommunicatorFeedback(0);
-            $lockups->setCommunicatorFeedback($communicator_feedback);
+            $lockups->setCommunicatorStatus(0);
         }else if ($action == "deny"  && $auth->isCreative()) {
             $lockups->setCreativeStatus(0);
-            $lockups->setCreativeFeedback($creative_feedback);
         }
         $entityManager = $doctrine->getManager();
         $entityManager->persist($lockups);
+        if ($action != "feedback") {
+            $entityManager->persist($feedback);
+        }
         $entityManager->flush();
 
         return $this->redirectToRoute('previewLockups', [

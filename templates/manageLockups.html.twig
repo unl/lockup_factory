@@ -1,15 +1,28 @@
 {% block body %}
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
     <h3>Manage your lockups</h3>
-    <p>Welcome {{ user }}</p>
+    <p>Welcome {{ user }},</p>
+
+    <div class="dcf-mb-4">
+    <form class="dcf-form">
+        <label for="search-term">Search Lockups</label>
+        <div class="dcf-input-group">
+            <input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+            <button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+            {% if search != "" %}
+            <a href="/lockups/manage" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+            {% endif %}
+	                </div>
+    </form>
+    </div>
     <table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
     <thead>
         <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Preview</th>
-            <th scope="col">Approver</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
+            <th scope="col" style="width: 20%;">Title</th>
+            <th scope="col" style="width: 25%;">Preview</th>
+            <th scope="col" style="width: 20%;">Approver</th>
+            <th scope="col" style="width: 20%;">Status</th>
+            <th scope="col" style="width: 15%;">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -29,9 +42,9 @@
             {{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
             {{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
 
-                            {{(item.getCreativeStatus == 0) ? "<p><strong>Creative (University Communications)</strong>: Awaiting Approval</p>" | raw}}
-                            {{(item.getCreativeStatus == 1) ? "<p><strong>Creative (University Communications)</strong>: Approved</p>" | raw}}
-                            {{(item.getCreativeStatus == 2) ? "<p><strong>Creative (University Communications)</strong>: Rejected</p>" | raw}}
+                            {{(item.getCreativeStatus == 0) ? "<p><strong>University Communications</strong>: Awaiting Approval</p>" | raw}}
+                            {{(item.getCreativeStatus == 1) ? "<p><strong>University Communications</strong>: Approved</p>" | raw}}
+                            {{(item.getCreativeStatus == 2) ? "<p><strong>University Communications</strong>: Rejected</p>" | raw}}
 
             </td>
             <td data-label="Actions">
@@ -43,7 +56,16 @@
             </td>
         </tr>
         {% endfor %}
+
         <tbody>
     </table>
 </div>
+
+<script>
+let searchTerm = "{{ search }}";
+let searchTermField = document.getElementById("searchTermField");
+if (searchTerm != "") {
+    searchTermField.value = searchTerm;
+}
+</script>
 {% endblock %}

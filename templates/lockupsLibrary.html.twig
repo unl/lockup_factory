@@ -1,0 +1,47 @@
+{% block body %}
+<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+    <h3>Manage your lockups</h3>
+        <div class="dcf-mb-4">
+    <form class="dcf-form">
+        <label for="search-term">Search Lockups</label>
+        <div class="dcf-input-group">
+            <input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+            <button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+            {% if search != "" %}
+            <a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+            {% endif %}
+	                </div>
+    </form>
+    </div>
+
+        <table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Preview</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in lockups_array%}
+        <tr>
+            <td data-label="Title">
+                {{item.getDepartment}} {{item.getInstitution}}
+            </td>
+            <td data-label="Preview">
+            <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+
+        <tbody>
+    </table>
+</div>
+<script>
+let searchTerm = "{{ search }}";
+let searchTermField = document.getElementById("searchTermField");
+if (searchTerm != "") {
+    searchTermField.value = searchTerm;
+}
+</script>
+{% endblock %}

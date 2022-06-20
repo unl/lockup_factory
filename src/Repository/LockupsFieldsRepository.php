@@ -48,6 +48,41 @@ class LockupsFieldsRepository extends ServiceEntityRepository
     // /**
     //  * @return LockupsFields[] Returns an array of LockupsFields objects
     //  */
+    // public function search(string $term): array
+    // {
+    //     $qb = $this->createQueryBuilder('p')
+    //         ->where('p.value LIKE :value')
+    //         ->setParameter('value', '%'.$term.'%')
+    //         ->orderBy('p.value', 'ASC');
+
+    //     $query = $qb->getQuery();
+    //     return $query->execute();
+
+    //     // to get just one result:
+    //     // $product = $query->setMaxResults(1)->getOneOrNullResult();
+    // }
+
+    /**
+     * @return LockupsFields[] Returns an array of LockupsFields objects
+     */
+    public function searchField(string $value): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\LockupsFields p
+            WHERE p.value LIKE :value
+            ORDER BY p.value ASC'
+        )->setParameter('value', '%'.$value.'%');
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    // /**
+    //  * @return LockupsFields[] Returns an array of LockupsFields objects
+    //  */
     /*
     public function findByExampleField($value)
     {

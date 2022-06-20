@@ -4,6 +4,15 @@
 
 {% block content %}
 <div class="dcf-mt-6 dcf-mb-6">
+{% if noticeMessage is defined and noticeMessage != ""%}
+    <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+    <div class="dcf-w-max-lg dcf-ml-auto dcf-mr-auto">
+    <div class="dcf-notice {{noticeType | default('dcf-notice-success')}} dcf-w-max-lg" hidden>
+  <h2>{{noticeTitle | default('Success!')}}</h2>
+  <div>{{noticeMessage}}</div>
+</div>
+</div>
+{% endif %}
     {% block body %}
     {% if page_template is defined %}
     {% include page_template %}

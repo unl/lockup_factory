@@ -64,9 +64,16 @@ class Lockups
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $zipUrl;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $public;
+
+    #[ORM\OneToMany(mappedBy: 'Lockup', targetEntity: Feedbacks::class, orphanRemoval: true)]
+    private $feedbacks;
+
     public function __construct()
     {
         $this->lockupFiles = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -280,6 +287,48 @@ class Lockups
     public function setZipUrl(?string $zipUrl): self
     {
         $this->zipUrl = $zipUrl;
+
+        return $this;
+    }
+
+    public function getPublic(): ?int
+    {
+        return $this->public;
+    }
+
+    public function setPublic(?int $public): self
+    {
+        $this->public = $public;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feedbacks>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedbacks $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks[] = $feedback;
+            $feedback->setLockup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedbacks $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getLockup() === $this) {
+                $feedback->setLockup(null);
+            }
+        }
 
         return $this;
     }

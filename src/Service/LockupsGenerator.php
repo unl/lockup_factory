@@ -93,13 +93,7 @@ class LockupsGenerator
             $styles = array('RGB');
         }
         // set the name
-        if ($lockups->getInstitution() != "")
-        {
-            $lockups_name = $lockups->getInstitution();
-        } else {
-            $lockups_name = $lockups->getDepartment();
-
-        }
+        $lockups_name = $lockups->getInstitution() . "_" . $lockups->getDepartment();
         $lockups_name = str_replace(" ", "_", $lockups_name);
         $lockups_name = $lockups_name . "__";
 

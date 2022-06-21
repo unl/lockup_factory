@@ -94,6 +94,16 @@ class IndexController extends BaseController
         $arr = [];
         $count = 0;
 
+        if ($id != 0) {
+            if ($lockups == null) {
+                $response = $this->forward('App\Controller\IndexController::errorPage', [
+                    'errorTitle' => "Not found!",
+                    'errorBody' => "The requested lockup could not be found."
+                ]);
+                return $response;
+            }
+        }
+
         $lockups->setApprover($approver);
         $lockups->setTemplate($template);
         $lockups->setStatus(0);
@@ -106,7 +116,7 @@ class IndexController extends BaseController
         $lockups->setGenerating(0);
         $lockups->setPublic(1);
         $errors = $validator->validate($lockups);
-
+        
         $lockupsStyle = array(
             'lockup_id' => $lockups->getId(),
             'style' => $template->getStyle(),
@@ -388,6 +398,13 @@ class IndexController extends BaseController
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+        if ($lockup == null) {
+            $response = $this->forward('App\Controller\IndexController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found."
+            ]);
+            return $response;
+        }
         $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
         $lockupsStyle = array(
             'lockup_id' => $lockup->getId(),
@@ -411,6 +428,7 @@ class IndexController extends BaseController
      */
     public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
     {
+        
         $auth->requireAuth();
         $response = $this->forward('App\Controller\IndexController::addLockup', [
             'id' => $id
@@ -427,6 +445,14 @@ class IndexController extends BaseController
         // $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
 
+        if ($lockup == null) {
+            $response = $this->forward('App\Controller\IndexController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found."
+            ]);
+            return $response;
+        }
+
         return $this->render('base.html.twig', [
             'page_template' => "downloadLockups.html.twig",
             'Lockup' => $lockup
@@ -441,7 +467,7 @@ class IndexController extends BaseController
         // $auth->requireAuth();
 
         $lockupsGenerator->generateLockups($id);
-
+        
         return $this->redirectToRoute('downloadLockups', [
             'id' => $id
         ], 302);

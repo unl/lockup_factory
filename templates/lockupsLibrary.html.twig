@@ -29,7 +29,8 @@
                 {{item.getDepartment}} {{item.getInstitution}}
             </td>
             <td data-label="Preview">
-            <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+            <a href="/lockups/download/{{item.getId}}">
+            <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div></a>
             </td>
         </tr>
         {% endfor %}

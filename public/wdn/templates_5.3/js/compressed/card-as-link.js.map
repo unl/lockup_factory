@@ -1,0 +1,1 @@
+{"version":3,"sources":["?"],"names":["require","cardAsLinkModule","cards","document","querySelectorAll","DCFCardAsLink","initialize"],"mappings":"AAEAA,SAAS,kBAAmB,SAAUC,GACpC,GAAIC,GAAQC,SAASC,iBAAiB,oBACrB,IAAIH,GAAiBI,cAAcH,GACzCI","file":"card-as-link.js"}

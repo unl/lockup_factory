@@ -1,0 +1,1 @@
+{"version":3,"sources":["?"],"names":["require","DCFPaginationModule","paginationNavs","document","querySelectorAll","DCFPagination","initialize"],"mappings":"AAEAA,SAAS,kBAAmB,SAAUC,GACpC,GAAIC,GAAiBC,SAASC,iBAAiB,kBAC9B,IAAIH,GAAoBI,cAAcH,GAC5CI","file":"pagination.js"}

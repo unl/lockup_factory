@@ -52,8 +52,7 @@ class LockupsConverter
             foreach ($lockupFiles as $item) {
                 $zip->addFile($item->getDirectory(), $item->getPathName());
             }
-            $zip->addFile($this->projectRoot . "/public/lockups/horiz_convert_pantone.jsx", "horiz_convert_pantone.jsx");
-            $zip->addFile($this->projectRoot . "/public/lockups/vert_convert_pantone.jsx", "vert_convert_pantone.jsx");
+            $zip->addFile($this->projectRoot . "/public/lockups/convert_pantone.jsx", "convert_pantone.jsx");
             // All files are added, so close the zip file.
             $zip->close();
         }

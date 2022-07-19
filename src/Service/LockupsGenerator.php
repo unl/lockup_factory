@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Service\SvgGenerator;
 use App\Service\LockupsConverter;
 use App\Entity\Lockups;
+use App\Entity\LockupFiles;
 use App\Entity\LockupsFields;
 use App\Entity\LockupTemplates;
 use Doctrine\Persistence\ManagerRegistry;
@@ -99,6 +100,15 @@ class LockupsGenerator
 
         //remove the existing folder
         $this->lockupsConverter->deteleFolder($lockups_name);
+
+
+        //remove existing files from db
+        $delete_lockup_files = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
+
+        foreach ($delete_lockup_files as $item) {
+            $this->doctrine->getManager()->remove(($item));
+        }
+        $this->doctrine->getManager()->flush();
 
         //the actual process
         foreach ($orients as $orient) {

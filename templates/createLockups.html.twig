@@ -2,7 +2,7 @@
 {% block body %}
 
 <div class="dcf-wrapper dcf-bleed dcf-pb-7">
-    <div class="dcf-grid">
+    <div class="dcf-grid dcf-col-gap-vw">
         <div class="dcf-col-100% dcf-col-25%-start@md dcf-rounded dcf-pb-6">
             <h5 class="dcf-mb-5">Select your template</h5>
             <div class="dcf-mb-6">
@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="dcf-col-100% dcf-col-75%-end@md dcf-pb-6 dcf-pr-2 dcf-pl-2">
+        <div class="dcf-col-100% dcf-col-75%-end@md dcf-pb-6 dcf-pr-2">
             <h5 class="dcf-mb-6">Preview</h5>
             <!-- error tag -->
             {% if error_msg['title'] != ""%}
@@ -64,20 +64,39 @@
                 {% for item in lockups %}
                 <div id="{{item.getId}}svg" style="display:{{ (item.getId == 1) ? " block" : "none" }}" class="svgTabs">
                     <div class="dcf-grid dcf-grid-halves">
-                        <div class="d-flex flex-column dcf-mr-6" style="background-color: #fff; border-radius: 8px;">
-                            <div>
+                    <div class="dcf-txt-center">
                                 <h6>{{(item.getStyle == "h") ? "Horizontal" : "Vertical"}} </h6>
-                            </div>
-                            <div class="dcf-txt-center align-self-center w-100">
+
+                    </div>
+                        {% if item.getLinksTo != null%}
+                                {% for subitem in lockups %}
+
+                                {% if(subitem.getId == item.getLinksTo) %}
+                    <div class="dcf-txt-center">
+                                <h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
+
+                    </div>
+                                {% endif %}
+
+                                {% endfor %}
+                                {% endif %}
+
+                    </div>
+                    <div class="dcf-grid dcf-grid-halves">
+                        <div class="d-flex flex-column dcf-mr-6" style="background-color: #fff; border-radius: 8px;">
+                            {# <div>
+                                <h6>{{(item.getStyle == "h") ? "Horizontal" : "Vertical"}} </h6>
+                            </div> #}
+                            <div class="dcf-txt-center align-self-center w-100 dcf-pt-3 dcf-pl-2">
                                 {{item.getSvg | raw}}
                             </div>
                         </div>
                         {% if item.getLinksTo != null%}
                         <div class="d-flex" style="background-color: #fff;">
-                            <div class="dcf-flex-col align-self-center dcf-txt-center w-100">
+                            <div class="dcf-flex-col align-self-center dcf-txt-center w-100 dcf-pt-3 dcf-pl-2">
                                 {% for subitem in lockups %}
                                 {% if(subitem.getId == item.getLinksTo) %}
-                                <h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
+                                {# <h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6> #}
                                 {{ subitem.getSvg | raw }}
                                 {% endif %}
                                 {% endfor %}
@@ -99,7 +118,7 @@
                         <label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
                         <input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}"
                             maxlength="{{ item.getLength }}" placeholder="{{item.getPlaceholder}}">
-                        <p style="font-size: .8em;font-style: italic;">Maximum {{ item.getLength }} characters.</p>
+                        <p style="font-size: .8em;font-style: italic;" class="dcf-mt-2">Maximum {{ item.getLength }} characters.</p>
                     </div>
                     {% endfor %}
                     <hr>

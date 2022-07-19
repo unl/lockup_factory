@@ -133,4 +133,13 @@ class Auth
             return false;
         }
     }
+
+    public function isAdmin() : bool {
+        $user = $this->getUser();
+        if ($user->getRole() == "admin") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

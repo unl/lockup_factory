@@ -3,16 +3,11 @@
 {% block doctitle %}<title>UNL Lockups</title>{% endblock %}
 
 {% block content %}
-<div class="dcf-mt-6 dcf-mb-6">
+    <div class="dcf-mt-6 dcf-mb-6">
     {% block body %}
     {% if page_template is defined %}
     {% include page_template %}
     {% endif %}
     {% endblock %}
-    <script>
-  window.addEventListener('inlineJSReady', function() {
-    WDN.initializePlugin('notice');
-  }, false);
-</script>
 </div>
 {% endblock %}

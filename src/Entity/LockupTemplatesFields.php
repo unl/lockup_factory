@@ -26,13 +26,13 @@ class LockupTemplatesFields
     private $slug;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $Placeholder;
+    private $placeholder;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $Value;
+    private $value;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $Uppercase;
+    private $uppercase;
 
     public function getId(): ?int
     {
@@ -89,36 +89,36 @@ class LockupTemplatesFields
 
     public function getPlaceholder(): ?string
     {
-        return $this->Placeholder;
+        return $this->placeholder;
     }
 
-    public function setPlaceholder(?string $Placeholder): self
+    public function setPlaceholder(?string $placeholder): self
     {
-        $this->Placeholder = $Placeholder;
+        $this->placeholder = $placeholder;
 
         return $this;
     }
 
     public function getValue(): ?string
     {
-        return $this->Value;
+        return $this->value;
     }
 
-    public function setValue(?string $Value): self
+    public function setValue(?string $value): self
     {
-        $this->Value = $Value;
+        $this->value = $value;
 
         return $this;
     }
 
     public function getUppercase(): ?int
     {
-        return $this->Uppercase;
+        return $this->uppercase;
     }
 
-    public function setUppercase(?int $Uppercase): self
+    public function setUppercase(?int $uppercase): self
     {
-        $this->Uppercase = $Uppercase;
+        $this->uppercase = $uppercase;
 
         return $this;
     }

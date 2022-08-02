@@ -1,6 +1,6 @@
 {% block body %}
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
-    <h3>Manage your lockups</h3>
+    <h3>Lockups Library</h3>
         <div class="dcf-mb-4">
     <form class="dcf-form">
         <label for="search-term">Search Lockups</label>
@@ -34,15 +34,75 @@
             </td>
         </tr>
         {% endfor %}
-
         <tbody>
     </table>
+
+{# Pagination Script #}
+    {% set currentPage = 3 %}
+    {% set totalPage = 10 %}
+
+    {% if totalPage != 1 %}
+    <nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
+        <ol class="dcf-list-bare dcf-list-inline">
+            {% if currentPage != 1%}
+            <li><a class="dcf-pagination-first" href="1">First</a></li>
+            <li><a class="dcf-pagination-prev" href="{{ currentPage - 1}}">Prev</a></li>
+            {% endif %}
+
+            {% if currentPage == 1%}
+                <li><span class="dcf-pagination-selected">1</span></li>
+                {% for i in (currentPage + 1) .. totalPage %}
+                    {% if (i - currentPage) <= 2%}
+                    <li><a href="{{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if totalPage > 3 %}
+                    <li><span class="dcf-pagination-ellipsis">…</span></li>
+                {% endif %}
+            {% elseif currentPage == totalPage %}
+                {% if totalPage > 3 %}
+                    <li><span class="dcf-pagination-ellipsis">…</span></li>
+                {% endif %}
+                {% for i in (totalPage - 2) .. (totalPage - 1) %}
+                    {% if i >= (totalPage - 2) %}
+                    <li><a href="{{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                <li><span class="dcf-pagination-selected">{{ currentPage }}</span></li>
+            {% else %}
+                {% if (currentPage - 1) > 1 %}
+                    <li><span class="dcf-pagination-ellipsis">…</span></li>
+                {% endif %}
+                    <li><a href="{{ currentPage - 1 }}">{{ currentPage - 1 }}</a></li>
+                    <li><span class="dcf-pagination-selected">{{ currentPage }}</span></li>
+                    <li><a href="{{ currentPage + 1 }}">{{ currentPage + 1 }}</a></li>
+                {% if (currentPage + 1) < totalPage %}
+                    <li><span class="dcf-pagination-ellipsis">…</span></li>
+                {% endif %}
+            {% endif %}
+
+            {% if currentPage != totalPage %}
+            <li><a class="dcf-pagination-next" href="{{ currentPage + 1}}">Next</a></li>
+            <li><a class="dcf-pagination-last" href="{{ totalPage }}">Last</a></li>
+            {% endif %}
+        </ol>
+    </nav>
+{% endif %}
+{# End Pagination Script #}
 </div>
-<script>
+
+
+<script> // search script
 let searchTerm = "{{ search }}";
 let searchTermField = document.getElementById("searchTermField");
 if (searchTerm != "") {
     searchTermField.value = searchTerm;
 }
+</script>
+
+<script> // pagination javascript
+  window.addEventListener('inlineJSReady', function() {
+    WDN.initializePlugin('pagination');
+  }, false);
 </script>
 {% endblock %}

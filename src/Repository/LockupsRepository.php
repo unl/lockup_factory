@@ -45,6 +45,27 @@ class LockupsRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Lockups[] Returns an array of LockupsFields objects
+     */
+    public function searchNames(string $value): array
+    {
+        $searchArr = [];
+
+        $entityManager = $this->getEntityManager();
+
+        $institutionQuery = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Lockups p
+            WHERE p.institution LIKE :value
+            OR 
+            p.department LIKE :value
+            ORDER BY p.institution ASC'
+        )->setParameter('value', '%' . $value . '%');
+
+        // returns an array of Product objects
+        return $institutionQuery->getResult();
+    }
     // /**
     //  * @return Lockups[] Returns an array of Lockups objects
     //  */

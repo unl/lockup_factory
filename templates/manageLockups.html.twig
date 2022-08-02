@@ -29,13 +29,17 @@
         {% for item in lockups_array%}
         <tr>
             <td data-label="Title">
-                {{item.getDepartment}} {{item.getInstitution}}
+                {{item.getInstitution}}  {{item.getDepartment}} 
             </td>
             <td data-label="Preview">
             <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
             </td>
             <td data-label="Approver">
-                {{item.getApprover}}
+            {% if item.getApprover != null%}
+                {{item.getApprover.getName}}
+            {% else %}
+            Communicator not Specified
+            {% endif %}
             </td>
             <td data-label="Status">
             {{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}

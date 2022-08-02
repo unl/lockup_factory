@@ -19,7 +19,7 @@ class LockupsFields
     #[ORM\ManyToOne(targetEntity: LockupTemplatesFields::class)]
     private $fields;
 
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(type: 'string', length: 250, nullable: true)]
     private $value;
 
     public function getId(): ?int

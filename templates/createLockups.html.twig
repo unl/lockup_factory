@@ -117,7 +117,8 @@
                         style="display: {{(item.getId == 1) ? " block" : "none" }};">
                         <label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
                         <input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}"
-                            maxlength="{{ item.getLength }}" placeholder="{{item.getPlaceholder}}">
+                        {{ (user.isAdmin == false) ? 'maxlength=' ~ item.getLength}}
+                            placeholder="{{item.getPlaceholder}}">
                         <p style="font-size: .8em;font-style: italic;" class="dcf-mt-2">Maximum {{ item.getLength }} characters.</p>
                     </div>
                     {% endfor %}
@@ -139,28 +140,10 @@
                         <select def id="approver" name="approver"
                             class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
                             <option value="0">Select your Communicator Contact</option>
-                            <option value="4">Michael Bergland-Riese (EXT)</option>
-                            <option value="5">Kerry McCullough-Vondrak (ARCH)</option>
-                            <option value="6">Terri Pieper (CAS)</option>
-                            <option value="7">Sheri Irwin Gish (CBA)</option>
-                            <option value="9">JS Engebretson (ENG)</option>
-                            <option value="11">Amber Wolff (LAW)</option>
-                            <option value="12">Kathe Andersen (FPA)</option>
-                            <option value="14">Shari Rosso (UH)</option>
-                            <option value="24">Lonna Henrichs (ATH)</option>
-                            <option value="326">Lauren Gayer (Student Affairs)</option>
-                            <option value="340">Mike Jackson (RSO)</option>
-                            <option value="351">Haley Apel (CEHS)</option>
-                            <option value="425">Joan Barnes (Libraries)</option>
-                            <option value="476">Ashley Washburn (ORED)</option>
-                            <option value="557">Chris Dulak (CREC)</option>
-                            <option value="935">Haley Hamel (JMC)</option>
-                            <option value="1285">Christina Gardner (B&amp;F)</option>
-                            <option value="1294">Julie Kundhi (Academic Affairs)</option>
-                            <option value="1507">Jerri Harner (ODI)</option>
-                            <option value="1517">Jeff Sheldon (ALUM)</option>
-                            <option value="1688">Cara Pesek (CASNR &amp; IANR)</option>
-                            <option value="">I'm not sure / not listed / N/A</option>
+                            {% for item in approvers %}
+                            <option value="{{item.getId}}">{{item.getName}} ({{ item.getOrganizationAcronym }})</option>
+                            {% endfor %}
+                            <option value="-1">I'm not sure / not listed / N/A</option>
                         </select>
                     </div>
                     {% if lockup_style|length > 2 %}
@@ -223,9 +206,10 @@
 
     function updateSvgs(k) {
         for (let i = 0; i < Svg[k].length; i++) {
-            if (inputArray[k]['Uppercase'] == 1) {
+            console.log(inputArray[k]['uppercase'])
+            if (inputArray[k]['uppercase'] == 1) {
                 Svg[k][i].innerHTML = InputField[k].value.toUpperCase();
-                backupInputField[k] = InputField[k].value;
+                backupInputField[k] = InputField[k].value.toUpperCase();
             } else {
                 Svg[k][i].innerHTML = InputField[k].value;
                 backupInputField[k] = InputField[k].value;

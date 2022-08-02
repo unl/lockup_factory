@@ -41,8 +41,7 @@
             </h4>
             {% if Lockup.getPreviewH != null%}
             <div class="horiz">
-                <div style="display: inline-block">
-                    <div class="lockups-preview dcf-p-7">
+                    <div class="lockups-preview dcf-p-3">
                         {{ Lockup.getPreviewH | raw }}
                     </div>
                     <p class="dcf-txt-center">
@@ -50,8 +49,6 @@
                             Horizontal
                         </i>
                     </p>
-                </div>
-
             </div>
             {% endif %}
             {% if Lockup.getPreviewV != null%}
@@ -110,16 +107,16 @@
             </h4>
             {% if ((Lockup.getCommunicatorStatus == 0) and (Lockup.getCommunicatorFeedback != null)) %}
             <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Communicator</strong>: Feedback received<br>
+                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Feedback received<br>
 
             </div>
             {% elseif (Lockup.getCommunicatorStatus == 1)%}
             <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Communicator</strong>: Approved
+                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Approved
             </div>
             {% else %}
             <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>Communicator</strong>: Awaiting Approval<br>
+                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Awaiting Approval<br>
             </div>
             {% endif %}
             <div>

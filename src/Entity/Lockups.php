@@ -16,9 +16,6 @@ class Lockups
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    private $approver;
-
-    #[ORM\Column(type: 'integer')]
     private $status;
 
     #[ORM\ManyToOne(targetEntity: LockupTemplates::class)]
@@ -70,6 +67,9 @@ class Lockups
     #[ORM\OneToMany(mappedBy: 'Lockup', targetEntity: Feedbacks::class, orphanRemoval: true)]
     private $feedbacks;
 
+    #[ORM\ManyToOne(targetEntity: Users::class)]
+    private $approver;
+
     public function __construct()
     {
         $this->lockupFiles = new ArrayCollection();
@@ -79,18 +79,6 @@ class Lockups
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getApprover(): ?int
-    {
-        return $this->approver;
-    }
-
-    public function setApprover(int $approver): self
-    {
-        $this->approver = $approver;
-
-        return $this;
     }
 
     public function getStatus(): ?int
@@ -329,6 +317,18 @@ class Lockups
                 $feedback->setLockup(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getApprover(): ?Users
+    {
+        return $this->approver;
+    }
+
+    public function setApprover(?Users $approver): self
+    {
+        $this->approver = $approver;
 
         return $this;
     }

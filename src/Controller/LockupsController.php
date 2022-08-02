@@ -10,6 +10,7 @@ use App\Repository\LockupsFieldsRepository;
 use App\Entity\LockupTemplates;
 use App\Entity\LockupTemplatesFields;
 use App\Entity\Feedbacks;
+use App\Entity\Users;
 use App\Entity\LockupTemplatesCategories;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,6 +29,7 @@ use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 
 use App\Service\Auth;
 use App\Service\LockupsGenerator;
+use App\Service\Core;
 
 
 class LockupsController extends BaseController
@@ -41,14 +43,15 @@ class LockupsController extends BaseController
         $lockups = $doctrine->getRepository(LockupTemplates::class)->findAll();
         $lockups_fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
         $lockups_categories = $doctrine->getRepository(LockupTemplatesCategories::class)->findAll();
+        $approverList = $doctrine->getRepository(Users::class)->findBy(['role' => 'approver'],['name' => 'ASC']);
 
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
-        $jsonContent = $serializer->serialize($lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'Uppercase', 'Value']]);
-
 
         $fields = $serializer->serialize($fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['value', 'fields' => ['slug']]]);
+
+        $jsonContent = $serializer->serialize($lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'uppercase', 'value']]);
 
         return $this->render('base.html.twig', [
             'page_template' => "createLockups.html.twig",
@@ -59,13 +62,15 @@ class LockupsController extends BaseController
             'categories' => $lockups_categories,
             'error_msg' => $errorMsg,
             'fields' => $fields,
-            'lockup_style' => $lockupStyle
+            'lockup_style' => $lockupStyle,
+            'user' => $auth,
+            'approvers' => $approverList
 
         ]);
     }
 
     /**
-     * @Route("/", name="addLockup", methods={"POST"})
+     * @Route("/lockups/create/", name="addLockup", methods={"POST"})
      */
     public function addLockup(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, Auth $auth, LockupsGenerator $lockupsGenerator, int $id = 0)
     {
@@ -80,6 +85,7 @@ class LockupsController extends BaseController
 
         $lockuptemplate = (int)$request->request->get('lockuptemplate');
         $approver = (int)$request->request->get('approver');
+        $approverUser = $doctrine->getRepository(Users::class)->find($approver);
         $institution = (string)$request->get('institution');
         $department = (string)$request->get('department');
         $lockups = ($id != 0) ? $doctrine->getRepository(Lockups::class)->find($id) : new Lockups;
@@ -97,7 +103,7 @@ class LockupsController extends BaseController
             }
         }
 
-        $lockups->setApprover($approver);
+        $lockups->setApprover($approverUser);
         $lockups->setTemplate($template);
         $lockups->setStatus(0);
         $lockups->setDepartment($department);
@@ -236,28 +242,12 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/manage", name="manageLockups")
      */
-    public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, LockupsFieldsRepository $lockupsFieldsRepository): Response
+    public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, Core $core): Response
     {
         $auth->requireAuth();
         $search = (string)$request->query->get('search_term');
         if ($search != "") {
-            $searchResult = $lockupsFieldsRepository->searchField($search);
-            $searchLockupResult = [];
-            $searchArr = [];
-            
-            foreach($searchResult as $searchItem) {
-                array_push($searchArr, $searchItem->getLockup()->getId());
-            }
-
-            $searchArr = array_unique($searchArr);
-
-            foreach($searchArr as $arrItem) {
-                $temp = $doctrine->getRepository(Lockups::class)->find($arrItem);
-                if ($temp->getUser()->getId() == $auth->getUser()->getId()) {
-                    array_push($searchLockupResult, $doctrine->getRepository(Lockups::class)->find($arrItem));
-                }
-            }
-
+            $searchLockupResult = $core->search($search, $private = true);
             return $this->render('base.html.twig', [
                 'page_template' => "manageLockups.html.twig",
                 'page_name' => "ManageLockups",
@@ -335,25 +325,11 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/library", name="lockupsLibrary")
      */
-    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request): Response
+    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core): Response
     {
         $search = (string)$request->query->get('search_term');
         if ($search != "") {
-            $searchResult = $lockupsFieldsRepository->searchField($search);
-            $searchLockupResult = [];
-            $searchArr = [];
-            
-            foreach($searchResult as $searchItem) {
-                array_push($searchArr, $searchItem->getLockup()->getId());
-            }
-
-            $searchArr = array_unique($searchArr);
-
-            foreach($searchArr as $arrItem) {
-                $temp = $doctrine->getRepository(Lockups::class)->find($arrItem);
-                    array_push($searchLockupResult, $doctrine->getRepository(Lockups::class)->find($arrItem));
-            }
-
+            $searchLockupResult = $core->search($search, $private = false);
             return $this->render('base.html.twig', [
                 'page_template' => "lockupsLibrary.html.twig",
                 'page_name' => "LockupsLibrary",
@@ -394,7 +370,7 @@ class LockupsController extends BaseController
             'template_id' => $lockup->getTemplate()->getId(),
             'institution' => $lockup->getInstitution(),
             'department' => $lockup->getDepartment(),
-            'approver' => $lockup->getApprover()
+            'approver' => ($lockup->getApprover() ? $lockup->getApprover()->getId() : -1)
         );
         $response = $this->forward('App\Controller\LockupsController::createLockups', [
             'fields' => $lockupFields,

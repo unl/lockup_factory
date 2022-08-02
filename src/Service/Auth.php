@@ -55,7 +55,7 @@ class Auth
         return $this->doctrine->getRepository(Users::class)->findOneBy(['username' => $this->getUsername()]);
     }
 
-    public function setUser() : int
+    private function setUser() : int
     {
         $username = $this->getUsername();
         
@@ -89,7 +89,7 @@ class Auth
         return 0;
     }
 
-    public function getUserInfo($uid) : array
+    private function getUserInfo($uid) : array
     {
         $info = array();
         

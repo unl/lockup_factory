@@ -1,75 +1,230 @@
 {% block body %}
-<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
-    <h3>Manage your lockups</h3>
-    <p>Welcome {{ user }},</p>
+	<div
+		class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+		{# {{ app.request.getUri }} #}
+		{# {% if alert_message is defined %}
+						
+						<div class="dcf-notice {{ alert_type|default('dcf-notice-success') }}" hidden>
+						  <h2>{{ alert_title }}</h2>
+						  <div>{{ alert_message }}</div>
+						</div>
+						{% endif %} #}
+		<h3>Manage your lockups</h3>
+		<p>Welcome
+			{{ auth.getUsername }},</p>
+		{# <div class="dcf-tabs dcf-tabs-responsive">
+		  <h5>Tab Group Example Using Unordered List and Divs</h5>
+		  <ul>
+		    <li><a href="#example-panel-1">Tab 1</a></li>
+		    <li><a href="#example-panel-2">Tab 2</a></li>
+		    <li><a href="#example-panel-3">Tab 3</a></li>
+		  </ul>
+		  <div id="example-panel-1" class="unl-bg-cream">
+		    <h6>Panel 1</h6>
+		    <p>Vestibulum id ligula porta felis euismod semper. Nullam id dolor id nibh ultricies vehicula ut id elit. Maecenas faucibus mollis interdum. Nulla vitae elit libero, a pharetra augue. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+		  </div>
+		
+		  <div id="example-panel-2">
+		    <h6>Panel 2</h6>
+		    <p>Etiam porta sem malesuada magna mollis euismod. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis consectetur purus sit amet fermentum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nulla vitae elit libero, a pharetra augue. Vestibulum id ligula porta felis euismod semper. Cras mattis consectetur purus sit amet fermentum.</p>
+		  </div>
+		  <div id="example-panel-3">
+		    <h6>Panel 3</h6>
+		    <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vestibulum id ligula porta felis euismod semper. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+		  </div>
+		</div> #}
+		<div class="dcf-mb-4">
+			<form class="dcf-form">
+				<label for="search-term">Search Lockups</label>
+				<div class="dcf-input-group">
+					<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+					<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+					{% if search != "" %}
+						<a href="/lockups/manage" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+					{% endif %}
+				</div>
+			</form>
+		</div>
+        {% if auth.isSpecial %}
+		<div class="dcf-d-flex dcf-flex-row dcf-mb-3 dcf-jc-flex-end">
+			<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
+				<span class="dcf-mr-1">
+					<nobr>Filter by:</nobr>
+				</span>
+				<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
+					<option value="1">Pending (3)</option>
+					<option value="2">Approved (8)</option>
+					<option value="3">Your Lockups (30)</option>
+				</select>
+			</div>
+		</div>
+        {% endif %}
+		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+			<thead>
+				<tr>
+					<th scope="col" style="width: 20%;">Title</th>
+					<th scope="col" style="width: 25%;">Preview</th>
+					<th scope="col" style="width: 20%;">Approver</th>
+					<th scope="col" style="width: 20%;">Status</th>
+					<th scope="col" style="width: 15%;">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in lockups_array%}
+					<tr>
+						<td data-label="Title">
+							{{item.getInstitution}}
+							{{item.getDepartment}}
+						</td>
+						<td data-label="Preview">
+							<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+						</td>
+						<td data-label="Approver">
+							{% if item.getApprover != null%}
+								{{item.getApprover.getName}}
+							{% else %}
+								Communicator not Specified
+							{% endif %}
+						</td>
+						<td data-label="Status">
+							{{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
 
-    <div class="dcf-mb-4">
-    <form class="dcf-form">
-        <label for="search-term">Search Lockups</label>
-        <div class="dcf-input-group">
-            <input id="searchTermField" value="" type="text" name="search_term" id="search-term">
-            <button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
-            {% if search != "" %}
-            <a href="/lockups/manage" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
-            {% endif %}
-	                </div>
-    </form>
-    </div>
-    <table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
-    <thead>
-        <tr>
-            <th scope="col" style="width: 20%;">Title</th>
-            <th scope="col" style="width: 25%;">Preview</th>
-            <th scope="col" style="width: 20%;">Approver</th>
-            <th scope="col" style="width: 20%;">Status</th>
-            <th scope="col" style="width: 15%;">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in lockups_array%}
-        <tr>
-            <td data-label="Title">
-                {{item.getInstitution}}  {{item.getDepartment}} 
-            </td>
-            <td data-label="Preview">
-            <div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-            </td>
-            <td data-label="Approver">
-            {% if item.getApprover != null%}
-                {{item.getApprover.getName}}
-            {% else %}
-            Communicator not Specified
-            {% endif %}
-            </td>
-            <td data-label="Status">
-            {{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
-            {{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
-            {{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
+							{{(item.getCreativeStatus == 0) ? "<p><strong>University Communications</strong>: Awaiting Approval</p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p><strong>University Communications</strong>: Approved</p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p><strong>University Communications</strong>: Rejected</p>" | raw}}
 
-                            {{(item.getCreativeStatus == 0) ? "<p><strong>University Communications</strong>: Awaiting Approval</p>" | raw}}
-                            {{(item.getCreativeStatus == 1) ? "<p><strong>University Communications</strong>: Approved</p>" | raw}}
-                            {{(item.getCreativeStatus == 2) ? "<p><strong>University Communications</strong>: Rejected</p>" | raw}}
+						</td>
+						<td data-label="Actions">
+							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+								View
+							</a>
+							<form action="/lockups/delete/" method="POST" style="display: inline;">
+								<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
+								<input type="hidden" name="id" value="{{item.getId}}">
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 
-            </td>
-            <td data-label="Actions">
-                <a href="/lockups/preview/{{item.getId}}"><button class="dcf-btn dcf-btn-secondary">View</button></a>
-                <form action="/lockups/delete/" method="POST" style="display: inline;">
-                    <button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
-                    <input type="hidden" name="id" value="{{item.getId}}">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
+		{# Pagination Script #}
 
-        <tbody>
-    </table>
-</div>
+		{% if totalPage > 1 %}
+			{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" : path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
+			<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
+				<ol class="dcf-list-bare dcf-list-inline">
+					{% if currentPage != 1%}
+						<li>
+							<a class="dcf-pagination-first" href="{{ currentPath }}1">First</a>
+						</li>
+						<li>
+							<a class="dcf-pagination-prev" href="{{ currentPath }}{{ currentPage - 1}}">Prev</a>
+						</li>
+					{% endif %}
 
-<script>
-let searchTerm = "{{ search }}";
+					{% if currentPage == 1 %}
+						<li>
+							<span class="dcf-pagination-selected">1</span>
+						</li>
+						{% for i in (currentPage + 1) .. totalPage %}
+							{% if (i - currentPage) <= 2%}
+								<li>
+									<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+								</li>
+							{% endif %}
+						{% endfor %}
+						{% if totalPage > 3 %}
+							<li>
+								<span class="dcf-pagination-ellipsis">…</span>
+							</li>
+						{% endif %}
+					{% elseif currentPage == totalPage %}
+						{% if totalPage > 3 %}
+							<li>
+								<span class="dcf-pagination-ellipsis">…</span>
+							</li>
+						{% endif %}
+						{% if totalPage == 2 %}
+							{% for i in 1 .. (totalPage - 1) %}
+								{% if i >= (totalPage - 2) %}
+									<li>
+										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							{% for i in (totalPage - 2) .. (totalPage - 1) %}
+								{% if i >= (totalPage - 2) %}
+									<li>
+										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+						<li>
+							<span class="dcf-pagination-selected">{{ currentPage }}</span>
+						</li>
+					{% else %}
+						{% if (currentPage - 1) > 1 %}
+							<li>
+								<span class="dcf-pagination-ellipsis">…</span>
+							</li>
+						{% endif %}
+						<li>
+							<a href="{{ currentPath }}{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
+						</li>
+						<li>
+							<span class="dcf-pagination-selected">{{ currentPage }}</span>
+						</li>
+						<li>
+							<a href="{{ currentPath }}{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
+						</li>
+						{% if (currentPage + 1) < totalPage %}
+							<li>
+								<span class="dcf-pagination-ellipsis">…</span>
+							</li>
+						{% endif %}
+					{% endif %}
+
+					{% if currentPage != totalPage %}
+						<li>
+							<a class="dcf-pagination-next" href="{{ currentPath }}{{ currentPage + 1}}">Next</a>
+						</li>
+						<li>
+							<a class="dcf-pagination-last" href="{{ currentPath }}{{ totalPage }}">Last</a>
+						</li>
+					{% endif %}
+				</ol>
+			</nav>
+		{% endif %}
+		{# End Pagination Script #}
+	</div>
+
+	<script>
+		let searchTerm = "{{ search }}";
 let searchTermField = document.getElementById("searchTermField");
 if (searchTerm != "") {
-    searchTermField.value = searchTerm;
+searchTermField.value = searchTerm;
 }
-</script>
+	</script>
+
+	<script>
+		window.addEventListener('inlineJSReady', function () {
+WDN.initializePlugin('notice');
+}, false);
+	</script>
+	<script>
+		// pagination javascript
+window.addEventListener('inlineJSReady', function () {
+WDN.initializePlugin('pagination');
+}, false);
+	</script>
+	<script>
+		window.addEventListener('inlineJSReady', function () {
+WDN.initializePlugin('tabs');
+}, false);
+	</script>
 {% endblock %}

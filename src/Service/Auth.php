@@ -142,4 +142,8 @@ class Auth
             return false;
         }
     }
+
+    public function isSpecial() : bool {
+        return ($this->isApprover() or $this->isCreative() or $this->isAdmin());
+    }
 }

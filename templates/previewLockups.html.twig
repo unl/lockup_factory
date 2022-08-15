@@ -1,36 +1,25 @@
 {% block body %}
+{% if alert_message is defined %}
+
+<div class="dcf-notice {{ alert_type|default('dcf-notice-success') }}" hidden>
+  <h2>{{ alert_title }}</h2>
+  <div>{{ alert_message }}</div>
+</div>
+{% endif %}
     {% if (user.isApprover == false and user.isCreative == false) %}
     <h3>Edit lockup</h3>
 
+{% if alert_message is not defined %}
+
     <div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "
-        dcf-notice-success" : "dcf-notice-info" }} dcf-d-grid dcf-ml-auto dcf-mr-auto dcf-mb-6 dcf-rounded
-        dcf-notice-initialized dcf-w-max-lg" id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd" role="alertdialog"
-        aria-labelledby="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd-heading">
-        <div class="dcf-notice-icon"><svg class="dcf-h-100% dcf-w-100%" aria-hidden="true" focusable="false" height="24"
-                width="24" viewBox="0 0 24 24">
-                <path fill="#fefdfa"
-                    d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm-.5 4.8c.7 0 1.2.6 1.2 1.2s-.6 1.2-1.2 1.2-1.3-.5-1.3-1.2.6-1.2 1.3-1.2zM15 19.2H9c-.4 0-.8-.3-.8-.8s.3-.8.8-.8h2.2v-7.5H10c-.4 0-.8-.3-.8-.8s.4-.5.8-.5h2c.2 0 .4.1.5.2.1.1.2.3.2.5v8.2H15c.4 0 .8.3.8.8s-.4.7-.8.7z">
-                </path>
-            </svg></div>
-        <div class="dcf-notice-body">
-            <h4 class="dcf-notice-heading dcf-txt-h6 dcf-mb-0 text-white"
-                id="dcf-notice-e59c27f8-8e98-4241-8bf0-88a7f92c9dcd-heading">{{(Lockup.getCreativeStatus == 1 and
-                Lockup.getCommunicatorStatus ==1) ? "Approved" : "Info"}}</h4>
-            <div class="dcf-notice-message dcf-txt-xs">Your lockup {{(Lockup.getCreativeStatus == 1 and
+        dcf-notice-success" : "dcf-notice-info" }}" hidden>
+  <h2>{{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "Approved" : "Info"}}</h2>
+  <div>Your lockup {{(Lockup.getCreativeStatus == 1 and
                 Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}} by your Communicator
                 Contact and
-                University Communications.
-            </div>
-        </div>
-        <div class="dcf-notice-close"><button class="dcf-btn dcf-btn-inverse-tertiary dcf-lh-1"><span
-                    class="dcf-sr-only">Close this notice</span><svg class="dcf-fill-current" aria-hidden="true"
-                    focusable="false" height="16" width="16" viewBox="0 0 24 24">
-                    <path
-                        d="M23.707 22.293L13.414 12 23.706 1.707A.999.999 0 1022.292.293L12 10.586 1.706.292A1 1 0 00.292 1.706L10.586 12 .292 22.294a1 1 0 101.414 1.414L12 13.414l10.293 10.292a.999.999 0 101.414-1.413z">
-                    </path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </svg></button></div>
-    </div>
+                University Communications.</div>
+</div>
+{% endif %}
     {% else %}
     <h3>Lockup Details</h3>
     {% endif %}
@@ -191,11 +180,17 @@
 
     </div>
 </div>
-{% endblock %}
-
 <script>
 var objDiv = document.getElementById("ofcomm");
 var objDiv2 = document.getElementById("ofcrea");
 objDiv.scrollTop = objDiv.scrollHeight;
 objDiv2.scrollTop = objDiv2.scrollHeight;
 </script>
+
+<script>
+  window.addEventListener('inlineJSReady', function() {
+    WDN.initializePlugin('notice');
+  }, false);
+</script>
+{% endblock %}
+

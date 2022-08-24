@@ -354,7 +354,7 @@ class LockupsController extends BaseController
 
 
     /**
-     * @Route("/lockups/preview/{id}", name="previewLockups", methods={"POST"})
+     * @Route("/lockups/preview/{id}", name="lockupsActions", methods={"POST"})
      */
     public function lockupsActions(ManagerRegistry $doctrine, Request $request, Auth $auth): RedirectResponse
     {
@@ -435,11 +435,12 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/library", name="lockupsLibrary")
      */
-    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core): Response
+    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core, Auth $auth): Response
     {
+        $auth->requireAuth();
         $search = (string)$request->query->get('search_term');
         if ($search != "") {
-            $searchLockupResult = $core->search($search, $private = false);
+            $searchLockupResult = $core->search($search, false);
             return $this->render('base.html.twig', [
                 'page_template' => "lockupsLibrary.html.twig",
                 'page_name' => "LockupsLibrary",
@@ -447,8 +448,11 @@ class LockupsController extends BaseController
                 'search' => $search
             ]); 
         }
-
-        $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
+        if ($auth->isAdmin() == true) {
+            $publicLockups = $doctrine->getRepository(Lockups::class)->findAll();
+        } else {
+            $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
+        }
 
         return $this->render('base.html.twig', [
             'page_template' => "lockupsLibrary.html.twig",
@@ -509,7 +513,7 @@ class LockupsController extends BaseController
      */
     public function downloadLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
     {
-        // $auth->requireAuth();
+        $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
 
         if ($lockup == null) {
@@ -522,7 +526,8 @@ class LockupsController extends BaseController
 
         return $this->render('base.html.twig', [
             'page_template' => "downloadLockups.html.twig",
-            'Lockup' => $lockup
+            'Lockup' => $lockup,
+            'auth' => $auth
         ]);
     }
 

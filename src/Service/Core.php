@@ -43,10 +43,17 @@ class Core
             $temp = $this->doctrine->getRepository(Lockups::class)->find($arrItem);
             if ($private) {
                 if ($temp->getUser()->getId() == $this->auth->getUser()->getId()) {
-                    array_push($searchLockupResult, $this->doctrine->getRepository(Lockups::class)->find($arrItem));
+                    array_push($searchLockupResult, $temp);
                 }
             } else {
-                array_push($searchLockupResult, $this->doctrine->getRepository(Lockups::class)->find($arrItem));
+                // for lockupsLibrary
+                if ($this->auth->isAdmin() == true) {
+                    array_push($searchLockupResult, $temp);
+                } else {
+                    if ($temp->getPublic() == 1) {
+                    array_push($searchLockupResult, $temp);
+                    }
+                }
             }
         }
         return $searchLockupResult;

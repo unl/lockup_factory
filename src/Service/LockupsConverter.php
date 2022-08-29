@@ -15,6 +15,7 @@ class LockupsConverter
     private $appKernel;
     private $projectRoot;
     private $saveDirectory;
+    private $lockups;
 
     public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel)
     {
@@ -22,6 +23,14 @@ class LockupsConverter
         $this->appKernel = $appKernel;
         $this->projectRoot = $this->appKernel->getProjectDir();
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
+    }
+
+    public function getLockupFileName(Lockups $lockups) : string {
+        $lockups_name = $lockups->getDepartment();
+        $lockups_name = str_replace(" ", "_", $lockups_name);
+        $lockups_name = $lockups_name . "__";
+        $this->lockups = $lockups;
+        return $lockups_name;
     }
 
     private function createFolder(string $folderName): string
@@ -32,14 +41,18 @@ class LockupsConverter
         return $folderName;
     }
 
-    public function deteleFolder(string $fileName) {
-        $deleteFolder = $this->saveDirectory . "/" . $fileName . "lockups";
-        exec('rm -rf ' . $deleteFolder);
+    public function deteleLockupsFolder() {
+        exec('rm -rf '. $this->SaveFolder());
     }
 
-    public function createZip(int $id, string $fileName) {
-        $lockup = $this->doctrine->getRepository(Lockups::class)->find($id);
+    public function SaveFolder() {
+        $saveFolder = $this->saveDirectory . (string)$this->lockups->getId() . $this->getLockupFileName($this->lockups) . "/";
+        return $saveFolder;
+    }
+
+    public function createZip(Lockups $lockup) {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
+        $fileName = $this->getLockupFileName($lockup);
 
         $zippathName = $this->saveDirectory . "/" . $fileName . "lockups" . "/" . $fileName . "lockups.zip";
 
@@ -61,8 +74,9 @@ class LockupsConverter
         $this->doctrine->getManager()->flush();
     }
 
-    public function saveSvg(Lockups $lockups, string $SVG, string $fileName, string $orient, bool $rev = false, string $color = "RGB"): bool
+    public function saveSvg(Lockups $lockups, string $SVG, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
+        $fileName = $this->getLockupFileName($lockups);
         $svgPath = $this->createFolder($this->saveDirectory . "/" . $fileName . "lockups" . '/') . $orient . $fileName . $color . '.svg';
         $myfile = fopen($svgPath, "w") or die("Internal error");
         fwrite($myfile, $SVG);

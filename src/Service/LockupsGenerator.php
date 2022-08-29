@@ -23,84 +23,60 @@ class LockupsGenerator
         $this->lockupsConverter = $lockupsConverter;
     }
 
-    public function fetchLockupDetails(int $id): ?array
+    public function fetchLockupTemplates(int $id): ?array
     {
-        $array = array(
-            "fields" => "",
-            "h" => null,
-            "v" => null,
-            "template" => null
-        );
+        $array = array();
 
         $lockup = $this->doctrine->getRepository(Lockups::class)->find($id);
-        if ($lockup->getTemplate()->getStyle() == "h") {
-            $array["h"] = $lockup->getTemplate();
-            $array["template"] = $lockup->getTemplate()->getSlug();
-        } else {
-            $array["template"] = $lockup->getTemplate()->getSlug();
-            $array["v"] = $lockup->getTemplate();
-        }
+        array_push($array, $lockup->getTemplate());
 
         if ($lockup->getTemplate()->getLinksTo() != null) {
             $lockupTemplate = $this->doctrine->getRepository(LockupTemplates::class)->find($lockup->getTemplate()->getLinksTo());
-
-            if ($lockupTemplate->getStyle() == "h") {
-                $array["h"] = $lockupTemplate;
-            } else {
-                $array["v"] = $lockupTemplate;
-            }
+            array_push($array, $lockupTemplate);
         }
-
-        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
-        $array["fields"] = $lockupFields;
 
         return $array;
     }
 
-    public function createPreview(int $id): string
+
+    public function createPreview(int $id): bool
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
-        $array = $this->fetchLockupDetails($id);
-        if ($array["h"] != null) {
-            $horizontal = $this->SvgGenerator->createLockup($array["h"]->getSlug(), $array['fields'], 'h', 'RGB', false, true);
-            // $this->lockupsConverter->saveSvg($horizontal, "Nh_". $lockups->getId());
-            $lockups->setPreviewH($horizontal);
+        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+        $array = $this->fetchLockupTemplates($id);
+        foreach ($array as $template) {
+            if ($template->getStyle() == "h") {
+                $horizontal = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, 'h', 'RGB', false, true);
+                $lockups->setPreviewH($horizontal);
+            } else if ($template->getStyle() == "v") {
+                $vertical = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, 'v', 'RGB', false, true);
+                $lockups->setPreviewV($vertical);
+            }
         }
-        if ($array["v"] != null) {
-            $vertical = $this->SvgGenerator->createLockup($array["v"]->getSlug(), $array['fields'], 'v', 'RGB', false, true);
-            // $this->lockupsConverter->saveSvg($vertical, "Nv_". $lockups->getId());
-
-            $lockups->setPreviewV($vertical);
-        }
-        // $this->generateLockups($id);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
-        return "";
+        return true;
     }
 
     public function generateLockups(int $id): string
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+
         // set status to generating
         $lockups->setGenerating(1);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
 
-        $array = $this->fetchLockupDetails($id);
+        $array = $this->fetchLockupTemplates($id);
+        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
 
-        $orients = array('h', 'v');
         $styles = array('RGB', 'pms186cp', '4c', 'blk');
-        if ($array["template"] == "v_social") {
-            $styles = array('RGB');
-        }
+
         // set the name
-        $lockups_name = $lockups->getInstitution() . "_" . $lockups->getDepartment();
-        $lockups_name = str_replace(" ", "_", $lockups_name);
-        $lockups_name = $lockups_name . "__";
+        $lockups_name = $this->lockupsConverter->getLockupFileName($lockups);
 
         //remove the existing folder
-        $this->lockupsConverter->deteleFolder($lockups_name);
-
+        $this->lockupsConverter->deteleLockupsFolder();
 
         //remove existing files from db
         $delete_lockup_files = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
@@ -111,28 +87,29 @@ class LockupsGenerator
         $this->doctrine->getManager()->flush();
 
         //the actual process
-        foreach ($orients as $orient) {
-            if (!(($array["template"] == 'v_acronym_2_subject' || $array["template"] == 'v_extension_4h' || $array["template"] == 'v_social') && $orient == 'h')) // no horizontal for these styles
-            {
-                foreach ($styles as $style) {
-                    $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, false);
-                    $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name , $orient, false, $style);
+        foreach ($array as $template) {
+            if ($template->getSlug() == "v_social") { // only RGB for this one
+                $styles = array('RGB');
+            }
+            foreach ($styles as $style) {
+                $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, false);
 
-                    if ($array['template'] != 'v_social') // no reverse for this style
-                    {
-                    $svgFile = $this->SvgGenerator->createLockup($array['template'], $array['fields'], $orient, $style, true);
-                    $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name , $orient, true, $style);
-                    }
+                $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name, $template->getStyle(), false, $style);
+
+                if ($array['template'] != 'v_social') // no reverse for this style
+                {
+                    $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, true);
+                    $this->lockupsConverter->saveSvg($lockups, $svgFile, $lockups_name, $template->getStyle(), true, $style);
                 }
             }
         }
+
+        $this->lockupsConverter->createZip($lockups);
 
         $lockups->setGenerating(0);
         $lockups->setIsGenerated(1);
         $this->doctrine->getManager()->persist($lockups);
         $this->doctrine->getManager()->flush();
-
-        $this->lockupsConverter->createZip($lockups->getId(), $lockups_name);
         return "";
     }
 }

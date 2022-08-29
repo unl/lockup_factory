@@ -515,7 +515,16 @@ class LockupsController extends BaseController
      */
     public function generateLockups(int $id, ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response
     {
-        // $auth->requireAuth();
+        $auth->requireAuth();
+        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+
+        if ($lockup == null) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found."
+            ]);
+            return $response;
+        }
 
         $lockupsGenerator->generateLockups($id);
         

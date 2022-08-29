@@ -528,9 +528,14 @@ class LockupsController extends BaseController
 
         $lockupsGenerator->generateLockups($id);
         
-        return $this->redirectToRoute('downloadLockups', [
-            'id' => $id
-        ], 302);
+        // return $this->redirectToRoute('downloadLockups', [
+        //     'id' => $id
+        // ], 302);
+        $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            'errorTitle' => "Not found!",
+            'errorBody' => "The requested lockup could not be found."
+        ]);
+        return $response;
     }
 
 

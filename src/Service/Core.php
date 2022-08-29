@@ -64,7 +64,7 @@ class Core
         if ($lockups == null) {
             return false;
         }
-        if ($lockups->getCreativeStatus() && $lockups->getCommunicatorStatus) {
+        if ($lockups->getCreativeStatus() && $lockups->getCommunicatorStatus()) {
             return true;
         } else {
             return false;

@@ -119,7 +119,7 @@
                         <input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}"
                         {{ (user.isAdmin == false) ? 'maxlength=' ~ item.getLength}}
                             placeholder="{{item.getPlaceholder}}">
-                        <p style="font-size: .8em;font-style: italic;" class="dcf-mt-2">Maximum {{ item.getLength }} characters.</p>
+                        <p style="font-size: .8em;font-style: italic;" class="dcf-mt-2">{{user.isAdmin ? "Unlimited" : "Maximum " ~ item.getLength }} characters.</p>
                     </div>
                     {% endfor %}
                     <hr>

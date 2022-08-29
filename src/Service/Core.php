@@ -58,4 +58,28 @@ class Core
         }
         return $searchLockupResult;
     }
+
+    public function lockupsApproved(int $id) : bool {
+        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+        if ($lockups == null) {
+            return false;
+        }
+        if ($lockups->getCreativeStatus() && $lockups->getCommunicatorStatus) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function ownsLockup (int $id) : bool {
+        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+        if ($lockups == null) {
+            return false;
+        }
+        if ($this->auth->getUser() == $lockups->getUser()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

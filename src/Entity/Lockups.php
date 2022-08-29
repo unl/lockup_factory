@@ -70,6 +70,12 @@ class Lockups
     #[ORM\ManyToOne(targetEntity: Users::class)]
     private $approver;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $Organization;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $DateCreated;
+
     public function __construct()
     {
         $this->lockupFiles = new ArrayCollection();
@@ -329,6 +335,30 @@ class Lockups
     public function setApprover(?Users $approver): self
     {
         $this->approver = $approver;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?string
+    {
+        return $this->Organization;
+    }
+
+    public function setOrganization(?string $Organization): self
+    {
+        $this->Organization = $Organization;
+
+        return $this;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->DateCreated;
+    }
+
+    public function setDateCreated(\DateTimeInterface $DateCreated): self
+    {
+        $this->DateCreated = $DateCreated;
 
         return $this;
     }

@@ -39,9 +39,16 @@
             <div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
             {% if Lockup.getIsGenerated == 0 %}
             {# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
+            {% if lockupsApproved %}
             <button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
             <button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
             <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
+            {% elseif lockupsApproved == false %}
+            <div class="dcf-notice dcf-notice-warning" hidden>
+              <h2>Lockups hasn't been approved yet.</h2>
+            <div>You can't generate it right now.</div>
+            </div>
+            {% endif %}
 
             {% elseif Lockup.getIsGenerated == 1 %}
             {% if auth.isAdmin == true or Lockup.getPublic == 1 %}
@@ -279,5 +286,11 @@ showallBtn.addEventListener("click", function() {
 });
 
 
+</script>
+
+<script>
+  window.addEventListener('inlineJSReady', function() {
+    WDN.initializePlugin('notice');
+  }, false);
 </script>
 {% endblock %}

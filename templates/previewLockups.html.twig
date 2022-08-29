@@ -57,102 +57,101 @@
             {% endif %}
         </div>
         <div>
-            <h4>
-                Actions
-            </h4>
-            <div class="dcf-mb-5">
-                {% if (user.isApprover == false and user.isCreative == false) %}
-                <a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
-                {% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
-                <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
-                {% endif %}
+            <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+                <h4>User Actions</h4>
+                    {% if (user.isApprover == false and user.isCreative == false) %}
+                    <a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+                    {% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
+                    <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
+                    {% endif %}
+                    {% else %}
+                    <form  method="POST" style="display: inline;">
+                        <button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
+                        <input type="hidden" name="id" value="{{Lockup.getId}}">
+                        <input type="hidden" name="action" value="approve">
+                        <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                        <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                    </form>
+                                    <form  method="POST" style="display: inline;">
+                        <button type="submit" class="dcf-btn dcf-btn-secondary">Leave Feedback Only</button>
+                        <input type="hidden" name="id" value="{{Lockup.getId}}">
+                        <input type="hidden" name="action" value="feedback">
+                        <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                        <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                    </form>
+                                    <form  method="POST" style="display: inline;">
+                        <button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
+                        <input type="hidden" name="id" value="{{Lockup.getId}}">
+                        <input type="hidden" name="action" value="deny">
+                        <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
+                        <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
+                    </form>
+                    {# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
+                    {% endif %}
+            </div>
+
+            <h4>Details</h4>
+            <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+                <h5>Communicator</h5>
+                {% if ((Lockup.getCommunicatorStatus == 0) and (Lockup.getCommunicatorFeedback != null)) %}
+                    <div class="dcf-mb-4 dcf-rounded">
+                        {{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)<strong>: Feedback received</strong>
+                    </div>
+                {% elseif (Lockup.getCommunicatorStatus == 1)%}
+                    <div class="dcf-mb-4 dcf-rounded">
+                        {{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)<strong>: Approved</strong>
+                    </div>
                 {% else %}
-                <form action="/lockups/actions/" method="POST" style="display: inline;">
-                    <button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
-                    <input type="hidden" name="id" value="{{Lockup.getId}}">
-                    <input type="hidden" name="action" value="approve">
-                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
-                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
-                </form>
-                                <form action="/lockups/actions/" method="POST" style="display: inline;">
-                    <button type="submit" class="dcf-btn dcf-btn-secondary">Leave Feedback Only</button>
-                    <input type="hidden" name="id" value="{{Lockup.getId}}">
-                    <input type="hidden" name="action" value="feedback">
-                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
-                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
-                </form>
-                                <form action="/lockups/actions/" method="POST" style="display: inline;">
-                    <button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
-                    <input type="hidden" name="id" value="{{Lockup.getId}}">
-                    <input type="hidden" name="action" value="deny">
-                    <input class="creative-feedback-class" type="hidden" name="creative_feedback" value="">
-                    <input class="communicator-feedback-class" type="hidden" name="communicator_feedback" value="">
-                </form>
-                {# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
+                    <div class="dcf-mb-4 dcf-rounded">
+                        {{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)<strong>: Awaiting Approval</strong>
+                    </div>
                 {% endif %}
-            </div>
-            <h4>
-                Details
-            </h4>
-            {% if ((Lockup.getCommunicatorStatus == 0) and (Lockup.getCommunicatorFeedback != null)) %}
-            <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Feedback received<br>
 
-            </div>
-            {% elseif (Lockup.getCommunicatorStatus == 1)%}
-            <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Approved
-            </div>
-            {% else %}
-            <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
-                <strong>{{ Lockup.getApprover.getName | default('Communicator not specified') }} (Communicator)</strong>: Awaiting Approval<br>
-            </div>
-            {% endif %}
-            <div>
-            
-             {% if Lockup.getFeedbacks != null %}
-            <div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4" id="ofcomm">
-            {% for item in Lockup.getFeedbacks %}
-            {% if item.type == "approver" %}
-                                <div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4" style="border-radius: 10px; position:relative;">
-                    <p style="color: var(--darker-gray)">{{ item.value }}</p>
-                    <p style="color: var(--darker-gray); position: absolute; bottom: 0px;" class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
-                </div>
-            {% endif %}
-            {% endfor %}
-                
-            </div>
-{% endif %}
+            {# feedback block start #}
+                {% if Lockup.getFeedbacks != null %}
+                    <div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4 unl-bg-cream" id="ofcomm">
+                    {% for item in Lockup.getFeedbacks %}
+                        {% if item.type == "approver" %}
+                            <div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4" style="border-radius: 10px; position:relative;">
+                            <p style="color: var(--darker-gray)">{{ item.value }}</p>
+                            <p style="color: var(--darker-gray); position: absolute; bottom: 0px;" class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
+                            </div>
+                        {% endif %}
+                    {% endfor %}   
+                    </div>
+                {% endif %}
                 {% if (user.isApprover == true)%}
-                                       <form action="/lockups/actions/" method="POST" style="display: inline;">
-                    <input type="hidden" name="id" value="{{Lockup.getId}}">
-                                    <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback"
-                    name="communicator-feedback" placeholder="Add feedback."></textarea>
-                    <input type="hidden" name="action" value="update">
-                    <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Add Feedback</button>
-
+                    <form  method="POST" style="display: inline;">
+                        <input type="hidden" name="id" value="{{Lockup.getId}}">
+                                <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback" name="communicator-feedback" placeholder="Add feedback."></textarea>
+                        <input type="hidden" name="action" value="update">
+                        <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Add Feedback</button>
                 </form>
                 {% endif %}
             </div>
-            <br>
+            {# ucomm block #}
+            <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+                <h5>Communicator</h5>
+            
+             
             {% if ((Lockup.getCreativeStatus == 0) and (Lockup.getCreativeFeedback != null)) %}
-            <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
+            <div class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
                 <strong>University Communications</strong>: Feedback received<br>
 
             </div>
             {% elseif (Lockup.getCreativeStatus == 1)%}
-            <div style="border-radius: 8px;" class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
+            <div class="unl-bg-green dcf-p-2 unl-lightest-gray dcf-mb-4">
                 <strong>University Communications</strong>: Approved
             </div>
             {% else %}
-            <div style="border-radius: 8px;" class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
+            <div class="unl-bg-blue dcf-p-2 unl-lightest-gray dcf-mb-4">
                 <strong>University Communications</strong>: Awaiting Approval<br>
             </div>
             {% endif %}
             <div>
 
             
-          <div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4" id="ofcomm">
+          <div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4" id="ofcrea">
             {% if Lockup.getFeedbacks != null %}
             {% for item in Lockup.getFeedbacks %}
             {% if item.type == "creative" %}
@@ -165,7 +164,7 @@
                 {% endif %}
             </div>
             {% if (user.isCreative == true)%}
-                                       <form action="/lockups/actions/" method="POST" style="display: inline;">
+                                       <form method="POST" style="display: inline;">
                                                        <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="creative-feedback"
                     name="creative-feedback" placeholder="Add feedback."></textarea>
                     <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Add Feedback</button>

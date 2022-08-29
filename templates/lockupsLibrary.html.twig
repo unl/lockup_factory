@@ -40,30 +40,30 @@
 			<tbody></tbody>
 		</table>
 
-		{# Pagination Script #}
-		{% set currentPage = 2 %}
-		{% set totalPage = 2 %}
 
-		{% if totalPage != 1 %}
+		{# Pagination Script #}
+
+		{# {% if totalPage > 1 %}
+			{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" : path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
 			<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
 				<ol class="dcf-list-bare dcf-list-inline">
 					{% if currentPage != 1%}
 						<li>
-							<a class="dcf-pagination-first" href="1">First</a>
+							<a class="dcf-pagination-first" href="{{ currentPath }}1">First</a>
 						</li>
 						<li>
-							<a class="dcf-pagination-prev" href="{{ currentPage - 1}}">Prev</a>
+							<a class="dcf-pagination-prev" href="{{ currentPath }}{{ currentPage - 1}}">Prev</a>
 						</li>
 					{% endif %}
 
-					{% if currentPage == 1%}
+					{% if currentPage == 1 %}
 						<li>
 							<span class="dcf-pagination-selected">1</span>
 						</li>
 						{% for i in (currentPage + 1) .. totalPage %}
 							{% if (i - currentPage) <= 2%}
 								<li>
-									<a href="{{ i }}">{{ i }}</a>
+									<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
 								</li>
 							{% endif %}
 						{% endfor %}
@@ -82,7 +82,7 @@
 							{% for i in 1 .. (totalPage - 1) %}
 								{% if i >= (totalPage - 2) %}
 									<li>
-										<a href="{{ i }}">{{ i }}</a>
+										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
 									</li>
 								{% endif %}
 							{% endfor %}
@@ -90,12 +90,11 @@
 							{% for i in (totalPage - 2) .. (totalPage - 1) %}
 								{% if i >= (totalPage - 2) %}
 									<li>
-										<a href="{{ i }}">{{ i }}</a>
+										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
 									</li>
 								{% endif %}
 							{% endfor %}
 						{% endif %}
-
 						<li>
 							<span class="dcf-pagination-selected">{{ currentPage }}</span>
 						</li>
@@ -106,13 +105,13 @@
 							</li>
 						{% endif %}
 						<li>
-							<a href="{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
+							<a href="{{ currentPath }}{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
 						</li>
 						<li>
 							<span class="dcf-pagination-selected">{{ currentPage }}</span>
 						</li>
 						<li>
-							<a href="{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
+							<a href="{{ currentPath }}{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
 						</li>
 						{% if (currentPage + 1) < totalPage %}
 							<li>
@@ -123,15 +122,15 @@
 
 					{% if currentPage != totalPage %}
 						<li>
-							<a class="dcf-pagination-next" href="{{ currentPage + 1}}">Next</a>
+							<a class="dcf-pagination-next" href="{{ currentPath }}{{ currentPage + 1}}">Next</a>
 						</li>
 						<li>
-							<a class="dcf-pagination-last" href="{{ totalPage }}">Last</a>
+							<a class="dcf-pagination-last" href="{{ currentPath }}{{ totalPage }}">Last</a>
 						</li>
 					{% endif %}
 				</ol>
 			</nav>
-		{% endif %}
+		{% endif %} #}
 		{# End Pagination Script #}
 	</div>
 

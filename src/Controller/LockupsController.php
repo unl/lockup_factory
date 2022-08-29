@@ -114,6 +114,7 @@ class LockupsController extends BaseController
         $lockups->setIsGenerated(0);
         $lockups->setGenerating(0);
         $lockups->setPublic(1);
+        $lockups->setDateCreated(new \DateTime());
         $errors = $validator->validate($lockups);
         
         $lockupsStyle = array(
@@ -255,31 +256,27 @@ class LockupsController extends BaseController
         $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
         if ($search != "") {
             $searchLockupResult = $core->search($search, true);
-            $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
-            $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
+            // $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
+            // $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
             return $this->render('base.html.twig', [
                 'page_template' => "manageLockups.html.twig",
                 'page_name' => "ManageLockups",
                 'lockups_array' => $searchLockupResult,
                 'auth' => $auth,
-                'search' => $search,
-                'currentPage' => $page,
-                'totalPage' => $pageLength
+                'search' => $search
             ]); 
         }
         $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
         $product = array_reverse($product);
-        $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
-        $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
+        // $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
+        // $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
 
         return $this->render('base.html.twig', [
             'page_template' => "manageLockups.html.twig",
             'page_name' => "ManageLockups",
             'lockups_array' => $product,
             'auth' => $auth,
-            'search' => "",
-            'currentPage' => $page,
-            'totalPage' => $pageLength
+            'search' => ""
         ]);
     }
 
@@ -309,17 +306,17 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/preview/{id}", name="previewLockups", methods={"GET"})
      */
-    public function previewLockups(int $id, ManagerRegistry $doctrine, Auth $auth, Request $request): Response
+    public function previewLockups(int $id, ManagerRegistry $doctrine, Auth $auth, Request $request, Core $core): Response
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
 
         $action = (string)$request->query->get('action');
 
-        if ($lockup == null) {
+        if ($lockup == null || ($lockup->getPublic() == 0 && ($core->ownsLockup($id) || $auth->isAdmin()))) {
             $response = $this->forward('App\Controller\LockupsController::errorPage', [
                 'errorTitle' => "Not found!",
-                'errorBody' => "The requested lockup could not be found."
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
             return $response;
         }
@@ -433,36 +430,6 @@ class LockupsController extends BaseController
     }
 
     /**
-     * @Route("/lockups/library", name="lockupsLibrary")
-     */
-    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core, Auth $auth): Response
-    {
-        $auth->requireAuth();
-        $search = (string)$request->query->get('search_term');
-        if ($search != "") {
-            $searchLockupResult = $core->search($search, false);
-            return $this->render('base.html.twig', [
-                'page_template' => "lockupsLibrary.html.twig",
-                'page_name' => "LockupsLibrary",
-                'lockups_array' => $searchLockupResult,
-                'search' => $search
-            ]); 
-        }
-        if ($auth->isAdmin() == true) {
-            $publicLockups = $doctrine->getRepository(Lockups::class)->findAll();
-        } else {
-            $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
-        }
-
-        return $this->render('base.html.twig', [
-            'page_template' => "lockupsLibrary.html.twig",
-            'page_name' => "LockupsLibrary",
-            'lockups_array' => $publicLockups,
-            'search' => ""
-        ]);
-    }
-
-    /**
      * @Route("/lockups/edit/{id}", name="editLockups", methods={"GET"})
      */
     public function editLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
@@ -511,7 +478,7 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/download/{id}", name="downloadLockups", methods={"GET"})
      */
-    public function downloadLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
+    public function downloadLockups(int $id, ManagerRegistry $doctrine, Auth $auth, Core $core): Response
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
@@ -524,10 +491,22 @@ class LockupsController extends BaseController
             return $response;
         }
 
+        if ($lockup->getPublic() == 0) {
+            if ($lockup->getUser() == $auth->getUser() || $auth->isAdmin()) {
+                return $this->render('base.html.twig', [
+                    'page_template' => "downloadLockups.html.twig",
+                    'Lockup' => $lockup,
+                    'auth' => $auth,
+                    'lockupsApproved' => $core->lockupsApproved($id)
+                ]);
+            }
+        }
+
         return $this->render('base.html.twig', [
             'page_template' => "downloadLockups.html.twig",
             'Lockup' => $lockup,
-            'auth' => $auth
+            'auth' => $auth,
+            'lockupsApproved' => $core->lockupsApproved($id)
         ]);
     }
 

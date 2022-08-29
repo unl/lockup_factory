@@ -46,7 +46,7 @@ class LockupsConverter
     }
 
     public function SaveFolder() {
-        $saveFolder = $this->saveDirectory . (string)$this->lockups->getId() . $this->lockups . "/";
+        $saveFolder = $this->saveDirectory . (string)$this->lockups->getId() . $this->getLockupFileName($this->lockups) . "/";
         return $saveFolder;
     }
 

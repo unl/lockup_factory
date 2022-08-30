@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Service\SvgGenerator;
 use App\Service\LockupsConverter;
 use App\Entity\Lockups;
+use App\Service\Core;
 use App\Entity\LockupFiles;
 use App\Entity\LockupsFields;
 use App\Entity\LockupTemplates;
@@ -15,12 +16,14 @@ class LockupsGenerator
     private $SvgGenerator;
     private $doctrine;
     private $lockupsConverter;
+    private $core;
 
-    public function __construct(SvgGenerator $SvgGenerator, ManagerRegistry $doctrine, LockupsConverter $lockupsConverter)
+    public function __construct(SvgGenerator $SvgGenerator, ManagerRegistry $doctrine, LockupsConverter $lockupsConverter, Core $core)
     {
         $this->SvgGenerator = $SvgGenerator;
         $this->doctrine = $doctrine;
         $this->lockupsConverter = $lockupsConverter;
+        $this->core = $core;
     }
 
     public function fetchLockupTemplates(int $id): ?array
@@ -62,6 +65,8 @@ class LockupsGenerator
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
 
+        $this->lockupsConverter->setLockup($lockups);
+
         // set status to generating
         $lockups->setGenerating(1);
         $this->doctrine->getManager()->persist($lockups);
@@ -73,7 +78,7 @@ class LockupsGenerator
         $styles = array('RGB', 'pms186cp', '4c', 'blk');
 
         // set the name
-        $lockups_name = $this->lockupsConverter->getLockupFileName($lockups);
+        // $lockups_name = $this->core->getLockupFileName($lockups);
 
         //remove the existing folder
         $this->lockupsConverter->deteleLockupsFolder();
@@ -104,7 +109,7 @@ class LockupsGenerator
             }
         }
 
-        // $this->lockupsConverter->createZip($lockups);
+        $this->lockupsConverter->createZip($lockups);
 
         $lockups->setGenerating(0);
         $lockups->setIsGenerated(1);

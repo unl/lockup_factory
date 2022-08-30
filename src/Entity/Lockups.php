@@ -43,12 +43,6 @@ class Lockups
     #[ORM\Column(type: 'integer', options:["default"=> 0])]
     private $isGenerated;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $creative_feedback;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $communicator_feedback;
-
     #[ORM\Column(type: 'integer', options:["default"=> 0])]
     private $CreativeStatus;
 
@@ -191,30 +185,6 @@ class Lockups
     public function setIsGenerated(?int $isGenerated): self
     {
         $this->isGenerated = $isGenerated;
-
-        return $this;
-    }
-
-    public function getCreativeFeedback(): ?string
-    {
-        return $this->creative_feedback;
-    }
-
-    public function setCreativeFeedback(?string $creative_feedback): self
-    {
-        $this->creative_feedback = $creative_feedback;
-
-        return $this;
-    }
-
-    public function getCommunicatorFeedback(): ?string
-    {
-        return $this->communicator_feedback;
-    }
-
-    public function setCommunicatorFeedback(?string $communicator_feedback): self
-    {
-        $this->communicator_feedback = $communicator_feedback;
 
         return $this;
     }

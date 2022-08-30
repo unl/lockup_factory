@@ -41,7 +41,6 @@
             {# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
             {% if lockupsApproved %}
             <button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
-            <a href="/lockups/generate/50" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate</a>
             <button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
             <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
             {% elseif lockupsApproved == false %}

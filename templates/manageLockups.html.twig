@@ -17,7 +17,7 @@
 			</form>
 		</div>
 		{% if auth.isCreative or auth.isAdmin %}
-				<h4>Lockups needing communicator approval. </h4>
+				<h4>Lockups needing University Communications approval. </h4>
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
@@ -30,7 +30,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for item in lockups_array %}
+				{% for item in pendingCreative %}
 				{% if item.getCommunicatorStatus == 0  %}
 					<tr>
 						<td data-label="Title">
@@ -67,8 +67,8 @@
 			</tbody>
 		</table>
 		{% endif %}
-				{% if auth.isApprover or auth.isAdmin %}
-				<h4 class="dcf-mt-6">Lockups needing creative approval. </h4>
+		{% if auth.isApprover or auth.isAdmin %}
+				<h4 class="dcf-mt-6">Lockups needing communicator approval. </h4>
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
@@ -81,7 +81,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for item in lockups_array %}
+				{% for item in pendingApprover %}
 				{% if (item.getCreativeStatus == 0 and item.getApprover == auth.getUser) or auth.isAdmin %}
 					<tr>
 						<td data-label="Title">

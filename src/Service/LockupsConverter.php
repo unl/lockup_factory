@@ -6,6 +6,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\KernelInterface;
 use App\Entity\Lockups;
 use App\Entity\LockupFiles;
+use App\Service\Core;
 use ZipArchive;
 
 
@@ -16,21 +17,23 @@ class LockupsConverter
     private $projectRoot;
     private $saveDirectory;
     private $lockups;
+    private $core;
+    private $urlSuffix;
 
-    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core)
     {
         $this->doctrine = $doctrine;
         $this->appKernel = $appKernel;
         $this->projectRoot = $this->appKernel->getProjectDir();
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
+        $this->core = $core;
+        $this->urlSuffix = "/lockups" . "/";
+
     }
 
-    public function getLockupFileName(Lockups $lockups) : string {
-        $lockups_name = $lockups->getDepartment();
-        $lockups_name = str_replace(" ", "_", $lockups_name);
-        $lockups_name = $lockups_name . "__";
+    public function setLockup(Lockups $lockups) {
         $this->lockups = $lockups;
-        return $lockups_name;
+        return;
     }
 
     private function createFolder(string $folderName): string
@@ -46,7 +49,7 @@ class LockupsConverter
     }
 
     public function savePath() : string {
-        $savePath = (string)$this->lockups->getId() . "_" . $this->getLockupFileName($this->lockups) . "/";
+        $savePath = (string)$this->lockups->getId() . "_" . $this->core->getLockupFileName($this->lockups) . "/";
         return $savePath;
     }
 
@@ -58,11 +61,10 @@ class LockupsConverter
 
     public function createZip(Lockups $lockup) {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
-        $fileName = $this->getLockupFileName($lockup);
+        $fileName = "N_" . $this->core->getLockupFileName($lockup) . "lockups.zip";
+        $zippathName = $this->saveFolder() . $fileName;
 
-        $zippathName = $this->saveDirectory . "/" . $fileName . "lockups" . "/" . $fileName . "lockups.zip";
-
-        $zipDownloadUrl = "/lockups" . "/" . $fileName . "lockups" . "/" . $fileName . "lockups.zip";
+        $zipDownloadUrl = $this->urlSuffix . $this->savePath() . $fileName;
 
         $zip = new ZipArchive;
         if ($zip->open($zippathName, ZipArchive::CREATE) === TRUE)
@@ -71,7 +73,7 @@ class LockupsConverter
             foreach ($lockupFiles as $item) {
                 $zip->addFile($item->getDirectory(), $item->getPathName());
             }
-            $zip->addFile($this->projectRoot . "/public/lockups/convert_pantone.jsx", "convert_pantone.jsx");
+            $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
             // All files are added, so close the zip file.
             $zip->close();
         }
@@ -82,7 +84,7 @@ class LockupsConverter
 
     public function saveSvg(Lockups $lockups, string $SVG, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        $fileName = $this->getLockupFileName($lockups);
+        $fileName = $this->core->getLockupFileName($lockups);
         $svgFile = $orient . $fileName . $color . '.svg';
         $svgPath = $this->saveFolder() . $svgFile;
         $myfile = fopen($svgPath, "w") or die("Internal error");
@@ -95,13 +97,13 @@ class LockupsConverter
 
     public function convertAll(Lockups $lockups, string $SvgPath, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        $fileName = $this->getLockupFileName($lockups);
+        $fileName = $this->core->getLockupFileName($lockups);
         $pathName = "";
         if ($orient == "h") {
-            $pathName = "Nh_" . $this->getLockupFileName($lockups) . "/";
+            $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
             $fileName = "Nh_" . $fileName;
         } else {
-            $pathName = "Nv_" . $this->getLockupFileName($lockups) . "/";
+            $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
             $fileName = "Nv_" . $fileName;
         }
         switch ($color) {
@@ -133,7 +135,7 @@ class LockupsConverter
             $fileName = $fileName . "_rev";
         }
 
-        $urlSuffix = "/lockups" . "/";
+        $this->urlSuffix = "/lockups" . "/";
 
         $svgPathName = $pathName . $fileName . ".svg";
         $svgDirectory = $this->saveFolder() . $svgPathName;
@@ -166,7 +168,7 @@ class LockupsConverter
         $lockupFileClass[0]->setOrient($orient);
         $lockupFileClass[0]->setStyle($color);
         $lockupFileClass[0]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[0]->setUrl($urlSuffix . $this->savePath() . $svgPathName);
+        $lockupFileClass[0]->setUrl($this->urlSuffix . $this->savePath() . $svgPathName);
         $lockupFileClass[0]->setDirectory($svgDirectory);
         $lockupFileClass[0]->setPathName($svgPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[0]);
@@ -184,7 +186,7 @@ class LockupsConverter
         $lockupFileClass[1]->setOrient($orient);
         $lockupFileClass[1]->setStyle($color);
         $lockupFileClass[1]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[1]->setUrl($urlSuffix . $this->savePath() . $pngPathName);
+        $lockupFileClass[1]->setUrl($this->urlSuffix . $this->savePath() . $pngPathName);
         $lockupFileClass[1]->setDirectory($pngDirectory);
         $lockupFileClass[1]->setPathName($pngPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[1]);
@@ -201,7 +203,7 @@ class LockupsConverter
         $lockupFileClass[2]->setOrient($orient);
         $lockupFileClass[2]->setStyle($color);
         $lockupFileClass[2]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[2]->setUrl($urlSuffix . $this->savePath() . $jpgPathName);
+        $lockupFileClass[2]->setUrl($this->urlSuffix . $this->savePath() . $jpgPathName);
         $lockupFileClass[2]->setDirectory($jpgDirectory);
         $lockupFileClass[2]->setPathName($jpgPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[2]);
@@ -230,7 +232,7 @@ class LockupsConverter
         $lockupFileClass[3]->setOrient($orient);
         $lockupFileClass[3]->setStyle($color);
         $lockupFileClass[3]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[3]->setUrl($urlSuffix . $this->savePath() . $epsPathName);
+        $lockupFileClass[3]->setUrl($this->urlSuffix . $this->savePath() . $epsPathName);
         $lockupFileClass[3]->setDirectory($epsDirectory);
         $lockupFileClass[3]->setPathName($epsPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[3]);
@@ -245,7 +247,7 @@ class LockupsConverter
         $lockupFileClass[4]->setOrient($orient);
         $lockupFileClass[4]->setStyle($color);
         $lockupFileClass[4]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[4]->setUrl($urlSuffix . $this->savePath() . $aiPathName);
+        $lockupFileClass[4]->setUrl($this->urlSuffix . $this->savePath() . $aiPathName);
         $lockupFileClass[4]->setDirectory($aiDirectory);
         $lockupFileClass[4]->setPathName($aiPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[4]);
@@ -265,7 +267,7 @@ class LockupsConverter
             $lockupFileClass[5]->setOrient($orient);
             $lockupFileClass[5]->setStyle($color);
             $lockupFileClass[5]->setTemplate($lockups->getTemplate());
-            $lockupFileClass[5]->setUrl($urlSuffix . $this->savePath() . $pdfPathName);
+            $lockupFileClass[5]->setUrl($this->urlSuffix . $this->savePath() . $pdfPathName);
             $lockupFileClass[5]->setDirectory($pdfDirectory);
             $lockupFileClass[5]->setPathName($pdfPathName);
             $this->doctrine->getManager()->persist($lockupFileClass[5]);

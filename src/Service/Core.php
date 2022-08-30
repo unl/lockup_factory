@@ -82,4 +82,48 @@ class Core
             return false;
         }
     }
+
+    public function getLockupFileName(Lockups $lockups) : string {
+        $lockups_name = $lockups->getDepartment();
+        $lockups_name = str_replace(" ", "_", $lockups_name);
+        $lockups_name = $lockups_name . "__";
+        $this->lockups = $lockups;
+        return $lockups_name;
+    }
+
+    public function hasApproverFeedback($id) : bool {
+        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+        $feedbacks = $lockups->getFeedbacks();
+        if ($feedbacks == null) {
+            return false;
+        }
+        foreach ($feedbacks as $item) {
+            if ($item->getUser() == $lockups->getApprover()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasCreativeFeedback($id) : bool {
+        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
+        $feedbacks = $lockups->getFeedbacks();
+        if ($feedbacks == null) {
+            return false;
+        }
+        foreach ($feedbacks as $item) {
+            if ($item->getUser()->getRole() == "creative") {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getPendingApproverLockups(int $id = 0) {
+        return $this->lockupsRepository->pendingApprover($id);
+    }
+
+    public function getPendingCreativeLockups() {
+        return $this->lockupsRepository->pendingCreative();
+    }
 }

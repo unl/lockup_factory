@@ -338,6 +338,9 @@
 
         if (lockupApprover != 0) {
             let tempElement = document.getElementById("approver");
+            tempElement.value = -1;
+        } else {
+            let tempElement = document.getElementById("approver");
             tempElement.value = lockupApprover;
         }
 

@@ -66,6 +66,52 @@ class LockupsRepository extends ServiceEntityRepository
         // returns an array of Product objects
         return $institutionQuery->getResult();
     }
+
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function pendingApprover(int $id = 0): array
+    {
+        $entityManager = $this->getEntityManager();
+        if ($id == 0 ) {
+            $query = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.CreativeStatus = 0
+                ORDER BY p.id DESC'
+            );
+        } else {
+            $query = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.CreativeStatus = 0
+                AND
+                p.approver = :id
+                ORDER BY p.id DESC'
+            )->setParameter('id', $id);
+        }
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function pendingCreative(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Lockups p
+            WHERE p.CommunicatorStatus = 0
+            ORDER BY p.id DESC'
+        );
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Lockups[] Returns an array of Lockups objects
     //  */

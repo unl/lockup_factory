@@ -80,7 +80,6 @@ class LockupsController extends BaseController
             "body" => ""
         );
         $fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
-
         $entityManager = $doctrine->getManager();
 
         $lockuptemplate = (int)$request->request->get('lockuptemplate');
@@ -92,6 +91,12 @@ class LockupsController extends BaseController
         $template = $doctrine->getRepository(LockupTemplates::class)->find($lockuptemplate);
         $arr = [];
         $count = 0;
+
+        if ($id != 0) {
+            $originalUser = $lockups->getUser();
+        } else {
+            $originalUser = $auth->getUser();
+        }
 
         if ($id != 0) {
             if ($lockups == null) {
@@ -108,7 +113,7 @@ class LockupsController extends BaseController
         $lockups->setStatus(0);
         $lockups->setDepartment($department);
         $lockups->setInstitution($institution);
-        $lockups->setUser($auth->getUser());
+        $lockups->setUser($originalUser);
         $lockups->setCommunicatorStatus(0);
         $lockups->setCreativeStatus(0);
         $lockups->setIsGenerated(0);
@@ -270,13 +275,23 @@ class LockupsController extends BaseController
         $product = array_reverse($product);
         // $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
         // $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
+        if ($auth->isAdmin()) {
+            $pendingApprover = $core->getPendingApproverLockups();
+        } else {
+            $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
+        }
+
+        $pendingCreative = $core->getPendingCreativeLockups();
+
 
         return $this->render('base.html.twig', [
             'page_template' => "manageLockups.html.twig",
             'page_name' => "ManageLockups",
             'lockups_array' => $product,
             'auth' => $auth,
-            'search' => ""
+            'search' => "",
+            'pendingApprover'  => $pendingApprover,
+            'pendingCreative' => $pendingCreative
         ]);
     }
 
@@ -290,6 +305,14 @@ class LockupsController extends BaseController
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
         $lockup_fields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
         $entityManager = $doctrine->getManager();
+
+        if ($lockups == null || ($auth->getUser() != $lockups->getUser() && !$auth->isAdmin())) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+            ]);
+            return $response;
+        }
 
         foreach ($lockup_fields as $item) {
             $entityManager->remove(($item));
@@ -312,13 +335,17 @@ class LockupsController extends BaseController
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
 
         $action = (string)$request->query->get('action');
-
-        if ($lockup == null || ($lockup->getPublic() == 0 && ($core->ownsLockup($id) || $auth->isAdmin()))) {
+        // $lockup == null || $auth->getUser() != $lockup->getUser() || !$auth->isCreative() || !$auth->isAdmin() || ($auth->getUser() != $lockup->getApprover()
+        if ($lockup == null) {
             $response = $this->forward('App\Controller\LockupsController::errorPage', [
                 'errorTitle' => "Not found!",
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
             return $response;
+        } else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
+            return $this->redirectToRoute('downloadLockups', [
+                'id' => $id
+            ], 302); 
         }
 
         if ($action == "new-lockup") {
@@ -328,7 +355,8 @@ class LockupsController extends BaseController
                 'Lockup' => $lockup,
                 'user' => $auth,
                 'alert_title' => "Success!",
-                'alert_message' => "You have successfully created the lockup"
+                'alert_message' => "You have successfully created the lockup",
+                'core' => $core
             ]);
         } elseif ($action == "edit-lockup") {
             return $this->render('base.html.twig', [
@@ -337,7 +365,8 @@ class LockupsController extends BaseController
                 'Lockup' => $lockup,
                 'user' => $auth,
                 'alert_title' => "Success!",
-                'alert_message' => "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver."
+                'alert_message' => "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.",
+                'core' => $core
             ]);
         }
 
@@ -345,7 +374,8 @@ class LockupsController extends BaseController
             'page_template' => "previewLockups.html.twig",
             'page_name' => "ManageLockups",
             'Lockup' => $lockup,
-            'user' => $auth
+            'user' => $auth,
+            'core' => $core
         ]);
     }
 
@@ -436,10 +466,10 @@ class LockupsController extends BaseController
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
-        if ($lockup == null) {
+        if ($lockup == null || ($lockup->getUser() != $auth->getUser() && !$auth->isAdmin())) {
             $response = $this->forward('App\Controller\LockupsController::errorPage', [
                 'errorTitle' => "Not found!",
-                'errorBody' => "The requested lockup could not be found."
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
             return $response;
         }
@@ -492,13 +522,12 @@ class LockupsController extends BaseController
         }
 
         if ($lockup->getPublic() == 0) {
-            if ($lockup->getUser() == $auth->getUser() || $auth->isAdmin()) {
-                return $this->render('base.html.twig', [
-                    'page_template' => "downloadLockups.html.twig",
-                    'Lockup' => $lockup,
-                    'auth' => $auth,
-                    'lockupsApproved' => $core->lockupsApproved($id)
+            if ($lockup->getUser() != $auth->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover()))) {
+                $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                    'errorTitle' => "Private Lockup!",
+                    'errorBody' => "You have insufficient permissions to view this page."
                 ]);
+                return $response;
             }
         }
 
@@ -528,14 +557,9 @@ class LockupsController extends BaseController
 
         $lockupsGenerator->generateLockups($id);
         
-        // return $this->redirectToRoute('downloadLockups', [
-        //     'id' => $id
-        // ], 302);
-        $response = $this->forward('App\Controller\LockupsController::errorPage', [
-            'errorTitle' => "Not found!",
-            'errorBody' => "The requested lockup could not be found."
-        ]);
-        return $response;
+        return $this->redirectToRoute('downloadLockups', [
+            'id' => $id
+        ], 302);
     }
 
 

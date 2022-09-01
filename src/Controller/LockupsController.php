@@ -383,61 +383,72 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/preview/{id}", name="lockupsActions", methods={"POST"})
      */
-    public function lockupsActions(ManagerRegistry $doctrine, Request $request, Auth $auth): RedirectResponse
+    public function lockupsActions(ManagerRegistry $doctrine, Request $request, Auth $auth): Response
     {
         $auth->requireAuth();
         $id = $request->request->get('id');
         $action = $request->request->get('action');
+        $role = $request->request->get('role');
+
         $creative_feedback = $request->request->get('creative-feedback');
         $communicator_feedback = $request->request->get('communicator-feedback');
 
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
 
+        if ($lockups == null) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+            ]);
+            return $response;
+        }
+
         $feedback = new Feedbacks;
         $feedback->setUser($auth->getUser());
         $feedback->setLockup($lockups);
+        $feedback->setType($role);
         $feedback->setTime(date("Y-m-d H:i:s"));
         $msg = "";
-        if ($auth->isCreative()) {
-            $feedback->setType("creative");
-            if ($action == "approve") {
-                $msg = "LOCKUP APPROVED";
-            } else if ($action == "deny") {
-                $msg = "LOCKUP DENIED";
-            } else if ($action == "update") {
-            $msg = $creative_feedback;
-            }
-            $feedback->setValue($msg);
 
-        } else if ($auth->isApprover()) {
-            $feedback->setType("approver");
-            if ($action == "approve") {
-                $msg = "LOCKUP APPROVED";
-            } else if ($action == "deny") {
-                $msg = "LOCKUP DENIED";
-            } else if ($action == "update") {
-            $msg = $communicator_feedback;
-            }
-            $feedback->setValue($msg);
+        switch ($role) {
+            case "creative":
+                if ($auth->isCreative() or $auth->isAdmin()) {
+                    switch ($action) {
+                        case "approve":
+                            $msg = "LOCKUP APPROVED";
+                            $lockups->setCreativeStatus(1);
+                            break;
+                        case "deny":
+                            $msg = "LOCKUP DENIED";
+                            $lockups->setCreativeStatus(2);
+                            break;
+                        case "update":
+                            $msg = $creative_feedback;
+                            break;
+                    }
+                    $feedback->setValue($msg);
+                }
+                break;
+            case "approver":
+                if (($auth->isApprover() && $lockups->getApprover() == $auth->getUser()) or $auth->isAdmin()) {
+                    switch ($action) {
+                        case "approve":
+                            $msg = "LOCKUP APPROVED";
+                            $lockups->setCommunicatorStatus(1);
+                            break;
+                        case "deny":
+                            $msg = "LOCKUP DENIED";
+                            $lockups->setCommunicatorStatus(2);
+                            break;
+                        case "update":
+                            $msg = $communicator_feedback;
+                            break;
+                    }
+                    $feedback->setValue($msg);
+                }
+                break;
         }
 
-        if ($action == "approve" && $auth->isCreative()) {
-            $lockups->setCreativeStatus(1);
-        } else if ($action == "approve" && $auth->isApprover()) {
-            $lockups->setCommunicatorStatus(1);
-        } else if  ($action == "update" && $auth->isCreative()) {
-            $lockups->setCreativeFeedback($creative_feedback);
-        } else if ($action == "update" && $auth->isApprover()) {
-            $lockups->setCommunicatorFeedback($communicator_feedback);
-        }else if ($action == "feedback" && $auth->isApprover()) {
-            $lockups->setCommunicatorFeedback(0);
-        }else if ($action == "feedback" && $auth->isCreative()) {
-            $lockups->setCreativeStatus(0);
-        }else if ($action == "deny" && $auth->isApprover()) {
-            $lockups->setCommunicatorStatus(0);
-        }else if ($action == "deny"  && $auth->isCreative()) {
-            $lockups->setCreativeStatus(0);
-        }
         $entityManager = $doctrine->getManager();
         $entityManager->persist($lockups);
         if ($action != "feedback") {
@@ -445,9 +456,10 @@ class LockupsController extends BaseController
         }
         $entityManager->flush();
 
-        return $this->redirectToRoute('previewLockups', [
+        $response = $this->forward('App\Controller\LockupsController::previewLockups', [
             'id' => $id
-        ], 302); 
+        ]);
+        return $response;
     }
 
     /**

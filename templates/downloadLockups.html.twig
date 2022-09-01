@@ -37,22 +37,16 @@
             </div>
             <div class="dcf-txt-center">
             <div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
+            {% if lockupsApproved %}
             {% if Lockup.getIsGenerated == 0 %}
             {# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
-            {% if lockupsApproved %}
             <button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
             <button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
             <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
-            {% elseif lockupsApproved == false %}
-            <div class="dcf-notice dcf-notice-warning" hidden>
-              <h2>Lockups hasn't been approved yet.</h2>
-            <div>You can't generate it right now.</div>
-            </div>
-            {% endif %}
 
             {% elseif Lockup.getIsGenerated == 1 %}
             {% if auth.isAdmin == true or Lockup.getPublic == 1 %}
-            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4" id="generatedBtn">Download All (.zip)</a>
+            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-6" id="generatedBtn">Download All (.zip)</a>
 
             	<div class="dcf-d-flex dcf-flex-row dcf-mb-3 dcf-jc-flex-start">
 			<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
@@ -123,6 +117,12 @@
             </tbody>
             </table>
             {% endif %}
+            {% endif %}
+            {% elseif lockupsApproved == false %}
+            <div class="dcf-notice dcf-notice-warning" hidden>
+              <h2>Lockups hasn't been approved yet.</h2>
+            <div>You can't generate it right now.</div>
+            </div>
             {% endif %}
 
             </div>

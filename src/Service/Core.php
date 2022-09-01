@@ -64,7 +64,7 @@ class Core
         if ($lockups == null) {
             return false;
         }
-        if ($lockups->getCreativeStatus() && $lockups->getCommunicatorStatus()) {
+        if ($lockups->getCreativeStatus() == 1 && $lockups->getCommunicatorStatus() == 1) {
             return true;
         } else {
             return false;
@@ -98,7 +98,7 @@ class Core
             return false;
         }
         foreach ($feedbacks as $item) {
-            if ($item->getUser() == $lockups->getApprover()) {
+            if ($item->getType() == "approver") {
                 return true;
             }
         }
@@ -112,7 +112,7 @@ class Core
             return false;
         }
         foreach ($feedbacks as $item) {
-            if ($item->getUser()->getRole() == "creative") {
+            if ($item->getType() == "creative") {
                 return true;
             }
         }

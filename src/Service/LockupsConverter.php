@@ -39,7 +39,8 @@ class LockupsConverter
     private function createFolder(string $folderName): string
     {
         if (!file_exists($folderName)) {
-            mkdir($folderName, 0777, true);
+		// mkdir($folderName, 0770, true);
+		exec('mkdir ' . $folderName);
         }
         return $folderName;
     }
@@ -108,7 +109,7 @@ class LockupsConverter
         }
         switch ($color) {
             case "RGB":
-                $pathName = $pathName . "RGB (HEX)/";
+                $pathName = $pathName . "RGB_HEX/";
                 $fileName = $fileName . "RGB";
                 break;
             case "pms186cp":
@@ -116,7 +117,7 @@ class LockupsConverter
                 $fileName = $fileName . "pms186cp";
                 break;
             case "4c":
-                $pathName = $pathName . "4c CMYK/";
+                $pathName = $pathName . "4c_CMYK/";
                 $fileName = $fileName . "4c";
                 break;
             case "blk":
@@ -159,7 +160,10 @@ class LockupsConverter
         $lockupFileClass = [];
 
         #for svg
-        exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape' . ' --export-plain-svg=' . $svgDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+        // echo (var_dump($backend_output));
+        // echo ($svgDirectory);
 
         $lockupFileClass[0] = new LockupFiles();
         $lockupFileClass[0]->setFileName($fileName . ".svg");
@@ -176,7 +180,8 @@ class LockupsConverter
 
         #for png
 
-        exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape -h800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
 
         $lockupFileClass[1] = new LockupFiles();
@@ -194,7 +199,8 @@ class LockupsConverter
 
         #for jpg | convert is a imagemagick function
         $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
-        exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
+        // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
+        exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
 
         $lockupFileClass[2] = new LockupFiles();
         $lockupFileClass[2]->setFileName($fileName . ".jpg");
@@ -209,7 +215,8 @@ class LockupsConverter
         $this->doctrine->getManager()->persist($lockupFileClass[2]);
 
         #for eps
-        exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape -C' . ' --export-eps=' . $epsDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
         # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
         if ($color == '4c' || $color == 'pms186cp') {
@@ -253,25 +260,25 @@ class LockupsConverter
         $this->doctrine->getManager()->persist($lockupFileClass[4]);
 
         #for pdf
-        if ($color != "pms186cp") { //no pdf for pms
-            $options = '';
-            if ($color == '4c') {
-                $options = '-dProcessColorModel=/DeviceCMYK ';
-            }
-            exec('ps2pdf ' . $options . ' "' . $epsDirectory . '" "' . $pdfDirectory . '" 2>&1', $backend_output, $return_var);
+        // if ($color != "pms186cp") { //no pdf for pms
+        //     $options = '';
+        //     if ($color == '4c') {
+        //         $options = '-dProcessColorModel=/DeviceCMYK ';
+        //     }
+        //     exec('ps2pdf ' . $options . ' "' . $epsDirectory . '" "' . $pdfDirectory . '" 2>&1', $backend_output, $return_var);
     
-            $lockupFileClass[5] = new LockupFiles();
-            $lockupFileClass[5]->setFileName($fileName . ".pdf");
-            $lockupFileClass[5]->setFormat("pdf");
-            $lockupFileClass[5]->setLockup($lockups);
-            $lockupFileClass[5]->setOrient($orient);
-            $lockupFileClass[5]->setStyle($color);
-            $lockupFileClass[5]->setTemplate($lockups->getTemplate());
-            $lockupFileClass[5]->setUrl($this->urlSuffix . $this->savePath() . $pdfPathName);
-            $lockupFileClass[5]->setDirectory($pdfDirectory);
-            $lockupFileClass[5]->setPathName($pdfPathName);
-            $this->doctrine->getManager()->persist($lockupFileClass[5]);
-        }
+        //     $lockupFileClass[5] = new LockupFiles();
+        //     $lockupFileClass[5]->setFileName($fileName . ".pdf");
+        //     $lockupFileClass[5]->setFormat("pdf");
+        //     $lockupFileClass[5]->setLockup($lockups);
+        //     $lockupFileClass[5]->setOrient($orient);
+        //     $lockupFileClass[5]->setStyle($color);
+        //     $lockupFileClass[5]->setTemplate($lockups->getTemplate());
+        //     $lockupFileClass[5]->setUrl($this->urlSuffix . $this->savePath() . $pdfPathName);
+        //     $lockupFileClass[5]->setDirectory($pdfDirectory);
+        //     $lockupFileClass[5]->setPathName($pdfPathName);
+        //     $this->doctrine->getManager()->persist($lockupFileClass[5]);
+        // }
 
         $this->doctrine->getManager()->flush();
         return true;

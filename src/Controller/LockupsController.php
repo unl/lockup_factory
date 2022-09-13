@@ -251,7 +251,7 @@ class LockupsController extends BaseController
     }
 
     /**
-     * @Route("/lockups/manage", name="manageLockups")
+     * @Route("/lockups/manage", name="manageLockups", methods={"GET"})
      */
     public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, Core $core): Response
     {
@@ -296,9 +296,9 @@ class LockupsController extends BaseController
     }
 
     /**
-     * @Route("/lockups/delete/", name="deleteLockups", methods={"POST"})
+     * @Route("/lockups/manage/", name="deleteLockups", methods={"POST"})
      */
-    public function deleteLockups(ManagerRegistry $doctrine, Request $request, Auth $auth): RedirectResponse
+    public function deleteLockups(ManagerRegistry $doctrine, Request $request, Auth $auth): Response
     {
         $auth->requireAuth();
         $id = $request->request->get('id');
@@ -323,7 +323,8 @@ class LockupsController extends BaseController
         }
         $entityManager->flush();
 
-        return $this->redirectToRoute('manageLockups', [], 302);
+        $response = $this->forward('App\Controller\LockupsController::manageLockups', []);
+        return $response;
     }
 
     /**
@@ -351,7 +352,7 @@ class LockupsController extends BaseController
         if ($action == "new-lockup") {
             return $this->render('base.html.twig', [
                 'page_template' => "previewLockups.html.twig",
-                'page_name' => "ManageLockups",
+                'page_name' => "previewLockups",
                 'Lockup' => $lockup,
                 'user' => $auth,
                 'alert_title' => "Success!",
@@ -361,7 +362,7 @@ class LockupsController extends BaseController
         } elseif ($action == "edit-lockup") {
             return $this->render('base.html.twig', [
                 'page_template' => "previewLockups.html.twig",
-                'page_name' => "ManageLockups",
+                'page_name' => "previewLockups",
                 'Lockup' => $lockup,
                 'user' => $auth,
                 'alert_title' => "Success!",
@@ -372,7 +373,7 @@ class LockupsController extends BaseController
 
         return $this->render('base.html.twig', [
             'page_template' => "previewLockups.html.twig",
-            'page_name' => "ManageLockups",
+            'page_name' => "previewLockups",
             'Lockup' => $lockup,
             'user' => $auth,
             'core' => $core

@@ -53,9 +53,14 @@
 .horiz .lockups-preview .preview {
     width: 100%;
 }
+
+.vert .lockups-preview {
+  width: 90%;
+  max-width: 600px;
+}
+
 .vert .lockups-preview .preview {
-    width: 100%;
-    max-width: 200px;
+    max-height: 450px;
 }
 
 .table-preview .preview {
@@ -64,7 +69,7 @@
 
 .lockups-preview {
     background-color: #fff;
-    display:inline-block;
+    /* display:inline-block; */
     border: 3px dashed var(--b);
 }
 

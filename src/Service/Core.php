@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Lockups;
+use App\Entity\LockupsFields;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LockupsRepository;
 use App\Repository\LockupsFieldsRepository;
@@ -50,7 +51,7 @@ class Core
                 if ($this->auth->isAdmin() == true) {
                     array_push($searchLockupResult, $temp);
                 } else {
-                    if ($temp->getPublic() == 1) {
+                    if ($temp->getPublic() == 1 && $this->lockupsApproved($temp->getId())) {
                     array_push($searchLockupResult, $temp);
                     }
                 }
@@ -125,5 +126,71 @@ class Core
 
     public function getPendingCreativeLockups() {
         return $this->lockupsRepository->pendingCreative();
+    }
+
+    public function searchWrapper(array $lockups, string $searchTerm) : array { // takes an array of lockups and search term and searches from the array
+        $lockupsArray = [];
+        $pushed = false;
+        foreach ($lockups as $lockup) {
+            $lockup_fields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $lockup->getId()], ['approver.organization' => "ASC"]);
+            foreach ($lockup_fields as $field) {
+                if (strpos($field->getValue(), $searchTerm)) {
+                    // array_push($lockupsArray, $lockup);
+                    $pushed = true;
+                }
+            }
+            if (strpos($lockup->getInstitution(), $searchTerm) || strpos($lockup->getDepartment(), $searchTerm) || $pushed) {
+                array_push($lockupsArray, $lockup);
+                $pushed = false;
+            }
+        }
+        return $lockupsArray;
+    }
+
+    public function getLockupsLibraryLockups() : array {
+        if ($this->auth->isAdmin() == true) {
+            $publicLockups = $this->doctrine->getRepository(Lockups::class)->findAll();
+        } else {
+            $publicLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['public' => 1, 'CommunicatorStatus' => 1, 'CreativeStatus' => 1], ['approver' => 'ASC']);
+        }
+        // $columns = array_column($publicLockups, 'approver');
+        // usort($publicLockups, fn($a, $b) => $a['approver']['organization'] <=> $b['approver']['organization']);
+
+
+        return $this->lockupsLibraryWrapper($publicLockups);
+    }
+
+    public function lockupsLibraryWrapper(array $lockups) : array { // wrapper to format lockups array to lockups library specification
+        $sortedLockups = [];
+        foreach($lockups as $lockup) {
+            $temp = "";
+            $tempArray = [];
+            $unknownApproverArray = [];
+            if (count($lockups) >= 1) {
+                foreach ($lockups as $lockup) {
+                    if ($lockup->getApprover() == null) {
+                        array_push($unknownApproverArray, $lockup);
+                    } else {
+                        if ($temp == "") {
+                            $temp = $lockup->getApprover()->getOrganization();
+                            array_push($tempArray, $lockup);
+                        } else if ($temp == $lockup->getApprover()->getOrganization()) {
+                            array_push($tempArray, $lockup);
+                        } else {
+                            $sortedLockups[$temp] = $tempArray;
+                            $tempArray = [];
+                            $temp = $lockup->getApprover()->getOrganization();
+                            array_push($tempArray, $lockup);
+                        }
+                    }
+                }
+                if (count($unknownApproverArray) >= 1) {
+                    $sortedLockups['Unknown'] = $tempArray;
+                }
+                $sortedLockups[$temp] = $tempArray;
+            }
+            ksort($sortedLockups);
+        }
+        return $sortedLockups;
     }
 }

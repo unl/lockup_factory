@@ -259,22 +259,6 @@ class LockupsController extends BaseController
         $maxResults = 5;
         $search = (string)$request->query->get('search_term');
         $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
-        if ($search != "") {
-            $searchLockupResult = $core->search($search, true);
-            // $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
-            // $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
-            return $this->render('base.html.twig', [
-                'page_template' => "manageLockups.html.twig",
-                'page_name' => "ManageLockups",
-                'lockups_array' => $searchLockupResult,
-                'auth' => $auth,
-                'search' => $search
-            ]); 
-        }
-        $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
-        $product = array_reverse($product);
-        // $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
-        // $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
         if ($auth->isAdmin()) {
             $pendingApprover = $core->getPendingApproverLockups();
         } else {
@@ -282,6 +266,26 @@ class LockupsController extends BaseController
         }
 
         $pendingCreative = $core->getPendingCreativeLockups();
+        if ($search != "") {
+            $searchLockupResult = $core->search($search, true);
+            // $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
+            // $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
+            $pendingCreative = $core->searchWrapper($pendingCreative, $search);
+            $pendingApprover = $core->searchWrapper($pendingApprover, $search);
+            return $this->render('base.html.twig', [
+                'page_template' => "manageLockups.html.twig",
+                'page_name' => "ManageLockups",
+                'lockups_array' => $searchLockupResult,
+                'auth' => $auth,
+                'search' => $search,
+                'pendingApprover'  => $pendingApprover,
+                'pendingCreative' => $pendingCreative
+            ]); 
+        }
+        $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
+        $product = array_reverse($product);
+        // $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
+        // $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
 
 
         return $this->render('base.html.twig', [

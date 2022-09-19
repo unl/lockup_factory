@@ -13,17 +13,59 @@
 				</div>
 			</form>
 		</div>
-
-		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+		
+		{% for key, value in lockups_array%}
+		{% if auth.isAdmin %}
+		<h4>All lockups for {{ key }}</h4>
+		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
 			<thead>
 				<tr>
-					<th scope="col">Title</th>
-					<th scope="col">Preview</th>
-
+					<th style="width: 30%;" scope="col">Title</th>
+					<th style="width: 25%;" scope="col">Approved</th>
+					<th style="width: 15%;" scope="col">Public</th>
+					<th style="width: 30%;" scope="col">Preview</th>
 				</tr>
 			</thead>
 			<tbody>
-				{% for item in lockups_array%}
+				{% for item in value %}
+					<tr>
+						<td data-label="Title">
+							{{item.getDepartment}}
+							{{item.getInstitution}}
+						</td>
+						<td data-label="Approved">
+							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+
+							{{(item.getCreativeStatus == 0) ? "<p>University Communications: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>University Communications: <strong>Approved</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>University Communications: <strong>Rejected</strong></p>" | raw}}
+						</td>
+						<td data-label="Public">
+							{{ (item.getPublic == 1) ? "Published" : "Not published" }}
+						</td>
+						<td data-label="Preview">
+							<a href="/lockups/download/{{item.getId}}">
+								<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% else %}
+		<h4>Lockups approved for {{ key }}</h4>
+		
+		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+			<thead>
+				<tr>
+					<th style="width: 60%;" scope="col">Title</th>
+					<th style="width: 40%;" scope="col">Preview</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in value%}
 					<tr>
 						<td data-label="Title">
 							{{item.getDepartment}}
@@ -37,8 +79,11 @@
 					</tr>
 				{% endfor %}
 			</tbody>
-			<tbody></tbody>
 		</table>
+		{% endif %}
+		{% endfor %}
+		
+
 
 
 		{# Pagination Script #}

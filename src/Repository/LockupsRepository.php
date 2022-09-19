@@ -78,7 +78,7 @@ class LockupsRepository extends ServiceEntityRepository
                 'SELECT p
                 FROM App\Entity\Lockups p
                 WHERE p.CreativeStatus = 0
-                ORDER BY p.id DESC'
+                ORDER BY p.DateCreated DESC'
             );
         } else {
             $query = $entityManager->createQuery(
@@ -87,7 +87,7 @@ class LockupsRepository extends ServiceEntityRepository
                 WHERE p.CreativeStatus = 0
                 AND
                 p.approver = :id
-                ORDER BY p.id DESC'
+                ORDER BY p.DateCreated DESC'
             )->setParameter('id', $id);
         }
 
@@ -105,7 +105,7 @@ class LockupsRepository extends ServiceEntityRepository
             'SELECT p
             FROM App\Entity\Lockups p
             WHERE p.CommunicatorStatus = 0
-            ORDER BY p.id DESC'
+            ORDER BY p.DateCreated DESC'
         );
 
         // returns an array of Product objects

@@ -35,6 +35,13 @@
             {% endif %}
             </div>
             </div>
+            
+            {% if auth.isAdmin or Lockup.getUser == auth.getUser %}
+            <div class="dcf-txt-center dcf-mb-6">
+            <a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+            </div>
+            {% endif %}
+
             <div class="dcf-txt-center">
             <div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
             {% if lockupsApproved %}

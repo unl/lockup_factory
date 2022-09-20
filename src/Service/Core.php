@@ -149,48 +149,85 @@ class Core
 
     public function getLockupsLibraryLockups() : array {
         if ($this->auth->isAdmin() == true) {
-            $publicLockups = $this->doctrine->getRepository(Lockups::class)->findAll();
+            $publicLockups = $this->doctrine->getRepository(Lockups::class)->findBy([], ['approver' => 'ASC']);
         } else {
             $publicLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['public' => 1, 'CommunicatorStatus' => 1, 'CreativeStatus' => 1], ['approver' => 'ASC']);
         }
-        // $columns = array_column($publicLockups, 'approver');
-        // usort($publicLockups, fn($a, $b) => $a['approver']['organization'] <=> $b['approver']['organization']);
+        return $this->sortByOrganization($publicLockups);
+    }
 
+    public function sortByOrganization($lockups) : array {
+        usort($lockups, function ($a, $b) {
+            if ($a->getApprover() == null){
+                $firstValue = "Unknown";
+            } else {
+                $firstValue = $a->getApprover()->getOrganization();
+            }
 
-        return $this->lockupsLibraryWrapper($publicLockups);
+            if ($b->getApprover() == null){
+                $secondValue = "Unknown";
+            } else {
+                $secondValue = $b->getApprover()->getOrganization();
+            }
+            return strcmp($firstValue, $secondValue);
+        });
+
+        return $lockups;
+    }
+
+    public function maxSearchResultWrapper(array $lockups, int $page, int $maxResults) : array {
+        $lockups = array_slice($lockups, ($page - 1) * $maxResults, $maxResults);
+        return $lockups;
+
     }
 
     public function lockupsLibraryWrapper(array $lockups) : array { // wrapper to format lockups array to lockups library specification
         $sortedLockups = [];
+        $tempOrg = "";
+        $tempArr = [];
         foreach($lockups as $lockup) {
-            $temp = "";
-            $tempArray = [];
-            $unknownApproverArray = [];
-            if (count($lockups) >= 1) {
-                foreach ($lockups as $lockup) {
-                    if ($lockup->getApprover() == null) {
-                        array_push($unknownApproverArray, $lockup);
-                    } else {
-                        if ($temp == "") {
-                            $temp = $lockup->getApprover()->getOrganization();
-                            array_push($tempArray, $lockup);
-                        } else if ($temp == $lockup->getApprover()->getOrganization()) {
-                            array_push($tempArray, $lockup);
-                        } else {
-                            $sortedLockups[$temp] = $tempArray;
-                            $tempArray = [];
-                            $temp = $lockup->getApprover()->getOrganization();
-                            array_push($tempArray, $lockup);
-                        }
-                    }
-                }
-                if (count($unknownApproverArray) >= 1) {
-                    $sortedLockups['Unknown'] = $tempArray;
-                }
-                $sortedLockups[$temp] = $tempArray;
+            if ($lockup->getApprover() == null) {
+                $approverDepartment = "Unknown";
+            } elseif ($lockup->getApprover()->getOrganization() == null) {
+                $approverDepartment = "Unknown";
+            } else {
+                $approverDepartment = $lockup->getApprover()->getOrganization();
             }
-            ksort($sortedLockups);
+
+            if ($tempOrg == "") {
+                $tempOrg = $approverDepartment;
+                array_push($tempArr, $lockup);
+            } else if ($tempOrg == $approverDepartment) {
+                array_push($tempArr, $lockup);
+            } else {
+                // array_push($sortedLockups, $tempArr);
+                $sortedLockups[$tempOrg] = $tempArr;
+                $tempOrg = $approverDepartment;
+                $tempArr = [];
+                array_push($tempArr, $lockup);
+            }
         }
+        $sortedLockups[$tempOrg] = $tempArr;
         return $sortedLockups;
+    }
+
+    public function filterOrganization(array $sortedLockups, string $approver = null) : array {
+        $sortedArray = [];
+        if ($approver != null ) {
+            foreach ($sortedLockups as $key => $value) {
+                if ($key == $approver) {
+                    $sortedArray[$key] = $value;
+                    return $sortedArray;
+                }
+            }
+        } else {
+            return $sortedLockups;
+        }
+    }
+
+    public function lockupsLibraryManager(array $lockups, int $page, int $maxResults) : array {
+        $tempArray = $this->maxSearchResultWrapper($lockups,$page,$maxResults);
+        $tempArray = $this->lockupsLibraryWrapper($tempArray);
+        return $tempArray;
     }
 }

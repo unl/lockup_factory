@@ -13,10 +13,69 @@
 				</div>
 			</form>
 		</div>
+
+
+		<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-grid-thirds@lg dcf-mb-6 dcf-row-gap-1 dcf-col-gap-vw">
+
+		<div>
+		<fieldset>
+		<legend class="dcf-legend">Filter by Organization</legend>
+		<form id="orgForm" method="POST">
+		<label class="dcf-txt-sm" for="approver">Select organization name</label>
 		
+		<select def id="organization" name="approver"
+			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+            <option value="0">Select approving organization</option>
+		{% for key, value in allLockups%}
+			<option value="{{ key }}">{{ key }}</option>
+		
+		{% endfor %}
+		</select>
+		</form>
+		</fieldset>
+		</div>
+
+		{% if auth.isAdmin %}
+
+		<div>
+		<fieldset>
+		<legend class="dcf-legend">Filter by user</legend>
+		
+					<form class="dcf-form">
+				<label for="search-term">Enter username</label>
+				<div class="dcf-input-group">
+					<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+					<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+					{% if search != "" %}
+						<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+					{% endif %}
+				</div>
+			</form>
+		</fieldset>
+		</div>
+
+		<div>
+		<fieldset>
+		<legend class="dcf-legend">More filters</legend>
+		<label class="dcf-txt-sm" for="approver">Select organization name</label>
+		<select def id="approver" name="approver"
+			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+		{% for key, value in allLockups %}
+			<option value="0">{{ key }}</option>
+		
+		{% endfor %}
+		</select>
+		</fieldset>
+		</div>
+
+		{% endif %}
+
+		</div>
+
 		{% for key, value in lockups_array%}
 		{% if auth.isAdmin %}
 		<h4>All lockups for {{ key }}</h4>
+		{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
 			<thead>
 				<tr>
@@ -88,7 +147,7 @@
 
 		{# Pagination Script #}
 
-		{# {% if totalPage > 1 %}
+		{% if totalPage > 1 %}
 			{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" : path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
 			<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
 				<ol class="dcf-list-bare dcf-list-inline">
@@ -175,7 +234,7 @@
 					{% endif %}
 				</ol>
 			</nav>
-		{% endif %} #}
+		{% endif %}
 		{# End Pagination Script #}
 	</div>
 
@@ -190,9 +249,26 @@ searchTermField.value = searchTerm;
 	</script>
 
 	<script>
+	// filter by organization script
+	const org_list = document.getElementById("organization");
+	const orgForm = document.getElementById("orgForm");
+    org_list.addEventListener("change", sendOrganizationInput);
+	let approverOrg = "{{ approver | default("")}}";
+
+	function sendOrganizationInput() {
+		if (org_list.value != "0") {
+		orgForm.submit();
+		}
+	}
+	if (approverOrg != null) {
+		org_list.value = approverOrg;
+	}
+	</script>
+
+	<script>
 		// pagination javascript
-window.addEventListener('inlineJSReady', function () {
-WDN.initializePlugin('pagination');
-}, false);
+		window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('pagination');
+		}, false);
 	</script>
 {% endblock %}

@@ -25,6 +25,7 @@ class LockupsLibraryController extends BaseController
     {
         $auth->requireAuth();
         $approver = $request->request->get("approver");
+        $user_id = $request->request->get("user_id");
         $search = (string)$request->query->get('search_term');
         $maxResults = 20;
         $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
@@ -43,7 +44,8 @@ class LockupsLibraryController extends BaseController
                 'auth' => $auth,
                 'currentPage' => $page,
                 'totalPage' => $pageLength,
-                'approver' => $approver
+                'approver' => $approver,
+                'user_id' => $user_id
             ]); 
         }
         // if ($auth->isAdmin() == true) {
@@ -52,6 +54,10 @@ class LockupsLibraryController extends BaseController
         //     $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
         // }
         // $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
+        
+
+
+
         $publicLockups = $core->getLockupsLibraryLockups();
         $pageLength = (int)(((count($publicLockups) % $maxResults) != 0) ? ((count($publicLockups) / $maxResults) + 1) : (count($publicLockups) / $maxResults));
 
@@ -59,6 +65,12 @@ class LockupsLibraryController extends BaseController
             $pageLength = 1;
             $page = 1;
             $maxResults = 99999999;
+        }
+
+        if ($user_id != "") {
+            $pageLength = 1;
+            $page = 1;
+            $maxResults = 99999999;        
         }
 
         $publicLockups = $core->lockupsLibraryManager($publicLockups, $page, $maxResults);
@@ -70,7 +82,9 @@ class LockupsLibraryController extends BaseController
             $filteredLockups = $publicLockups;
         }
         
-
+        if ($user_id != "") {
+            $filteredLockups = $core->searchhByUsername($user_id);
+        }
 
         return $this->render('base.html.twig', [
             'page_template' => "lockupsLibrary.html.twig",
@@ -81,7 +95,8 @@ class LockupsLibraryController extends BaseController
             'auth' => $auth,
             'currentPage' => $page,
             'totalPage' => $pageLength,
-            'approver' => $approver
+            'approver' => $approver,
+            'user_id' => $user_id
         ]);
     }
 }

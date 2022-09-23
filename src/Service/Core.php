@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Lockups;
+use App\Entity\Users;
 use App\Entity\LockupsFields;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LockupsRepository;
@@ -211,7 +212,7 @@ class Core
         return $sortedLockups;
     }
 
-    public function filterOrganization(array $sortedLockups, string $approver = null) : array {
+    public function filterOrganization(array $sortedLockups, string $approver = null) : array { // for search by organization
         $sortedArray = [];
         if ($approver != null ) {
             foreach ($sortedLockups as $key => $value) {
@@ -229,5 +230,21 @@ class Core
         $tempArray = $this->maxSearchResultWrapper($lockups,$page,$maxResults);
         $tempArray = $this->lockupsLibraryWrapper($tempArray);
         return $tempArray;
+    }
+
+    public function searchhByUsername(string $userID) {
+        $filteredLockups = [];
+        $findUser = $this->doctrine->getRepository(Users::class)->findOneBy(['username'=> $userID]);
+        $allLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['user' => $findUser], ['approver' => 'ASC']);
+        foreach ($allLockups as $lockup) {
+            if ($this->auth->isAdmin()) {
+                return $this->lockupsLibraryManager($allLockups, 1, 999999);
+            } else if ($this->auth->isCreative() || $this->auth->isApprover()) {
+                if ($lockup->getPublic() == 1) {
+                    array_push($filteredLockups, $lockup);
+                }
+            }
+        }
+        return $this->lockupsLibraryManager($filteredLockups, 1, 999999);
     }
 }

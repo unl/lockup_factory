@@ -41,12 +41,12 @@
 		<fieldset>
 		<legend class="dcf-legend">Filter by user</legend>
 		
-					<form class="dcf-form">
+					<form class="dcf-form" method="POST">
 				<label for="search-term">Enter username</label>
 				<div class="dcf-input-group">
-					<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+					<input value="" type="text" name="user_id" id="userIdField">
 					<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
-					{% if search != "" %}
+					{% if user_id != "" %}
 						<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
 					{% endif %}
 				</div>
@@ -54,7 +54,7 @@
 		</fieldset>
 		</div>
 
-		<div>
+		{# <div>
 		<fieldset>
 		<legend class="dcf-legend">More filters</legend>
 		<label class="dcf-txt-sm" for="approver">Select organization name</label>
@@ -66,7 +66,7 @@
 		{% endfor %}
 		</select>
 		</fieldset>
-		</div>
+		</div> #}
 
 		{% endif %}
 
@@ -245,6 +245,15 @@ let searchTerm = "{{ search }}";
 let searchTermField = document.getElementById("searchTermField");
 if (searchTerm != "") {
 searchTermField.value = searchTerm;
+}
+	</script>
+
+		<script>
+		// user search script
+let userId = "{{ user_id }}";
+let userIdField = document.getElementById("userIdField");
+if (userId != "") {
+userIdField.value = userId;
 }
 	</script>
 

@@ -388,9 +388,49 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/preview/{id}", name="lockupsActions", methods={"POST"})
      */
-    public function lockupsActions(ManagerRegistry $doctrine, Request $request, Auth $auth): Response
+    public function lockupsActions(int $id, ManagerRegistry $doctrine, Request $request, Auth $auth): Response
     {
         $auth->requireAuth();
+        $publish = $request->request->get('publishLockup');
+
+        if ($publish == "1") {
+            $publishLockup = $doctrine->getRepository(Lockups::class)->find($id);
+            if ($publishLockup == null) {
+                $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                    'errorTitle' => "Not found!",
+                    'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+                ]);
+                return $response;
+            }
+            $publishLockup->setPublic(1);
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($publishLockup);
+            $entityManager->flush();
+            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                'id' => $id
+            ]);
+            return $response;
+            
+        } else if ($publish == "0") {
+            $publishLockup = $doctrine->getRepository(Lockups::class)->find($id);
+            if ($publishLockup == null) {
+                $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                    'errorTitle' => "Not found!",
+                    'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+                ]);
+                return $response;
+            }
+            $publishLockup->setPublic(0);
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($publishLockup);
+            $entityManager->flush();
+            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                'id' => $id
+            ]);
+            return $response;
+        }
         $id = $request->request->get('id');
         $action = $request->request->get('action');
         $role = $request->request->get('role');

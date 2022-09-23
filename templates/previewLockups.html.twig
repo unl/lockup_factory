@@ -21,14 +21,14 @@
     {% else %}
         <h3>Lockup Details</h3>
 {% endif %}
-    <div class="dcf-grid dcf-grid-full dcf-grid-halves@md">
+    <div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-vw">
         <div>
             <h4>
                 Preview Lockup
             </h4>
             {% if Lockup.getPreviewH != null%}
             <div class="horiz">
-                    <div class="lockups-preview dcf-p-3">
+                    <div class="lockups-preview dcf-p-4">
                         {{ Lockup.getPreviewH | raw }}
                     </div>
                     <p class="dcf-txt-center">
@@ -40,7 +40,7 @@
             {% endif %}
             {% if Lockup.getPreviewV != null%}
             <div class="vert">
-                    <div class="lockups-preview dcf-p-3 dcf-txt-center">
+                    <div class="lockups-preview dcf-p-4 dcf-txt-center">
                         {{ Lockup.getPreviewV | raw }}
                     </div>
                     <p class="dcf-txt-center">

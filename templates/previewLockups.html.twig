@@ -7,7 +7,7 @@
 {% endif %}
 
 {% if (user.isApprover == false and user.isCreative == false) %}
-    <h3>Edit lockup</h3>
+    <h3>Edit Lockup</h3>
 
     {% if alert_message is not defined %}
         <div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? " dcf-notice-success" : "dcf-notice-info" }}" hidden>
@@ -24,7 +24,7 @@
     <div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-vw">
         <div>
             <h4>
-                Preview Lockup
+                Preview
             </h4>
             {% if Lockup.getPreviewH != null%}
             <div class="horiz">

@@ -15,7 +15,7 @@
         <div>Your lockup {{(Lockup.getCreativeStatus == 1 and
                     Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}} by your Communicator
                     Contact and
-                    University Communications.</div>
+                    University Communication.</div>
         </div>
     {% endif %}
     {% else %}
@@ -186,22 +186,22 @@
 
             {# ucomm block #}
             <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-                <h5>University Communications</h5>
+                <h5>University Communication</h5>
                 {% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
                 <div class="dcf-p-2 dcf-mb-4">
-                    University Communications: <strong>Feedback received</strong>
+                    University Communication: <strong>Feedback received</strong>
                 </div>
                 {% elseif (Lockup.getCreativeStatus == 1)%}
                 <div class="dcf-p-2 dcf-mb-4">
-                    University Communications: <strong>Approved</strong>
+                    University Communication: <strong>Approved</strong>
                 </div>
                 {% elseif (Lockup.getCreativeStatus == 2)%}
                 <div class="dcf-p-2 dcf-mb-4">
-                    University Communications: <strong>Denied</strong>
+                    University Communication: <strong>Denied</strong>
                 </div>
                 {% else %}
                 <div class="dcf-p-2 dcf-mb-4">
-                    University Communications: <strong>Awaiting Approval</strong>
+                    University Communication: <strong>Awaiting Approval</strong>
                 </div>
                 {% endif %}
 

@@ -181,7 +181,7 @@ class LockupsConverter
         #for png
 
         // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -h800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape -h 800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
 
         $lockupFileClass[1] = new LockupFiles();

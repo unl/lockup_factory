@@ -72,6 +72,10 @@
 
 		</div>
 
+		{% if user_id != "" %}
+		<h3>Lockups for user {{ user_id }}</h3>
+		{% endif %}
+
 		{% for key, value in lockups_array%}
 		{% if auth.isAdmin %}
 		<h4>All lockups for {{ key }}</h4>

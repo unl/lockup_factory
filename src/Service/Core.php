@@ -236,6 +236,7 @@ class Core
         $filteredLockups = [];
         $findUser = $this->doctrine->getRepository(Users::class)->findOneBy(['username'=> $userID]);
         $allLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['user' => $findUser], ['approver' => 'ASC']);
+        $allLockups = $this->sortByOrganization($allLockups);
         foreach ($allLockups as $lockup) {
             if ($this->auth->isAdmin()) {
                 return $this->lockupsLibraryManager($allLockups, 1, 999999);

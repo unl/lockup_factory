@@ -12,13 +12,14 @@ class Auth
     private $doctrine;
     private $directory_url = 'https://directory.unl.edu/';
     private $entityManager;
-    private $root_url = "localhost.unl.edu";
+    private $root_url;
 
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, string $appUrl)
     {
         $this->doctrine = $doctrine;
         $this->entityManager = $doctrine->getManager();
+        $this->root_url = $appUrl;
 
         if (!phpCAS::isInitialized()) {
             phpCAS::client(CAS_VERSION_2_0, 'shib.unl.edu', 443, 'idp/profile/cas');

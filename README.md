@@ -6,7 +6,7 @@ Install Symfony CLI
 
 Install Lockup Factory
 1. Create a new database and import the sql dump in `/db`.
-2. Copy .env to .env.local and edit the database details (including setting a proper serverVersion param).
+2. Copy .env to .env.local and edit the database details (including setting a proper serverVersion param) and set the `APP_URL` to the url of your app.
 3. Install inkscape in your local machine by `brew install --cask inkscape` on macOS.
 4. Also install imagemagick in your local machine by `brew install imagemagick` on macOS.
 5. Run `composer install` & `npm install`.

@@ -45,8 +45,21 @@
     border-radius: 6px;
 }
 
-.vert .lockups-preview .preview {
-    max-height: 12em;
+.lockups-border {
+  background-color: #fff;
+  border: 3px dashed var(--b);
+}
+.horiz .lockups-preview .preview {
+  max-height: 13em;
+}
+
+.horiz .lockups-download .preview {
+  max-height: 13em;
+}
+
+.vert .lockups-download .preview {
+  max-height: 15em;
+  min-height: 100%;
 }
 
 .table-preview .preview {

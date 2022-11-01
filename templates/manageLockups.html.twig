@@ -17,7 +17,7 @@
 			</form>
 		</div>
 		{% if auth.isCreative or auth.isAdmin %}
-				<h4>Lockups needing University Communication approval. </h4>
+				<h4>Lockups needing UComm approval. </h4>
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
@@ -47,13 +47,17 @@
 							{{ item.getDateCreated|date('Y-m-d') }}
 						</td>
 						<td data-label="Status">
-							{{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
+							{% if (item.getApprover == null) %}
+							<p>Communicator: Not specified<br></p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected<br></p>" | raw}}
+							{% endif %}
 
-							{{(item.getCreativeStatus == 0) ? "<p><strong>UComm</strong>: Awaiting Approval</p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p><strong>UComm</strong>: Approved</p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p><strong>UComm</strong>: Rejected</p>" | raw}}
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected</p>" | raw}}
 
 						</td>
 						<td data-label="Actions">
@@ -98,13 +102,17 @@
 							{{ item.getDateCreated|date('Y-m-d') }}
 						</td>
 						<td data-label="Status">
-							{{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
+													{% if (item.getApprover == null) %}
+							<p>Communicator: Not specified<br></p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+							{% endif %}
 
-							{{(item.getCreativeStatus == 0) ? "<p><strong>UComm</strong>: Awaiting Approval</p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p><strong>UComm</strong>: Approved</p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p><strong>UComm</strong>: Rejected</p>" | raw}}
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
 
 						</td>
 						<td data-label="Actions">
@@ -119,7 +127,7 @@
 		</table>
 		{% endif %}
 
-		<h4 class="dcf-mt-6">Your lockups. </h4>
+		<h4 class="dcf-mt-6">Your lockups</h4>
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
@@ -144,17 +152,21 @@
 							{% if item.getApprover != null%}
 								{{item.getApprover.getName}}
 							{% else %}
-								Communicator not Specified
+								Communicator not specified
 							{% endif %}
 						</td>
 						<td data-label="Status">
-							{{(item.getCommunicatorStatus == 0) ? "<p><strong>Communicator</strong>: Awaiting Approval<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p><strong>Communicator</strong>: Approved<br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p><strong>Communicator</strong>: Rejected<br></p>" | raw}}
+							{% if (item.getApprover == null) %}
+							<p>Communicator: <strong>Not specified</strong><br></p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+							{% endif %}
 
-							{{(item.getCreativeStatus == 0) ? "<p><strong>UComm</strong>: Awaiting Approval</p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p><strong>UComm</strong>: Approved</p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p><strong>UComm</strong>: Rejected</p>" | raw}}
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
 
 						</td>
 						<td data-label="Actions">
@@ -170,98 +182,6 @@
 				{% endfor %}
 			</tbody>
 		</table>
-
-		{# Pagination Script #}
-
-		{# {% if totalPage > 1 %}
-			{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" : path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
-			<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
-				<ol class="dcf-list-bare dcf-list-inline">
-					{% if currentPage != 1%}
-						<li>
-							<a class="dcf-pagination-first" href="{{ currentPath }}1">First</a>
-						</li>
-						<li>
-							<a class="dcf-pagination-prev" href="{{ currentPath }}{{ currentPage - 1}}">Prev</a>
-						</li>
-					{% endif %}
-
-					{% if currentPage == 1 %}
-						<li>
-							<span class="dcf-pagination-selected">1</span>
-						</li>
-						{% for i in (currentPage + 1) .. totalPage %}
-							{% if (i - currentPage) <= 2%}
-								<li>
-									<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-								</li>
-							{% endif %}
-						{% endfor %}
-						{% if totalPage > 3 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-					{% elseif currentPage == totalPage %}
-						{% if totalPage > 3 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-						{% if totalPage == 2 %}
-							{% for i in 1 .. (totalPage - 1) %}
-								{% if i >= (totalPage - 2) %}
-									<li>
-										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-									</li>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							{% for i in (totalPage - 2) .. (totalPage - 1) %}
-								{% if i >= (totalPage - 2) %}
-									<li>
-										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-									</li>
-								{% endif %}
-							{% endfor %}
-						{% endif %}
-						<li>
-							<span class="dcf-pagination-selected">{{ currentPage }}</span>
-						</li>
-					{% else %}
-						{% if (currentPage - 1) > 1 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-						<li>
-							<a href="{{ currentPath }}{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
-						</li>
-						<li>
-							<span class="dcf-pagination-selected">{{ currentPage }}</span>
-						</li>
-						<li>
-							<a href="{{ currentPath }}{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
-						</li>
-						{% if (currentPage + 1) < totalPage %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-					{% endif %}
-
-					{% if currentPage != totalPage %}
-						<li>
-							<a class="dcf-pagination-next" href="{{ currentPath }}{{ currentPage + 1}}">Next</a>
-						</li>
-						<li>
-							<a class="dcf-pagination-last" href="{{ currentPath }}{{ totalPage }}">Last</a>
-						</li>
-					{% endif %}
-				</ol>
-			</nav>
-		{% endif %} #}
-		{# End Pagination Script #}
 	</div>
 
 	<script>

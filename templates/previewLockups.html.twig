@@ -15,7 +15,7 @@
         <div>Your lockup {{(Lockup.getCreativeStatus == 1 and
                     Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}} by your Communicator
                     Contact and
-                    University Communication.</div>
+                    UComm.</div>
         </div>
     {% endif %}
     {% else %}
@@ -28,10 +28,10 @@
             </h4>
             {% if Lockup.getPreviewH != null%}
             <div class="horiz">
-                    <div class="lockups-preview dcf-p-4">
+                    <div class="lockups-preview dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
                         {{ Lockup.getPreviewH | raw }}
                     </div>
-                    <p class="dcf-txt-center">
+                    <p class="dcf-txt-center dcf-d-flex dcf-jc-center">
                         <i>
                             Horizontal
                         </i>
@@ -40,7 +40,7 @@
             {% endif %}
             {% if Lockup.getPreviewV != null%}
             <div class="vert">
-                    <div class="lockups-preview dcf-p-4 dcf-txt-center">
+                    <div class="lockups-preview dcf-p-4 dcf-txt-center  dcf-ai-center">
                         {{ Lockup.getPreviewV | raw }}
                     </div>
                     <p class="dcf-txt-center">
@@ -183,34 +183,37 @@
                 {% endif %}
 
                 {% if ((user.isApprover == true) and (Lockup.getApprover == user.getUser)) or (user.isAdmin) %}
-                    <form  method="POST" style="display: inline;">
+                    <form class="dcf-form"  method="POST" style="display: inline;">
                         <input type="hidden" name="id" value="{{Lockup.getId}}">
-                        <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback" name="communicator-feedback" placeholder="Add feedback."></textarea>
+                                            <div class="dcf-form-group">
+                            <label for="communicator-feedback">Feedback</label>
+                        <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback" name="communicator-feedback" placeholder="Type your feedback here."></textarea>
+                        </div>
                         <input type="hidden" name="role" value="approver">
                         <input type="hidden" name="action" value="update">
-                        <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Add Feedback</button>
+                        <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Submit</button>
                     </form>
                 {% endif %}
             </div>
 
             {# ucomm block #}
             <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-                <h5>University Communication</h5>
+                <h5>Creative</h5>
                 {% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
-                <div class="dcf-p-2 dcf-mb-4">
-                    University Communication: <strong>Feedback received</strong>
+                <div class="dcf-mb-4">
+                    UComm: <strong>Feedback received</strong>
                 </div>
                 {% elseif (Lockup.getCreativeStatus == 1)%}
-                <div class="dcf-p-2 dcf-mb-4">
-                    University Communication: <strong>Approved</strong>
+                <div class="dcf-mb-4">
+                    UComm: <strong>Approved</strong>
                 </div>
                 {% elseif (Lockup.getCreativeStatus == 2)%}
-                <div class="dcf-p-2 dcf-mb-4">
-                    University Communication: <strong>Denied</strong>
+                <div class="dcf-mb-4">
+                    UComm: <strong>Denied</strong>
                 </div>
                 {% else %}
-                <div class="dcf-p-2 dcf-mb-4">
-                    University Communication: <strong>Awaiting Approval</strong>
+                <div class="dcf-mb-4">
+                    UComm: <strong>Awaiting Approval</strong>
                 </div>
                 {% endif %}
 
@@ -228,9 +231,13 @@
                 {% endif %}
 
                 {% if (user.isCreative == true) or (user.isAdmin) %}
-                    <form method="POST" style="display: inline;">
-                            <textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="creative-feedback" name="creative-feedback" placeholder="Add feedback."></textarea>
-                            <button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Add Feedback</button>
+                    <form class="dcf-form" method="POST" style="display: inline;">
+                    <div class="dcf-form-group">
+                            <label for="creative-feedback">Feedback</label>
+
+                            <textarea class="dcf-b-solid dcf-b-1 dcf-rounded" rows="5" id="creative-feedback" name="creative-feedback" placeholder="Type your feedback here."></textarea>
+                    </div>
+                            <button type="submit" class="dcf-btn dcf-btn-secondary">Submit</button>
                             <input type="hidden" name="id" value="{{Lockup.getId}}">
                             <input type="hidden" name="role" value="creative">
                             <input type="hidden" name="action" value="update">

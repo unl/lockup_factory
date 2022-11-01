@@ -619,6 +619,35 @@ class LockupsController extends BaseController
         ], 302);
     }
 
+        /**
+     * @Route("/lockups/import/", name="importLockups", methods={"GET"})
+     */
+    public function importLockups(ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response
+    {
+        $auth->requireAuth();
+        $lockup = $doctrine->getRepository(Lockups::class)->findAll();
+
+        if ($lockup == null) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found."
+            ]);
+            return $response;
+        }
+
+        foreach ($lockup as $item) {
+            if ($item->getPreviewH() == null && $item->getPreviewV() == null) {
+                $lockupsGenerator->createPreview($item->getId());
+            }
+        }
+        
+        $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            'errorTitle' => "DONE found!",
+            'errorBody' => "The requested lockup could be found."
+        ]);
+        return $response;
+    }
+
 
     public function errorPage(string $errorTitle = "", string $errorBody = ""): Response
     {

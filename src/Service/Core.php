@@ -161,11 +161,16 @@ class Core
         usort($lockups, function ($a, $b) {
             if ($a->getApprover() == null){
                 $firstValue = "Unknown";
-            } else {
+            } else if ($a->getApprover()->getOrganization() == null ) {
+                $firstValue = "Unknown";
+            }
+            else {
                 $firstValue = $a->getApprover()->getOrganization();
             }
 
             if ($b->getApprover() == null){
+                $secondValue = "Unknown";
+            } else if ($b->getApprover()->getOrganization() == null ) {
                 $secondValue = "Unknown";
             } else {
                 $secondValue = $b->getApprover()->getOrganization();
@@ -209,6 +214,10 @@ class Core
             }
         }
         $sortedLockups[$tempOrg] = $tempArr;
+        // foreach($sortedLockups as $item) {
+        //     print(var_dump($item[0]->getId()));
+
+        // }
         return $sortedLockups;
     }
 

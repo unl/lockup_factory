@@ -59,6 +59,7 @@ class LockupsLibraryController extends BaseController
 
 
         $publicLockups = $core->getLockupsLibraryLockups();
+        $lockupsForOrgName = $core->lockupsLibraryManager($publicLockups, 1, 999999);
         $pageLength = (int)(((count($publicLockups) % $maxResults) != 0) ? ((count($publicLockups) / $maxResults) + 1) : (count($publicLockups) / $maxResults));
 
         if ($approver != null ) {
@@ -89,7 +90,7 @@ class LockupsLibraryController extends BaseController
         return $this->render('base.html.twig', [
             'page_template' => "lockupsLibrary.html.twig",
             'page_name' => "LockupsLibrary",
-            'allLockups' => $publicLockups,
+            'allLockups' => $lockupsForOrgName,
             'lockups_array' => $filteredLockups,
             'search' => "",
             'auth' => $auth,

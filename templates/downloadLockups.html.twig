@@ -1,142 +1,139 @@
 {% block body %}
-<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
-    <h3>Download Lockup Files</h3>
-    <div class="dcf-w-max-xl dcf-mr-auto dcf-ml-auto">
-    <div class="dcf-grid dcf-grid-halves dcf-col-gap-vw">
-                {% if Lockup.getPreviewH != null%}
-            <div class="horiz">
-                <div style="display: inline-block">
-                    <div class="lockups-preview dcf-p-7">
-                        {{ Lockup.getPreviewH | raw }}
-                    </div>
-                    <p class="dcf-txt-center">
-                        <i>
-                            Horizontal
-                        </i>
-                    </p>
-                </div>
+	<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+		<h3>Download Lockup Files</h3>
+		<div class="dcf-w-max-xl dcf-mr-auto dcf-ml-auto dcf-mb-6">
+			<div class="dcf-grid dcf-grid-full dcf-grid-halves@lg dcf-col-gap-vw dcf-row-gap-1">
+				{% if Lockup.getPreviewH != null%}
+					<div class="horiz lockups-border dcf-d-flex dcf-ai-center">
+						<div class="lockups-download dcf-p-4 dcf-d-flex-col dcf-w-100%">
+							{{ Lockup.getPreviewH | raw }}
+                            						<p class="dcf-txt-center">
+							<i>
+								Horizontal
+							</i>
+						</p>
+						</div>
+					</div>
+				{% endif %}
+				{% if Lockup.getPreviewV != null%}
+					<div class="vert lockups-border">
+							<div class="lockups-download dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
+								{{ Lockup.getPreviewV | raw }}
+							</div>
+							<p class="dcf-txt-center">
+								<i>
+									Vertical
+								</i>
+							</p>
+					</div>
 
-            </div>
-            {% endif %}
-            {% if Lockup.getPreviewV != null%}
-            <div class="vert">
-                <div style="display: inline-block">
-                    <div class="lockups-preview dcf-p-7">
-                        {{ Lockup.getPreviewV | raw }}
-                    </div>
-                    <p class="dcf-txt-center">
-                        <i>
-                            Vertical
-                        </i>
-                    </p>
-                </div>
-            </div>
-
-            {% endif %}
-            </div>
-            </div>
-            
-            {% if auth.isAdmin or Lockup.getUser == auth.getUser %}
-            <div class="dcf-txt-center dcf-mb-6">
-            <a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
-            </div>
-            {% endif %}
-
-            <div class="dcf-txt-center">
-            <div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
-            {% if lockupsApproved %}
-            {% if Lockup.getIsGenerated == 0 %}
-            {# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
-            <button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
-            <button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
-            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
-
-            {% elseif Lockup.getIsGenerated == 1 %}
-            {% if auth.isAdmin == true or Lockup.getPublic == 1 %}
-            <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-6" id="generatedBtn">Download All (.zip)</a>
-
-            	<div class="dcf-d-flex dcf-flex-row dcf-mb-3 dcf-jc-flex-start">
-			<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
-				<span class="dcf-mr-1">
-					<nobr>Orientation:</nobr>
-				</span>
-				<select id="orient" name="orient" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
-					<option value="0">Select Option</option>
-                    <option value="h">Horizontal</option>
-					<option value="v">Vertical</option>
-				</select>
-			</div>
-            
-            <div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
-				<span class="dcf-mr-1">
-					<nobr>Style:</nobr>
-				</span>
-				<select id="style" name="style" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
-					<option value="0">Select Option</option>
-                    <option value="RGB">RGB (HEX)</option>
-					<option value="4c">CMYK</option>
-					<option value="pms186cp">PMS186</option>
-					<option value="blk">Black</option>
-				</select>
-			</div>
-
-                        
-            <div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
-				<span class="dcf-mr-1">
-					<nobr>Format:</nobr>
-				</span>
-				<select id="format" name="format" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
-					<option value="0">Select Option</option>
-                    <option value="svg">SVG</option>
-					<option value="png">PNG</option>
-					<option value="jpg">JPG</option>
-					<option value="eps">EPS</option>
-					<option value="ai">AI</option>
-					{# <option value="pdf">PDF</option> #}
-				</select>
-			</div>
-
-            <div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
-				            <a class="dcf-btn dcf-btn-secondary" id="showAll" href="#" role="button">Show All</a>
-
+				{% endif %}
 			</div>
 		</div>
 
-            
-            <table class="dcf-table dcf-table-striped dcf-table-bordered dcf-w-100%">
-            <thead>
-            <tr>
-            <th>Name</th>
-            <th>Orientation</th>
-            <th>Style</th>
-            <th>Format</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in Lockup.getLockupFiles%}
-            <tr class="lockupsData">
-            <td id="lockupFileName"><a href="{{item.getUrl}}">{{ item.getFileName}}</a></td>
-            <td id="lockupOrient">{{ item.getOrient}}</td>
-            <td id="lockupStyle">{{ item.getStyle}}</td>
-            <td id="lockupFormat">{{ item.getFormat}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-            </table>
-            {% endif %}
-            {% endif %}
-            {% elseif lockupsApproved == false %}
-            <div class="dcf-notice dcf-notice-warning" hidden>
-              <h2>Lockups hasn't been approved yet.</h2>
-            <div>You can't generate it right now.</div>
-            </div>
-            {% endif %}
+		{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
+			<div class="dcf-txt-center dcf-mb-4">
+				<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+			</div>
+		{% endif %}
 
-            </div>
+		<div class="dcf-txt-center">
+			<div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
+			{% if lockupsApproved %}
+				{% if Lockup.getIsGenerated == 0 %}
+					{# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
+					<button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
+					<button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
+					<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
 
-</div>
-<script>
-let generateBtn = document.getElementById("generateBtn");
+				{% elseif Lockup.getIsGenerated == 1 %}
+					{% if auth.isAdmin == true or Lockup.getPublic == 1 %}
+						<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-6" id="generatedBtn">Download All (.zip)</a>
+
+						<div class="dcf-d-flex dcf-flex-row dcf-mb-3 dcf-jc-flex-start">
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
+								<span class="dcf-mr-1">
+									<nobr>Orientation:</nobr>
+								</span>
+								<select id="orient" name="orient" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
+									<option value="0">Select Option</option>
+									<option value="h">Horizontal</option>
+									<option value="v">Vertical</option>
+								</select>
+							</div>
+
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+								<span class="dcf-mr-1">
+									<nobr>Style:</nobr>
+								</span>
+								<select id="style" name="style" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
+									<option value="0">Select Option</option>
+									<option value="RGB">RGB (HEX)</option>
+									<option value="4c">CMYK</option>
+									<option value="pms186cp">PMS186</option>
+									<option value="blk">Black</option>
+								</select>
+							</div>
+
+
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+								<span class="dcf-mr-1">
+									<nobr>Format:</nobr>
+								</span>
+								<select id="format" name="format" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-w-max-xs dcf-float-left dcf-d-inline-block">
+									<option value="0">Select Option</option>
+									<option value="svg">SVG</option>
+									<option value="png">PNG</option>
+									<option value="jpg">JPG</option>
+									<option value="eps">EPS</option>
+									<option value="ai">AI</option>
+									{# <option value="pdf">PDF</option> #}
+								</select>
+							</div>
+
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+								<a class="dcf-btn dcf-btn-secondary" id="showAll" href="#" role="button">Reset</a>
+
+							</div>
+						</div>
+
+
+						<table class="dcf-table dcf-table-striped dcf-table-bordered dcf-w-100%">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Orientation</th>
+									<th>Style</th>
+									<th>Format</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in Lockup.getLockupFiles%}
+									<tr class="lockupsData">
+										<td id="lockupFileName">
+											<a href="{{item.getUrl}}">{{ item.getFileName}}</a>
+										</td>
+										<td id="lockupOrient">{{ item.getOrient}}</td>
+										<td id="lockupStyle">{{ item.getStyle}}</td>
+										<td id="lockupFormat">{{ item.getFormat}}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				{% endif %}
+			{% elseif lockupsApproved == false %}
+				<div class="dcf-notice dcf-notice-warning" hidden>
+					<h2>Lockups hasn't been approved yet.</h2>
+					<div>You can't generate it right now.</div>
+				</div>
+			{% endif %}
+
+		</div>
+
+	</div>
+	<script>
+		let generateBtn = document.getElementById("generateBtn");
 let generatingBtn = document.getElementById("generatingBtn");
 let generatingLoader = document.getElementById("generatingLoader");
 let generatedBtn = document.getElementById("generatedBtn");
@@ -145,33 +142,33 @@ generateBtn.addEventListener("click", generateLockup);
 function generateLockup() {
 
 
-    const xhr = new XMLHttpRequest();
-    xhr.addEventListener('loadstart', () => {
-        generateBtn.style.display = "none";
-        generatingBtn.style.display = "inline-block";
-        generatingLoader.style.display = "block";
-    });
-    xhr.addEventListener('progress', () => {
-        generateBtn.style.display = "none";
-        generatingBtn.style.display = "inline-block";
-        generatingLoader.style.display = "block";
-    });
-    xhr.addEventListener('loadend', () => {
-        generateBtn.style.display = "none";
-        generatingBtn.style.display = "none";
-        generatingLoader.style.display = "none";
-        location.reload();
-    });
-    
-    xhr.open("GET", "/lockups/generate/{{ Lockup.getId }}");
-    xhr.send();
-    return xhr;
+const xhr = new XMLHttpRequest();
+xhr.addEventListener('loadstart', () => {
+generateBtn.style.display = "none";
+generatingBtn.style.display = "inline-block";
+generatingLoader.style.display = "block";
+});
+xhr.addEventListener('progress', () => {
+generateBtn.style.display = "none";
+generatingBtn.style.display = "inline-block";
+generatingLoader.style.display = "block";
+});
+xhr.addEventListener('loadend', () => {
+generateBtn.style.display = "none";
+generatingBtn.style.display = "none";
+generatingLoader.style.display = "none";
+location.reload();
+});
+
+xhr.open("GET", "/lockups/generate/ {{ Lockup.getId }}");
+xhr.send();
+return xhr;
 }
-</script>
+	</script>
 
-<script>
+	<script>
 
-orientOption = document.getElementById("orient");
+		orientOption = document.getElementById("orient");
 styleOption = document.getElementById("style");
 formatOption = document.getElementById("format");
 showallBtn = document.getElementById("showAll");
@@ -179,123 +176,121 @@ showallBtn = document.getElementById("showAll");
 lockupsData = document.getElementsByClassName("lockupsData");
 
 lockupsFilter = {
-    lockupOrient: 0,
-    lockupStyle: 0,
-    lockupFormat: 0
+lockupOrient: 0,
+lockupStyle: 0,
+lockupFormat: 0
 };
 
 
 for (i = 0; i < lockupsData.length; i ++) {
-    lockupsData[i].style.display = "table-row";
+lockupsData[i].style.display = "table-row";
 }
 
 function updateListing() {
 for (i = 0; i < lockupsData.length; i ++) {
-    lockupsData[i].style.display = "table-row";
+lockupsData[i].style.display = "table-row";
 }
-    for (item in lockupsFilter) {
+for (item in lockupsFilter) {
 
-        if (lockupsFilter[item] != 0) {
-        for (i = 0; i < lockupsData.length; i ++) {
-             if (lockupsData[i].querySelector("#" + item).textContent == lockupsFilter[item] && lockupsData[i].style.display == "table-row") {
-                lockupsData[i].style.display = "table-row";
-             } else {
-                lockupsData[i].style.display = "none";
-            }
-        }
-        } else {
-
-        }
-    }
+if (lockupsFilter[item] != 0) {
+for (i = 0; i < lockupsData.length; i ++) {
+if (lockupsData[i].querySelector("#" + item).textContent == lockupsFilter[item] && lockupsData[i].style.display == "table-row") {
+lockupsData[i].style.display = "table-row";
+} else {
+lockupsData[i].style.display = "none";
+}
+}
+} else {}
+}
 }
 
-orientOption.addEventListener('change', function() {
-  switch (orientOption.value) {
-      case "0":
-      lockupsFilter['lockupOrient'] = 0;
-        break;
-    case "h":
-        lockupsFilter['lockupOrient'] = "h";
+orientOption.addEventListener('change', function () {
+switch (orientOption.value) {
+case "0":
+lockupsFilter['lockupOrient'] = 0;
+break;
+case "h":
+lockupsFilter['lockupOrient'] = "h";
 
-    break;
-        case "v":
-        lockupsFilter.lockupOrient = "v";
+break;
+case "v":
+lockupsFilter.lockupOrient = "v";
 
-    break;
-  }
-    updateListing();
+break;
+}
+updateListing();
 });
 
-styleOption.addEventListener('change', function() {
-  switch (styleOption.value) {
-      case "0":
-      lockupsFilter['lockupStyle'] = 0;
-        break;
-    case "RGB":
-        lockupsFilter['lockupStyle'] = "RGB";
+styleOption.addEventListener('change', function () {
+switch (styleOption.value) {
+case "0":
+lockupsFilter['lockupStyle'] = 0;
+break;
+case "RGB":
+lockupsFilter['lockupStyle'] = "RGB";
 
-    break;
-        case "4c":
-        lockupsFilter['lockupStyle'] = "4c";
+break;
+case "4c":
+lockupsFilter['lockupStyle'] = "4c";
 
-    break;
-            case "pms186cp":
-        lockupsFilter['lockupStyle'] = "pms186cp";
+break;
+case "pms186cp":
+lockupsFilter['lockupStyle'] = "pms186cp";
 
-    break;
-                case "blk":
-        lockupsFilter['lockupStyle'] = "blk";
-    break;
-  }
-    updateListing();
+break;
+case "blk":
+lockupsFilter['lockupStyle'] = "blk";
+break;
+}
+updateListing();
 });
 
-formatOption.addEventListener('change', function() {
-  switch (formatOption.value) {
-      case "0":
-      lockupsFilter['lockupFormat'] = 0;
-        break;
-    case "svg":
-        lockupsFilter['lockupFormat'] = "svg";
+formatOption.addEventListener('change', function () {
+switch (formatOption.value) {
+case "0":
+lockupsFilter['lockupFormat'] = 0;
+break;
+case "svg":
+lockupsFilter['lockupFormat'] = "svg";
 
-    break;
-        case "png":
-        lockupsFilter['lockupFormat'] = "png";
+break;
+case "png":
+lockupsFilter['lockupFormat'] = "png";
 
-    break;
-            case "jpg":
-        lockupsFilter['lockupFormat'] = "jpg";
+break;
+case "jpg":
+lockupsFilter['lockupFormat'] = "jpg";
 
-    break;
-                case "eps":
-        lockupsFilter['lockupFormat'] = "eps";
-    break;
-    case "ai":
-        lockupsFilter['lockupFormat'] = "ai";
-    break;
-    case "pdf":
-        lockupsFilter['lockupFormat'] = "pdf";
-    break;
-  }
-    updateListing();
+break;
+case "eps":
+lockupsFilter['lockupFormat'] = "eps";
+break;
+case "ai":
+lockupsFilter['lockupFormat'] = "ai";
+break;
+case "pdf":
+lockupsFilter['lockupFormat'] = "pdf";
+break;
+}
+updateListing();
 });
 
-showallBtn.addEventListener("click", function() {
-    orientOption.value = 0;
-    styleOption.value = 0;
-    formatOption.value = 0;
-    lockupsFilter = {
-    lockupOrient: 0,
-    lockupStyle: 0,
-    lockupFormat: 0
-    };
-    updateListing();
+showallBtn.addEventListener("click", function () {
+orientOption.value = 0;
+styleOption.value = 0;
+formatOption.value = 0;
+lockupsFilter = {
+lockupOrient: 0,
+lockupStyle: 0,
+lockupFormat: 0
+};
+updateListing();
 });
-</script>
+	</script>
 
-<script>
-  window.addEventListener('inlineJSReady', function() {
-    WDN.initializePlugin('notice');
-  }, false);
-</script>
+	<script>
+		window.addEventListener('inlineJSReady', function () {
+WDN.initializePlugin('notice');
+}, false);
+	</script>
 {% endblock %}

@@ -7,7 +7,7 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "lockups";
-$databaseOfficial = "lockups-test";
+$databaseOfficial = "db_name";
 
 
 // Create connection
@@ -170,7 +170,11 @@ foreach ($result as $item) {
 
   $lockup['date_created'] = $item['date_created'];
 
+  if ($item['user_id'] == 8) {
+    $lockup['user_id'] = (int)15;
+  } else {
   $lockup['user_id'] = (int)$item['user_id'];
+  }
 
   if ($item['published'] == null) {
     $lockup['public'] = (int)1;
@@ -186,7 +190,7 @@ foreach ($result as $item) {
   }
 
   if ($item['approver_id'] == null) {
-    $lockup['approver_id'] = null;
+    $lockup['approver_id'] = 'NULL';
   } else {
     $lockup['approver_id'] = (int)$item['approver_id'];
   }
@@ -261,7 +265,6 @@ foreach ($result as $item) {
 
     $res->close();
   }
-  break;
 }
 
  // not needed

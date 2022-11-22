@@ -58,6 +58,9 @@
             <div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
                 <h4>User Actions</h4>
                     <a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+                    {% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
+                    <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
+                    {% endif %}
                     <form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
                     <div class="dcf-input-checkbox">
                         <input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
@@ -65,9 +68,6 @@
                     </div>
                     <input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
                     </form>
-                    {% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
-                    <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
-                    {% endif %}
                     {# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
             </div>
             {% endif %}

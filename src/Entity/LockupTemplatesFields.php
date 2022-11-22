@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LockupTemplatesFieldsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LockupTemplatesFieldsRepository::class)]
@@ -33,6 +35,14 @@ class LockupTemplatesFields
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private $uppercase;
+
+    #[ORM\OneToMany(mappedBy: 'LockupFields', targetEntity: TemplateFields::class)]
+    private $templateFields;
+
+    public function __construct()
+    {
+        $this->templateFields = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -119,6 +129,36 @@ class LockupTemplatesFields
     public function setUppercase(?int $uppercase): self
     {
         $this->uppercase = $uppercase;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TemplateFields>
+     */
+    public function getTemplateFields(): Collection
+    {
+        return $this->templateFields;
+    }
+
+    public function addTemplateField(TemplateFields $templateField): self
+    {
+        if (!$this->templateFields->contains($templateField)) {
+            $this->templateFields[] = $templateField;
+            $templateField->setLockupFields($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTemplateField(TemplateFields $templateField): self
+    {
+        if ($this->templateFields->removeElement($templateField)) {
+            // set the owning side to null (unless already changed)
+            if ($templateField->getLockupFields() === $this) {
+                $templateField->setLockupFields(null);
+            }
+        }
 
         return $this;
     }

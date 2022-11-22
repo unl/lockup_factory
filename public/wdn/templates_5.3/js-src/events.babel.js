@@ -184,7 +184,7 @@ define([
     if (localConfig.url && localConfig.url.match(/^\/\//)) {
       localConfig.url = 'https:' + localConfig.url;
     } else if (localConfig.url && localConfig.url.match(/^http:\/\//)) {
-      //localConfig.url = localConfig.url.replace('http://', 'https://');
+      localConfig.url = localConfig.url.replace('http://', 'https://');
     }
 
     // Handle direct url to upcoming or featured

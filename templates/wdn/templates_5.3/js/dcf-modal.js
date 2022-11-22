@@ -178,11 +178,6 @@ define(["exports", "./dcf-utility"], function (_exports, _dcfUtility) {
 
               while (currentEl && currentEl !== document.body) {
                 if (currentEl.classList.contains('dcf-modal-content')) {
-                  var iOSBodyStyle = {
-                    WebkitOverflowScrolling: 'none',
-                    overflow: 'hidden'
-                  };
-                  Object.assign(document.body.style, iOSBodyStyle);
                   return true;
                 }
 
@@ -449,7 +444,7 @@ define(["exports", "./dcf-utility"], function (_exports, _dcfUtility) {
           } // Add default utility classes to each modal
 
 
-          modal.classList.add('dcf-fixed', 'dcf-pin-top', 'dcf-pin-left', 'dcf-h-100%', 'dcf-w-100%', 'dcf-d-flex', 'dcf-ai-center', 'dcf-jc-center', 'dcf-opacity-0', 'dcf-pointer-events-none', 'dcf-invisible'); // Set attribute for modal wrapper
+          modal.classList.add('dcf-fixed', 'dcf-top-0', 'dcf-left-0', 'dcf-h-100%', 'dcf-w-100%', 'dcf-d-flex', 'dcf-ai-center', 'dcf-jc-center', 'dcf-opacity-0', 'dcf-pointer-events-none', 'dcf-invisible'); // Set attribute for modal wrapper
 
           modalWrapper.setAttribute('role', 'document'); // Check modal wrapper for any additional classes
 
@@ -461,13 +456,13 @@ define(["exports", "./dcf-utility"], function (_exports, _dcfUtility) {
 
           if (modalHeader.classList.length === _dcfUtility.DCFUtility.magicNumbers('int1') && modalHeader.classList.contains('dcf-modal-header')) {
             // If no custom classes are present, add default utility classes to modal header
-            modalHeader.classList.add('dcf-wrapper', 'dcf-pt-8', 'dcf-sticky', 'dcf-pin-top');
+            modalHeader.classList.add('dcf-wrapper', 'dcf-pt-8', 'dcf-sticky', 'dcf-top-0');
           } // Check each 'close' button for any additional classes
 
 
           if (btnCloseModal.classList.length === _dcfUtility.DCFUtility.magicNumbers('int1') && btnCloseModal.classList.contains('dcf-btn-close-modal')) {
             // If no custom classes are present, add default utility classes to 'close' button
-            btnCloseModal.classList.add('dcf-btn', 'dcf-btn-tertiary', 'dcf-absolute', 'dcf-pin-top', 'dcf-pin-right', 'dcf-z-1');
+            btnCloseModal.classList.add('dcf-btn', 'dcf-btn-tertiary', 'dcf-absolute', 'dcf-top-0', 'dcf-right-0', 'dcf-z-1');
           } // Check modal content for any additional classes
 
 

@@ -190,7 +190,8 @@ define(['wdn', 'jquery', 'plugins/moment-timezone-with-data', 'css!js-css/events
 
     if (localConfig.url && localConfig.url.match(/^\/\//)) {
       localConfig.url = 'https:' + localConfig.url;
-    } else if (localConfig.url && localConfig.url.match(/^http:\/\//)) {//localConfig.url = localConfig.url.replace('http://', 'https://');
+    } else if (localConfig.url && localConfig.url.match(/^http:\/\//)) {
+      localConfig.url = localConfig.url.replace('http://', 'https://');
     } // Handle direct url to upcoming or featured
 
 

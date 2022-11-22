@@ -35,6 +35,7 @@
 @import "variables/_variables.forms-selects";
 @import "variables/_variables.forms";
 @import "variables/_variables.headings";
+@import "variables/_variables.hr";
 @import "variables/_variables.input-groups";
 @import "variables/_variables.lists";
 @import "variables/_variables.marks";
@@ -43,6 +44,7 @@
 @import "variables/_variables.navigation";
 @import "variables/_variables.notices";
 @import "variables/_variables.paragraphs";
+@import "variables/_variables.print";
 @import "variables/_variables.sizing";
 @import "variables/_variables.slideshows";
 @import "variables/_variables.sup-sub";
@@ -65,7 +67,7 @@
 @import "../../../node_modules/dcf/scss/mixins/_mixins.display";
 @import "../../../node_modules/dcf/scss/mixins/_mixins.flexbox";
 @import "../../../node_modules/dcf/scss/mixins/_mixins.floats";
-@import "../../../node_modules/dcf/scss/mixins/_mixins.grid";
+@import "../../../node_modules/dcf/scss/mixins/_mixins.gap";
 @import "../../../node_modules/dcf/scss/mixins/_mixins.height-width";
 @import "../../../node_modules/dcf/scss/mixins/_mixins.margins";
 @import "../../../node_modules/dcf/scss/mixins/_mixins.media-queries";
@@ -86,6 +88,7 @@
 @import "mixins/_mixins.background-images";
 @import "mixins/_mixins.blend-modes";
 @import "mixins/_mixins.border-color";
+@import "mixins/_mixins.box-shadow";
 @import "mixins/_mixins.colors";
 @import "mixins/_mixins.filters";
 @import "mixins/_mixins.fonts";
@@ -120,6 +123,7 @@
 @import "../../../node_modules/dcf/scss/elements/_elements.figures";
 @import "../../../node_modules/dcf/scss/elements/_elements.forms";
 @import "../../../node_modules/dcf/scss/elements/_elements.headings";
+@import "../../../node_modules/dcf/scss/elements/_elements.hr";
 @import "../../../node_modules/dcf/scss/elements/_elements.html";
 @import "../../../node_modules/dcf/scss/elements/_elements.images";
 @import "../../../node_modules/dcf/scss/elements/_elements.lists";
@@ -141,6 +145,7 @@
 // Objects
 @import "../../../node_modules/dcf/scss/objects/_objects.bleed";
 @import "../../../node_modules/dcf/scss/objects/_objects.grids";
+@import "../../../node_modules/dcf/scss/objects/_objects.main";
 @import "../../../node_modules/dcf/scss/objects/_objects.media";
 @import "../../../node_modules/dcf/scss/objects/_objects.wrapper";
 @import "objects/_objects.grid";
@@ -221,7 +226,7 @@
 @import "../../../node_modules/dcf/scss/utilities/_utilities.display";
 @import "../../../node_modules/dcf/scss/utilities/_utilities.flexbox";
 @import "../../../node_modules/dcf/scss/utilities/_utilities.floats";
-@import "../../../node_modules/dcf/scss/utilities/_utilities.grid";
+@import "../../../node_modules/dcf/scss/utilities/_utilities.gap";
 @import "../../../node_modules/dcf/scss/utilities/_utilities.height-width";
 @import "../../../node_modules/dcf/scss/utilities/_utilities.lazy-load";
 @import "../../../node_modules/dcf/scss/utilities/_utilities.margins";
@@ -242,6 +247,7 @@
 @import "utilities/_utilities.background-images";
 @import "utilities/_utilities.blend-modes";
 @import "utilities/_utilities.border-color";
+@import "utilities/_utilities.box-shadow";
 @import "utilities/_utilities.colors";
 @import "utilities/_utilities.filters";
 @import "utilities/_utilities.fonts";

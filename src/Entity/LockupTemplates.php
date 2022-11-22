@@ -33,15 +33,20 @@ class LockupTemplates
     #[ORM\Column(type: 'integer', nullable: true)]
     private $links_to;
 
-    #[ORM\ManyToOne(targetEntity: LockupTemplatesCategories::class)]
-    private $category;
-
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $slug;
+
+    #[ORM\ManyToOne(targetEntity: LockupTemplatesCategories::class, inversedBy: 'lockupTemplates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
+
+    #[ORM\OneToMany(mappedBy: 'LockupTemplates', targetEntity: TemplateFields::class)]
+    private $templateFields;
 
     public function __construct()
     {
         $this->template = new ArrayCollection();
+        $this->templateFields = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -121,6 +126,18 @@ class LockupTemplates
         return $this;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
     public function getCategory(): ?LockupTemplatesCategories
     {
         return $this->category;
@@ -133,14 +150,32 @@ class LockupTemplates
         return $this;
     }
 
-    public function getSlug(): ?string
+    /**
+     * @return Collection<int, TemplateFields>
+     */
+    public function getTemplateFields(): Collection
     {
-        return $this->slug;
+        return $this->templateFields;
     }
 
-    public function setSlug(?string $slug): self
+    public function addTemplateField(TemplateFields $templateField): self
     {
-        $this->slug = $slug;
+        if (!$this->templateFields->contains($templateField)) {
+            $this->templateFields[] = $templateField;
+            $templateField->setLockupTemplates($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTemplateField(TemplateFields $templateField): self
+    {
+        if ($this->templateFields->removeElement($templateField)) {
+            // set the owning side to null (unless already changed)
+            if ($templateField->getLockupTemplates() === $this) {
+                $templateField->setLockupTemplates(null);
+            }
+        }
 
         return $this;
     }

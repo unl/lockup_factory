@@ -255,17 +255,21 @@ class LockupsController extends BaseController
      */
     public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, Core $core): Response
     {
-        $auth->requireAuth();
         $maxResults = 5;
+        $auth->requireAuth();
         $search = (string)$request->query->get('search_term');
         $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
+
         if ($auth->isAdmin()) {
             $pendingApprover = $core->getPendingApproverLockups();
-        } else {
+        } else if ($auth->isApprover()) {
             $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
         }
 
+        if ($auth->isCreative() || $auth->isAdmin()) {
         $pendingCreative = $core->getPendingCreativeLockups();
+        }
+
         if ($search != "") {
             $searchLockupResult = $core->search($search, true);
             // $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
@@ -307,7 +311,7 @@ class LockupsController extends BaseController
         $auth->requireAuth();
         $id = $request->request->get('id');
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
-        $lockup_fields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+
         $entityManager = $doctrine->getManager();
 
         if ($lockups == null || ($auth->getUser() != $lockups->getUser() && !$auth->isAdmin())) {
@@ -317,16 +321,11 @@ class LockupsController extends BaseController
             ]);
             return $response;
         }
-
-        foreach ($lockup_fields as $item) {
-            $entityManager->remove(($item));
-        }
         if ($lockups != null)
         {
             $entityManager->remove($lockups);
         }
         $entityManager->flush();
-
         $response = $this->forward('App\Controller\LockupsController::manageLockups', []);
         return $response;
     }
@@ -641,11 +640,12 @@ class LockupsController extends BaseController
             }
         }
         
-        $response = $this->forward('App\Controller\LockupsController::errorPage', [
-            'errorTitle' => "DONE found!",
-            'errorBody' => "The requested lockup could be found."
-        ]);
-        return $response;
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "DONE found!",
+                'errorBody' => "The requested lockup could be found."
+            ]);
+            return $response;
+
     }
 
 

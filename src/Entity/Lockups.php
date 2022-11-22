@@ -52,6 +52,9 @@ class Lockups
     #[ORM\OneToMany(mappedBy: 'lockup', targetEntity: LockupFiles::class, orphanRemoval: true)]
     private $lockupFiles;
 
+    #[ORM\OneToMany(mappedBy: 'lockup', targetEntity: LockupsFields::class, orphanRemoval: true)]
+    private $lockupsFields;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $zipUrl;
 
@@ -237,6 +240,37 @@ class Lockups
             // set the owning side to null (unless already changed)
             if ($lockupFile->getLockup() === $this) {
                 $lockupFile->setLockup(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, LockupsFields>
+     */
+    public function getLockupsFields(): Collection
+    {
+        return $this->lockupsFields;
+    }
+
+    public function addLockupsFields(LockupsFields $lockupsFields): self
+    {
+        if (!$this->lockupsFields->contains($lockupsFields)) {
+            $this->lockupsFields[] = $lockupsFields;
+            $lockupsFields->setLockup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLockupsFields(LockupsFields $lockupsFields): self
+    {
+        if ($this->lockupsFields->removeElement($lockupsFields)) {
+            // set the owning side to null (unless already changed)
+            if ($lockupsFields->getLockup() === $this) {
+                $lockupsFields->setLockup(null);
             }
         }
 

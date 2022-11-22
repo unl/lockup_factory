@@ -85,7 +85,7 @@ define(["exports", "./dcf-utility"], function (_exports, _dcfUtility) {
         this.dialogNode.setAttribute('role', 'dialog');
         this.dialogNode.setAttribute('aria-modal', 'true');
         this.dialogNode.setAttribute('aria-labelledby', dialogLabelID);
-        this.dialogNode.classList.add('dcf-datepicker-dialog', 'dcf-absolute', 'dcf-pin-right', 'dcf-invisible', 'dcf-d-none');
+        this.dialogNode.classList.add('dcf-datepicker-dialog', 'dcf-absolute', 'dcf-right-0', 'dcf-invisible', 'dcf-d-none');
         var dialogHeader = document.createElement('div');
         dialogHeader.classList.add('dcf-datepicker-dialog-header', 'dcf-d-flex', 'dcf-ai-center', 'dcf-jc-around');
         this.prevYearNode = document.createElement('button');

@@ -50,7 +50,11 @@
   border: 3px dashed var(--b);
 }
 .horiz .lockups-preview .preview {
-  max-height: 13em;
+  max-height: 14em;
+}
+
+.vert .lockups-preview .preview {
+  max-height: 14em;
 }
 
 .horiz .lockups-download .preview {

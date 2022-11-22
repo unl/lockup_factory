@@ -13,7 +13,8 @@ class LockupsFields
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Lockups::class)]
+    #[ORM\ManyToOne(targetEntity: Lockups::class, inversedBy: 'lockupsFields')]
+    #[ORM\JoinColumn(nullable: false)]
     private $lockup;
 
     #[ORM\ManyToOne(targetEntity: LockupTemplatesFields::class)]

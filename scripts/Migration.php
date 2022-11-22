@@ -1,7 +1,6 @@
 <?php
 
-
-
+use Symfony\Component\Validator\Constraints\Length;
 
 $servername = "localhost";
 $username = "root";
@@ -29,15 +28,17 @@ echo "Connected successfully \n";
 $sql = "SELECT * FROM lockups";
 $result = $conn->query($sql);
 
-$tempFields = [];
-$lockup = [];
-$feedbacks = [];
+
 
 
 
 
 
 foreach ($result as $item) {
+
+  $tempFields = [];
+$lockup = [];
+$feedbacks = [];
 
   if ($item['style'] == "org_recognized_student" || ($item['style'] == "org_recognized_student_2_1")) {
     $tempFields['9'] = $item['organization'];
@@ -190,7 +191,7 @@ foreach ($result as $item) {
   }
 
   if ($item['approver_id'] == null) {
-    $lockup['approver_id'] = 'NULL';
+    $lockup['approver_id'] = 15;
   } else {
     $lockup['approver_id'] = (int)$item['approver_id'];
   }
@@ -225,6 +226,35 @@ foreach ($result as $item) {
 
   $lockup['institution'] = $item['file_organization_acronym']; // add change to NULL if empty
 
+
+  foreach ($lockup as $key => $tempvalue) {
+    if ($lockup[$key] != null) {
+      if (str_contains($lockup[$key], "'")) {
+        $lockup[$key] = str_replace("'", "\'", $lockup[$key]);
+
+      }
+    }
+  }
+
+  foreach ($feedbacks as $primarykey => $valueItem) {
+  foreach ($feedbacks[$primarykey] as $key => $tempvalue) {
+    if ($feedbacks[$primarykey][$key] != null) {
+      if (str_contains($feedbacks[$primarykey][$key], "'")) {
+        $feedbacks[$primarykey][$key] = str_replace("'", "\'", $feedbacks[$primarykey][$key]);
+
+      }
+    }
+  }
+  }
+
+  foreach ($tempFields as $key => $tempvalue) {
+    if ($tempFields[$key] != null) {
+      if (str_contains($tempFields[$key], "'")) {
+        $tempFields[$key] = str_replace("'", "\'", $tempFields[$key]);
+
+      }
+    }
+  }
 
   // echo (var_dump($lockup));
   // echo (var_dump($tempFields));
@@ -268,11 +298,11 @@ foreach ($result as $item) {
 }
 
  // not needed
-$temp = [];
-foreach ($result as $item) {
-  if (!in_array($item['status'], $temp)) {
-    array_push($temp, $item['status']);
-  }
-}
+// $temp = [];
+// foreach ($result as $item) {
+//   if (!in_array($item['status'], $temp)) {
+//     array_push($temp, $item['status']);
+//   }
+// }
 
 // echo(var_dump($temp));

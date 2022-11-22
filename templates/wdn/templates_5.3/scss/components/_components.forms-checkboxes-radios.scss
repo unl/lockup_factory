@@ -7,17 +7,15 @@
 // and radio buttons https://scottaohara.github.io/a11y_styled_form_controls/src/radio-button/
 
 
-// Checkbox and radio label
-.unl .dcf-input-checkbox label,
-.unl .dcf-input-radio label {
-  margin-bottom: 0;
-}
-
-
 // Style checkbox and radio input
 .unl .dcf-input-checkbox label::before,
 .unl .dcf-input-radio label::before {
   transition: border-color $transition-duration-hover-off $transition-timing-fn-hover-off, box-shadow $transition-duration-hover-off $transition-timing-fn-hover-off;
+}
+
+
+.unl .dcf-input-switch label {
+  transition: background-color $transition-duration-hover-off $transition-timing-fn-hover-off, border-color $transition-duration-hover-off $transition-timing-fn-hover-off, color $transition-duration-hover-off $transition-timing-fn-hover-off;
 }
 
 
@@ -26,6 +24,23 @@
 .unl .dcf-input-radio label:hover::before,
 .unl .dcf-input-checkbox input[type="checkbox"]:hover + label::before {
   transition: border-color $transition-duration-hover-on $transition-timing-fn-hover-on;
+}
+
+
+.unl .dcf-input-switch label {
+  transition: background-color $transition-duration-hover-on $transition-timing-fn-hover-on, border-color $transition-duration-hover-on $transition-timing-fn-hover-on, color $transition-duration-hover-on $transition-timing-fn-hover-on;
+}
+
+
+.dcf-input-switch input[type="radio"]:checked + label:hover {
+  background-color: $bg-color-button-primary-hover;
+  border-color: $border-color-button-primary-hover;
+}
+
+
+.dcf-input-switch input[type="radio"]:not(:checked):not(:disabled) + label:hover {
+  background-color: $bg-color-button-secondary-tertiary-hover;
+  color: $color-button-secondary-tertiary-hover;
 }
 
 

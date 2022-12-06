@@ -26,34 +26,57 @@ class Core
         $this->auth = $auth;
     }
 
+    private function removeDuplicateLockupsfromArray($array)
+    {
+        $indexArray = array();
+        $newArray = array();
+        foreach ($array as $eachLockups) {
+            if (!array_key_exists($eachLockups->getId(), $indexArray)) {
+                $newArray[$eachLockups->getId()] = $eachLockups;
+            }
+        }
+        return $newArray;
+    }
+
     public function search(string $search, bool $private = false, int $id = null)
     {
         $searchLockupResult = [];
         $searchArr = [];
+        $newSearchArr = array();
 
-        foreach ($this->lockupsFieldsRepository->searchField($search) as $searchItem) {
-            array_push($searchArr, $searchItem->getLockup()->getId());
+        // if ($private == true) {
+        //     $id = $this->auth->getUser()->getId();
+        // }
+
+        $searchField = ($id != null ) ? $this->lockupsFieldsRepository->searchField(value: $search, id: $id) : $this->lockupsFieldsRepository->searchField(value: $search);
+        // echo(var_dump($searchField));
+        foreach ($searchField as $searchItem) {
+            array_push($searchArr, $searchItem->getLockup());
         }
 
-        foreach ($this->lockupsRepository->searchNames($search) as $searchItem) {
-            array_push($searchArr, $searchItem->getId());
+
+        $searchName = $this->lockupsRepository->searchNames($search);
+        foreach ($searchName as $searchItem) {
+            array_push($searchArr, $searchItem);
         }
 
-        $searchArr = array_unique($searchArr);
 
-        foreach ($searchArr as $arrItem) {
-            $temp = $this->doctrine->getRepository(Lockups::class)->find($arrItem);
+        $newSearchArr = $this->removeDuplicateLockupsfromArray($searchArr);
+
+        // $searchArr = array_unique($searchArr);
+
+        foreach ($newSearchArr as $arrItem) {
             if ($private) {
-                if ($temp->getUser()->getId() == $this->auth->getUser()->getId()) {
-                    array_push($searchLockupResult, $temp);
+                if ($arrItem->getUser()->getId() == $this->auth->getUser()->getId()) {
+                    array_push($searchLockupResult, $arrItem);
                 }
             } else {
                 // for lockupsLibrary
                 if ($this->auth->isAdmin() == true) {
-                    array_push($searchLockupResult, $temp);
+                    array_push($searchLockupResult, $arrItem);
                 } else {
-                    if ($temp->getPublic() == 1 && $this->lockupsApproved($temp->getId())) {
-                    array_push($searchLockupResult, $temp);
+                    if ($arrItem->getPublic() == 1 && $this->lockupsApproved($arrItem->getId())) {
+                        array_push($searchLockupResult, $arrItem);
                     }
                 }
             }
@@ -61,7 +84,8 @@ class Core
         return $searchLockupResult;
     }
 
-    public function lockupsApproved(int $id) : bool {
+    public function lockupsApproved(int $id): bool
+    {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
         if ($lockups == null) {
             return false;
@@ -73,7 +97,8 @@ class Core
         }
     }
 
-    public function ownsLockup (int $id) : bool {
+    public function ownsLockup(int $id): bool
+    {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
         if ($lockups == null) {
             return false;
@@ -85,15 +110,17 @@ class Core
         }
     }
 
-    public function getLockupFileName(Lockups $lockups) : string {
-        $lockups_name = $lockups->getDepartment();
+    public function getLockupFileName(Lockups $lockups): string
+    {
+        $lockups_name = $lockups->getName();
         $lockups_name = str_replace(" ", "_", $lockups_name);
         $lockups_name = $lockups_name . "__";
         $this->lockups = $lockups;
         return $lockups_name;
     }
 
-    public function hasApproverFeedback($id) : bool {
+    public function hasApproverFeedback($id): bool
+    {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
         $feedbacks = $lockups->getFeedbacks();
         if ($feedbacks == null) {
@@ -107,7 +134,8 @@ class Core
         return false;
     }
 
-    public function hasCreativeFeedback($id) : bool {
+    public function hasCreativeFeedback($id): bool
+    {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
         $feedbacks = $lockups->getFeedbacks();
         if ($feedbacks == null) {
@@ -121,15 +149,18 @@ class Core
         return false;
     }
 
-    public function getPendingApproverLockups(int $id = 0) {
+    public function getPendingApproverLockups(int $id = 0)
+    {
         return $this->lockupsRepository->pendingApprover($id);
     }
 
-    public function getPendingCreativeLockups() {
+    public function getPendingCreativeLockups()
+    {
         return $this->lockupsRepository->pendingCreative();
     }
 
-    public function searchWrapper(array $lockups, string $searchTerm) : array { // takes an array of lockups and search term and searches from the array
+    public function searchWrapper(array $lockups, string $searchTerm): array
+    { // takes an array of lockups and search term and searches from the array
         $lockupsArray = [];
         $pushed = false;
         foreach ($lockups as $lockup) {
@@ -148,7 +179,8 @@ class Core
         return $lockupsArray;
     }
 
-    public function getLockupsLibraryLockups() : array {
+    public function getLockupsLibraryLockups(): array
+    {
         if ($this->auth->isAdmin() == true) {
             $publicLockups = $this->doctrine->getRepository(Lockups::class)->findBy([], ['approver' => 'ASC']);
         } else {
@@ -157,20 +189,20 @@ class Core
         return $this->sortByOrganization($publicLockups);
     }
 
-    public function sortByOrganization($lockups) : array {
+    public function sortByOrganization($lockups): array
+    {
         usort($lockups, function ($a, $b) {
-            if ($a->getApprover() == null){
+            if ($a->getApprover() == null) {
                 $firstValue = "Unknown";
-            } else if ($a->getApprover()->getOrganization() == null ) {
+            } else if ($a->getApprover()->getOrganization() == null) {
                 $firstValue = "Unknown";
-            }
-            else {
+            } else {
                 $firstValue = $a->getApprover()->getOrganization();
             }
 
-            if ($b->getApprover() == null){
+            if ($b->getApprover() == null) {
                 $secondValue = "Unknown";
-            } else if ($b->getApprover()->getOrganization() == null ) {
+            } else if ($b->getApprover()->getOrganization() == null) {
                 $secondValue = "Unknown";
             } else {
                 $secondValue = $b->getApprover()->getOrganization();
@@ -181,17 +213,18 @@ class Core
         return $lockups;
     }
 
-    public function maxSearchResultWrapper(array $lockups, int $page, int $maxResults) : array {
+    public function maxSearchResultWrapper(array $lockups, int $page, int $maxResults): array
+    {
         $lockups = array_slice($lockups, ($page - 1) * $maxResults, $maxResults);
         return $lockups;
-
     }
 
-    public function lockupsLibraryWrapper(array $lockups) : array { // wrapper to format lockups array to lockups library specification
+    public function lockupsLibraryWrapper(array $lockups): array
+    { // wrapper to format lockups array to lockups library specification
         $sortedLockups = [];
         $tempOrg = "";
         $tempArr = [];
-        foreach($lockups as $lockup) {
+        foreach ($lockups as $lockup) {
             if ($lockup->getApprover() == null) {
                 $approverDepartment = "Unknown";
             } elseif ($lockup->getApprover()->getOrganization() == null) {
@@ -221,9 +254,10 @@ class Core
         return $sortedLockups;
     }
 
-    public function filterOrganization(array $sortedLockups, string $approver = null) : array { // for search by organization
+    public function filterOrganization(array $sortedLockups, string $approver = null): array
+    { // for search by organization
         $sortedArray = [];
-        if ($approver != null ) {
+        if ($approver != null) {
             foreach ($sortedLockups as $key => $value) {
                 if ($key == $approver) {
                     $sortedArray[$key] = $value;
@@ -235,15 +269,17 @@ class Core
         }
     }
 
-    public function lockupsLibraryManager(array $lockups, int $page, int $maxResults) : array {
-        $tempArray = $this->maxSearchResultWrapper($lockups,$page,$maxResults);
+    public function lockupsLibraryManager(array $lockups, int $page, int $maxResults): array
+    {
+        $tempArray = $this->maxSearchResultWrapper($lockups, $page, $maxResults);
         $tempArray = $this->lockupsLibraryWrapper($tempArray);
         return $tempArray;
     }
 
-    public function searchhByUsername(string $userID) {
+    public function searchhByUsername(string $userID)
+    {
         $filteredLockups = [];
-        $findUser = $this->doctrine->getRepository(Users::class)->findOneBy(['username'=> $userID]);
+        $findUser = $this->doctrine->getRepository(Users::class)->findOneBy(['username' => $userID]);
         $allLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['user' => $findUser], ['approver' => 'ASC']);
         $allLockups = $this->sortByOrganization($allLockups);
         foreach ($allLockups as $lockup) {

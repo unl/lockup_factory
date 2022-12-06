@@ -34,237 +34,240 @@ use App\Service\Core;
 
 class LockupsController extends BaseController
 {
-    /**
-     * @Route("/lockups/create/", name="createLockups", methods={"GET"})
-     */
-    public function createLockups(ManagerRegistry $doctrine, Auth $auth, array $errorMsg = array("title" => ""), array $fields = [], array $lockupStyle = []): Response
-    {
-        $auth->requireAuth();
-        $lockups = $doctrine->getRepository(LockupTemplates::class)->findAll();
-        $lockups_fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
-        $lockups_categories = $doctrine->getRepository(LockupTemplatesCategories::class)->findAll();
-        $approverList = $doctrine->getRepository(Users::class)->findBy(['role' => 'approver'],['name' => 'ASC']);
+    // /**
+    //  * @Route("/lockups/create/", name="createLockups", methods={"GET"})
+    //  */
+    // public function createLockups(ManagerRegistry $doctrine, Auth $auth, array $errorMsg = array("title" => ""), array $fields = [], array $lockupStyle = []): Response
+    // {
+    //     $auth->requireAuth();
+    //     $lockups = $doctrine->getRepository(LockupTemplates::class)->findAll();
+    //     $lockups_fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
+    //     $lockups_categories = $doctrine->getRepository(LockupTemplatesCategories::class)->findAll();
+    //     $approverList = $doctrine->getRepository(Users::class)->findBy(['role' => 'approver'],['name' => 'ASC']);
 
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
+    //     $encoders = [new JsonEncoder()];
+    //     $normalizers = [new ObjectNormalizer()];
+    //     $serializer = new Serializer($normalizers, $encoders);
 
-        $fields = $serializer->serialize($fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['value', 'fields' => ['slug']]]);
+    //     $fields = $serializer->serialize($fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['value', 'fields' => ['slug']]]);
 
-        $jsonContent = $serializer->serialize($lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'uppercase', 'value']]);
+    //     $jsonContent = $serializer->serialize($lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'uppercase', 'value']]);
 
-        return $this->render('base.html.twig', [
-            'page_template' => "createLockups.html.twig",
-            'page_name' => "CreateLockups",
-            'lockups' => $lockups,
-            'lockups_fields' => $lockups_fields,
-            'json_lockups_fields' => $jsonContent,
-            'categories' => $lockups_categories,
-            'error_msg' => $errorMsg,
-            'fields' => $fields,
-            'lockup_style' => $lockupStyle,
-            'user' => $auth,
-            'approvers' => $approverList
+    //     return $this->render('base.html.twig', [
+    //         'page_template' => "createLockups.html.twig",
+    //         'page_name' => "CreateLockups",
+    //         'lockups' => $lockups,
+    //         'lockups_fields' => $lockups_fields,
+    //         'json_lockups_fields' => $jsonContent,
+    //         'categories' => $lockups_categories,
+    //         'error_msg' => $errorMsg,
+    //         'fields' => $fields,
+    //         'lockup_style' => $lockupStyle,
+    //         'user' => $auth,
+    //         'approvers' => $approverList
 
-        ]);
-    }
+    //     ]);
+    // }
 
-    /**
-     * @Route("/lockups/create/", name="addLockup", methods={"POST"})
-     */
-    public function addLockup(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, Auth $auth, LockupsGenerator $lockupsGenerator, int $id = 0)
-    {
-        $auth->requireAuth();
-        $errorMsg = array(
-            "title" => "",
-            "body" => ""
-        );
-        $fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
-        $entityManager = $doctrine->getManager();
+    // /**
+    //  * @Route("/lockups/create/", name="addLockup", methods={"POST"})
+    //  */
+    // public function addLockup(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, Auth $auth, LockupsGenerator $lockupsGenerator, int $id = 0)
+    // {
+    //     $auth->requireAuth();
+    //     $errorMsg = array(
+    //         "title" => "",
+    //         "body" => ""
+    //     );
+    //     $fields = $doctrine->getRepository(LockupTemplatesFields::class)->findAll();
+    //     $entityManager = $doctrine->getManager();
 
-        $lockuptemplate = (int)$request->request->get('lockuptemplate');
-        $approver = (int)$request->request->get('approver');
-        $approverUser = $doctrine->getRepository(Users::class)->find($approver);
-        $institution = (string)$request->get('institution');
-        $department = (string)$request->get('department');
-        $lockups = ($id != 0) ? $doctrine->getRepository(Lockups::class)->find($id) : new Lockups;
-        $template = $doctrine->getRepository(LockupTemplates::class)->find($lockuptemplate);
-        $arr = [];
-        $count = 0;
+    //     $lockuptemplate = (int)$request->request->get('lockuptemplate');
+    //     $approver = (int)$request->request->get('approver');
+    //     $approverUser = $doctrine->getRepository(Users::class)->find($approver);
+    //     $institution = (string)$request->get('institution');
+    //     $department = (string)$request->get('department');
+    //     $lockups = ($id != 0) ? $doctrine->getRepository(Lockups::class)->find($id) : new Lockups;
+    //     $template = $doctrine->getRepository(LockupTemplates::class)->find($lockuptemplate);
+    //     $arr = [];
+    //     $count = 0;
 
-        if ($id != 0) {
-            $originalUser = $lockups->getUser();
-        } else {
-            $originalUser = $auth->getUser();
-        }
+    //     if ($id != 0) {
+    //         $originalUser = $lockups->getUser();
+    //     } else {
+    //         $originalUser = $auth->getUser();
+    //     }
 
-        if ($id != 0) {
-            if ($lockups == null) {
-                $response = $this->forward('App\Controller\LockupsController::errorPage', [
-                    'errorTitle' => "Not found!",
-                    'errorBody' => "The requested lockup could not be found."
-                ]);
-                return $response;
-            }
-        }
+    //     if ($id != 0) {
+    //         if ($lockups == null) {
+    //             $response = $this->forward('App\Controller\LockupsController::errorPage', [
+    //                 'errorTitle' => "Not found!",
+    //                 'errorBody' => "The requested lockup could not be found."
+    //             ]);
+    //             return $response;
+    //         }
+    //     }
 
-        $lockups->setApprover($approverUser);
-        $lockups->setTemplate($template);
-        $lockups->setStatus(0);
-        $lockups->setDepartment($department);
-        $lockups->setInstitution($institution);
-        $lockups->setUser($originalUser);
-        $lockups->setCommunicatorStatus(0);
-        $lockups->setCreativeStatus(0);
-        $lockups->setIsGenerated(0);
-        $lockups->setGenerating(0);
-        $lockups->setPublic(1);
-        $lockups->setDateCreated(new \DateTime());
-        $errors = $validator->validate($lockups);
+    //     $lockups->setApprover($approverUser);
+    //     $lockups->setTemplate($template);
+    //     $lockups->setStatus(0);
+    //     $lockups->setDepartment($department);
+    //     $lockups->setInstitution($institution);
+    //     $lockups->setUser($originalUser);
+    //     $lockups->setCommunicatorStatus(0);
+    //     $lockups->setCreativeStatus(0);
+    //     $lockups->setIsGenerated(0);
+    //     $lockups->setGenerating(0);
+    //     $lockups->setPublic(1);
+    //     $lockups->setDateCreated(new \DateTime());
+    //     $errors = $validator->validate($lockups);
         
-        $lockupsStyle = array(
-            'lockup_id' => $lockups->getId(),
-            'style' => $template->getStyle(),
-            'category' => $template->getCategory()->getSlug(),
-            'template_id' => $template->getId(),
-            'institution' => $institution,
-            'department' => $department,
-            'approver' => $approver
-        );
+    //     $lockupsStyle = array(
+    //         'lockup_id' => $lockups->getId(),
+    //         'style' => $template->getStyle(),
+    //         'category' => $template->getCategory()->getSlug(),
+    //         'template_id' => $template->getId(),
+    //         'institution' => $institution,
+    //         'department' => $department,
+    //         'approver' => $approver
+    //     );
 
-        foreach ($fields as $item) {
-            if (($request->request->get($item->getSlug())) != "" && (($request->request->get($item->getSlug())) != "0")) {
-                $arr[$count] = new LockupsFields;
-                $arr[$count]->setLockup($lockups);
-                $arr[$count]->setFields($item);
-                $arr[$count]->setValue($request->request->get($item->getSlug()));
-                // $entityManager->persist($arr[$count]); don't persist it now as it might casue an error
-                $count++;
-            }
-        }
-        // error checking
-        if (count($errors) > 0) {
-            $errorMsg['title'] = "Error";
-            $errorMsg['body'] = "You have an error in your submission.";
-            $response = $this->forward('App\Controller\LockupsController::createLockups', [
-                'errorMsg' => $errorMsg,
-                'fields' => $arr,
-                'lockupStyle' => $lockupsStyle
-            ]);
-            return $response;
-        }
-
-
-        foreach ($fields as $item) {
-            if (($request->request->get($item->getSlug())) == "") {
-                $errorMsg['title'] = "Empty Field";
-                $errorMsg['body'] = "Please enter the " . $item->getName() . " field.";
-                $response = $this->forward('App\Controller\LockupsController::createLockups', [
-                    'errorMsg' => $errorMsg,
-                    'fields' => $arr,
-                    'lockupStyle' => $lockupsStyle
-
-                ]);
-                return $response;
-            }
-        }
-
-        if (($department == "") && ($institution =! "")) {
-            $errorMsg['title'] = "Error!";
-            $errorMsg['body'] = "Please enter your Lockup Name.";
-            $response = $this->forward('App\Controller\LockupsController::createLockups', [
-                'errorMsg' => $errorMsg,
-                'fields' => $arr,
-                'lockupStyle' => $lockupsStyle
-
-            ]);
-            return $response;
-        }
-
-        if (($department =! "") && ($institution == "")) {
-            $errorMsg['title'] = "Error!";
-            $errorMsg['body'] = "Please enter your Institution/Department name.";
-            $response = $this->forward('App\Controller\LockupsController::createLockups', [
-                'errorMsg' => $errorMsg,
-                'fields' => $arr,
-                'lockupStyle' => $lockupsStyle
-
-            ]);
-            return $response;
-        }
+    //     foreach ($fields as $item) {
+    //         if (($request->request->get($item->getSlug())) != "" && (($request->request->get($item->getSlug())) != "0")) {
+    //             $arr[$count] = new LockupsFields;
+    //             $arr[$count]->setLockup($lockups);
+    //             $arr[$count]->setFields($item);
+    //             $arr[$count]->setValue($request->request->get($item->getSlug()));
+    //             // $entityManager->persist($arr[$count]); don't persist it now as it might casue an error
+    //             $count++;
+    //         }
+    //     }
+    //     // error checking
+    //     if (count($errors) > 0) {
+    //         $errorMsg['title'] = "Error";
+    //         $errorMsg['body'] = "You have an error in your submission.";
+    //         $response = $this->forward('App\Controller\LockupsController::createLockups', [
+    //             'errorMsg' => $errorMsg,
+    //             'fields' => $arr,
+    //             'lockupStyle' => $lockupsStyle
+    //         ]);
+    //         return $response;
+    //     }
 
 
+    //     foreach ($fields as $item) {
+    //         if (($request->request->get($item->getSlug())) == "") {
+    //             $errorMsg['title'] = "Empty Field";
+    //             $errorMsg['body'] = "Please enter the " . $item->getName() . " field.";
+    //             $response = $this->forward('App\Controller\LockupsController::createLockups', [
+    //                 'errorMsg' => $errorMsg,
+    //                 'fields' => $arr,
+    //                 'lockupStyle' => $lockupsStyle
 
-        if (($approver == 0)) {
-            $errorMsg['title'] = "Error!";
-            $errorMsg['body'] = "Please select your Communicator Contract.";
-            $response = $this->forward('App\Controller\LockupsController::createLockups', [
-                'errorMsg' => $errorMsg,
-                'fields' => $arr,
-                'lockupStyle' => $lockupsStyle
+    //             ]);
+    //             return $response;
+    //         }
+    //     }
 
-            ]);
-            return $response;
-        }
+    //     if (($department == "") && ($institution =! "")) {
+    //         $errorMsg['title'] = "Error!";
+    //         $errorMsg['body'] = "Please enter your Lockup Name.";
+    //         $response = $this->forward('App\Controller\LockupsController::createLockups', [
+    //             'errorMsg' => $errorMsg,
+    //             'fields' => $arr,
+    //             'lockupStyle' => $lockupsStyle
 
-        // end of error checking
-        if ($id != 0) {
-            // delete existing fields
-            $delete_lockup_fields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
-            $delete_entityManager = $doctrine->getManager();
+    //         ]);
+    //         return $response;
+    //     }
 
-            foreach ($delete_lockup_fields as $item) {
-                $delete_entityManager->remove(($item));
-            }
+    //     if (($department =! "") && ($institution == "")) {
+    //         $errorMsg['title'] = "Error!";
+    //         $errorMsg['body'] = "Please enter your Institution/Department name.";
+    //         $response = $this->forward('App\Controller\LockupsController::createLockups', [
+    //             'errorMsg' => $errorMsg,
+    //             'fields' => $arr,
+    //             'lockupStyle' => $lockupsStyle
 
-            //delete existing files
-            $delete_lockup_files = $doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
-            foreach ($delete_lockup_files as $item) {
-                $delete_entityManager->remove(($item));
-            }
-            $delete_entityManager->flush();
-            $editedLockup = true;
-        } else {
-            $editedLockup = false;
-        }
-        // now we can finally persist the contents of the array now
-        foreach ($arr as $eachField) {
-            $entityManager->persist($eachField);
-        }
+    //         ]);
+    //         return $response;
+    //     }
 
 
-        $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
-        $entityManager->persist($lockups);
-        $entityManager->flush();
-        $lockupsGenerator->createPreview($lockups->getId());
-        if ($id != 0) {
-            return $this->redirectToRoute('previewLockups', [
-                'id' => $id,
-                'action' => "edit-lockup"
-            ], 302); 
-        }
-        // return $this->redirectToRoute('manageLockups', [], 302);
-        return $this->redirectToRoute('previewLockups', [
-            'id' => $lockups->getId(),
-            'action' => "new-lockup"
-        ], 302); 
-    }
+
+    //     if (($approver == 0)) {
+    //         $errorMsg['title'] = "Error!";
+    //         $errorMsg['body'] = "Please select your Communicator Contract.";
+    //         $response = $this->forward('App\Controller\LockupsController::createLockups', [
+    //             'errorMsg' => $errorMsg,
+    //             'fields' => $arr,
+    //             'lockupStyle' => $lockupsStyle
+
+    //         ]);
+    //         return $response;
+    //     }
+
+    //     // end of error checking
+    //     if ($id != 0) {
+    //         // delete existing fields
+    //         $delete_lockup_fields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+    //         $delete_entityManager = $doctrine->getManager();
+
+    //         foreach ($delete_lockup_fields as $item) {
+    //             $delete_entityManager->remove(($item));
+    //         }
+
+    //         //delete existing files
+    //         $delete_lockup_files = $doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
+    //         foreach ($delete_lockup_files as $item) {
+    //             $delete_entityManager->remove(($item));
+    //         }
+    //         $delete_entityManager->flush();
+    //         $editedLockup = true;
+    //     } else {
+    //         $editedLockup = false;
+    //     }
+    //     // now we can finally persist the contents of the array now
+    //     foreach ($arr as $eachField) {
+    //         $entityManager->persist($eachField);
+    //     }
+
+
+    //     $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+    //     $entityManager->persist($lockups);
+    //     $entityManager->flush();
+    //     $lockupsGenerator->createPreview($lockups->getId());
+    //     if ($id != 0) {
+    //         return $this->redirectToRoute('previewLockups', [
+    //             'id' => $id,
+    //             'action' => "edit-lockup"
+    //         ], 302); 
+    //     }
+    //     // return $this->redirectToRoute('manageLockups', [], 302);
+    //     return $this->redirectToRoute('previewLockups', [
+    //         'id' => $lockups->getId(),
+    //         'action' => "new-lockup"
+    //     ], 302); 
+    // }
 
     /**
      * @Route("/lockups/manage", name="manageLockups", methods={"GET"})
      */
     public function manageLockups(ManagerRegistry $doctrine, Auth $auth, Request $request, Core $core): Response
     {
-        $maxResults = 5;
+        // $maxResults = 5;
         $auth->requireAuth();
         $search = (string)$request->query->get('search_term');
-        $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
+        $pendingCreative = array();
+        $pendingApprover = array();
+        // $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
 
         if ($auth->isAdmin()) {
             $pendingApprover = $core->getPendingApproverLockups();
         } else if ($auth->isApprover()) {
             $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
         }
+        
 
         if ($auth->isCreative() || $auth->isAdmin()) {
         $pendingCreative = $core->getPendingCreativeLockups();
@@ -286,10 +289,10 @@ class LockupsController extends BaseController
                 'pendingCreative' => $pendingCreative
             ]); 
         }
+
+        // get user's lockups
         $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
         $product = array_reverse($product);
-        // $pageLength = (int)(((count($product) % $maxResults) != 0) ? ((count($product) / $maxResults) + 1) : (count($product) / $maxResults));
-        // $product = array_slice($product, ($page - 1) * $maxResults, $maxResults);
 
 
         return $this->render('base.html.twig', [
@@ -297,7 +300,7 @@ class LockupsController extends BaseController
             'page_name' => "ManageLockups",
             'lockups_array' => $product,
             'auth' => $auth,
-            'search' => "",
+            'search' => $search,
             'pendingApprover'  => $pendingApprover,
             'pendingCreative' => $pendingCreative
         ]);
@@ -337,9 +340,8 @@ class LockupsController extends BaseController
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
-
+        $alert = array();
         $action = (string)$request->query->get('action');
-        // $lockup == null || $auth->getUser() != $lockup->getUser() || !$auth->isCreative() || !$auth->isAdmin() || ($auth->getUser() != $lockup->getApprover()
         if ($lockup == null) {
             $response = $this->forward('App\Controller\LockupsController::errorPage', [
                 'errorTitle' => "Not found!",
@@ -353,25 +355,11 @@ class LockupsController extends BaseController
         }
 
         if ($action == "new-lockup") {
-            return $this->render('base.html.twig', [
-                'page_template' => "previewLockups.html.twig",
-                'page_name' => "previewLockups",
-                'Lockup' => $lockup,
-                'user' => $auth,
-                'alert_title' => "Success!",
-                'alert_message' => "You have successfully created the lockup",
-                'core' => $core
-            ]);
+            $alert['title'] = "Success!";
+            $alert['msg'] = "You have successfully created the lockup";
         } elseif ($action == "edit-lockup") {
-            return $this->render('base.html.twig', [
-                'page_template' => "previewLockups.html.twig",
-                'page_name' => "previewLockups",
-                'Lockup' => $lockup,
-                'user' => $auth,
-                'alert_title' => "Success!",
-                'alert_message' => "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.",
-                'core' => $core
-            ]);
+            $alert['title'] ="Success!";
+            $alert['msg'] = "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.";
         }
 
         return $this->render('base.html.twig', [
@@ -379,6 +367,7 @@ class LockupsController extends BaseController
             'page_name' => "previewLockups",
             'Lockup' => $lockup,
             'user' => $auth,
+            'alert' => $alert,
             'core' => $core
         ]);
     }
@@ -390,52 +379,12 @@ class LockupsController extends BaseController
     public function lockupsActions(int $id, ManagerRegistry $doctrine, Request $request, Auth $auth): Response
     {
         $auth->requireAuth();
-        $publish = $request->request->get('publishLockup');
-
-        if ($publish == "1") {
-            $publishLockup = $doctrine->getRepository(Lockups::class)->find($id);
-            if ($publishLockup == null) {
-                $response = $this->forward('App\Controller\LockupsController::errorPage', [
-                    'errorTitle' => "Not found!",
-                    'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
-                ]);
-                return $response;
-            }
-            $publishLockup->setPublic(1);
-
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($publishLockup);
-            $entityManager->flush();
-            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
-                'id' => $id
-            ]);
-            return $response;
-            
-        } else if ($publish == "0") {
-            $publishLockup = $doctrine->getRepository(Lockups::class)->find($id);
-            if ($publishLockup == null) {
-                $response = $this->forward('App\Controller\LockupsController::errorPage', [
-                    'errorTitle' => "Not found!",
-                    'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
-                ]);
-                return $response;
-            }
-            $publishLockup->setPublic(0);
-
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($publishLockup);
-            $entityManager->flush();
-            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
-                'id' => $id
-            ]);
-            return $response;
-        }
         $id = $request->request->get('id');
         $action = $request->request->get('action');
         $role = $request->request->get('role');
-
         $creative_feedback = $request->request->get('creative-feedback');
         $communicator_feedback = $request->request->get('communicator-feedback');
+        $publish = $request->request->get('publishLockup');
 
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
 
@@ -443,6 +392,26 @@ class LockupsController extends BaseController
             $response = $this->forward('App\Controller\LockupsController::errorPage', [
                 'errorTitle' => "Not found!",
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+            ]);
+            return $response;
+        }
+        if ($publish == "1") {
+            $lockups->setPublic(1);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($lockups);
+            $entityManager->flush();
+            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                'id' => $id
+            ]);
+            return $response;
+            
+        } else if ($publish == "0") {
+            $lockups->setPublic(0);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($lockups);
+            $entityManager->flush();
+            $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                'id' => $id
             ]);
             return $response;
         }
@@ -466,7 +435,7 @@ class LockupsController extends BaseController
                             $msg = "LOCKUP DENIED";
                             $lockups->setCreativeStatus(2);
                             break;
-                        case "update":
+                        case "feedback":
                             $msg = $creative_feedback;
                             break;
                     }
@@ -484,7 +453,7 @@ class LockupsController extends BaseController
                             $msg = "LOCKUP DENIED";
                             $lockups->setCommunicatorStatus(2);
                             break;
-                        case "update":
+                        case "feedback":
                             $msg = $communicator_feedback;
                             break;
                     }
@@ -495,9 +464,7 @@ class LockupsController extends BaseController
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($lockups);
-        if ($action != "feedback") {
-            $entityManager->persist($feedback);
-        }
+        $entityManager->persist($feedback);
         $entityManager->flush();
 
         $response = $this->forward('App\Controller\LockupsController::previewLockups', [
@@ -618,7 +585,7 @@ class LockupsController extends BaseController
         ], 302);
     }
 
-        /**
+    /**
      * @Route("/lockups/import/", name="importLockups", methods={"GET"})
      */
     public function importLockups(ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response

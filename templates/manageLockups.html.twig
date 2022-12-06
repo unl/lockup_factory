@@ -1,6 +1,5 @@
 {% block body %}
-	<div
-		class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+	<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
 		<h3>Manage Lockups</h3>
 		<p>Welcome
 			{{ auth.getUsername }},</p>
@@ -16,115 +15,122 @@
 				</div>
 			</form>
 		</div>
-		{% if auth.isCreative or auth.isAdmin %}
-				<h4>Lockups needing UComm approval. </h4>
-		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
-			<thead>
-				<tr>
-					<th scope="col" style="width: 15%;">Title</th>
-					<th scope="col" style="width: 25%;">Preview</th>
-					<th scope="col" style="width: 10%;">User</th>
-					<th scope="col" style="width: 10%;">Last Updated</th>
-					<th scope="col" style="width: 25%;">Status</th>
-					<th scope="col" style="width: 10%;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in pendingCreative %}
-				{% if item.getCommunicatorStatus == 0  %}
-					<tr>
-						<td data-label="Title">
-							{{item.getInstitution}}
-							{{item.getDepartment}}
-						</td>
-						<td data-label="Preview">
-							<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-						</td>
-						<td data-label="User">
-							{{ item.getUser.getUsername }}
-						</td>
-						<td data-label="Last Updated">
-							{{ item.getDateCreated|date('Y-m-d') }}
-						</td>
-						<td data-label="Status">
-							{% if (item.getApprover == null) %}
-							<p>Communicator: Not specified<br></p>
-							{% else %}
-							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected<br></p>" | raw}}
+		{% if pendingCreative[0] is defined %}
+
+			{% if auth.isCreative or auth.isAdmin %}
+				<h4>Lockups needing UComm approval.
+				</h4>
+				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+					<thead>
+						<tr>
+							<th scope="col" style="width: 15%;">Title</th>
+							<th scope="col" style="width: 25%;">Preview</th>
+							<th scope="col" style="width: 10%;">User</th>
+							<th scope="col" style="width: 10%;">Last Updated</th>
+							<th scope="col" style="width: 25%;">Status</th>
+							<th scope="col" style="width: 10%;">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in pendingCreative %}
+							{% if item.getCommunicatorStatus == 0  %}
+								<tr>
+									<td data-label="Title">
+										{{item.getInstitution}}
+										{{item.getName}}
+									</td>
+									<td data-label="Preview">
+										<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="User">
+										{{ item.getUser.getUsername }}
+									</td>
+									<td data-label="Last Updated">
+										{{ item.getDateCreated|date('Y-m-d') }}
+									</td>
+									<td data-label="Status">
+										{% if (item.getApprover == null) %}
+											<p>Communicator: <strong>Not specified</strong><br></p>
+										{% else %}
+											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected<br></p>" | raw}}
+										{% endif %}
+
+										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+										{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected</p>" | raw}}
+
+									</td>
+									<td data-label="Actions">
+										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+											View
+										</a>
+									</td>
+								</tr>
 							{% endif %}
-
-							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected</p>" | raw}}
-
-						</td>
-						<td data-label="Actions">
-							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
-								View
-							</a>
-						</td>
-					</tr>
-				{% endif %}
-				{% endfor %}
-			</tbody>
-		</table>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
 		{% endif %}
-		{% if auth.isApprover or auth.isAdmin %}
-				<h4 class="dcf-mt-6">Lockups needing communicator approval. </h4>
-		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
-			<thead>
-				<tr>
-					<th scope="col" style="width: 15%;">Title</th>
-					<th scope="col" style="width: 25%;">Preview</th>
-					<th scope="col" style="width: 10%;">User</th>
-					<th scope="col" style="width: 10%;">Last Updated</th>
-					<th scope="col" style="width: 25%;">Status</th>
-					<th scope="col" style="width: 10%;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in pendingApprover %}
-				{% if (item.getCreativeStatus == 0 and item.getApprover == auth.getUser) or auth.isAdmin %}
-					<tr>
-						<td data-label="Title">
-							{{item.getInstitution}}
-							{{item.getDepartment}}
-						</td>
-						<td data-label="Preview">
-							<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-						</td>
-						<td data-label="User">
-							{{ item.getUser.getUsername }}
-						</td>
-						<td data-label="Last Updated">
-							{{ item.getDateCreated|date('Y-m-d') }}
-						</td>
-						<td data-label="Status">
-													{% if (item.getApprover == null) %}
-							<p>Communicator: Not specified<br></p>
-							{% else %}
-							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+		{% if pendingApprover[0] is defined %}
+			{% if auth.isApprover or auth.isAdmin %}
+				<h4 class="dcf-mt-6">Lockups needing communicator approval.
+				</h4>
+				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+					<thead>
+						<tr>
+							<th scope="col" style="width: 15%;">Title</th>
+							<th scope="col" style="width: 25%;">Preview</th>
+							<th scope="col" style="width: 10%;">User</th>
+							<th scope="col" style="width: 10%;">Last Updated</th>
+							<th scope="col" style="width: 25%;">Status</th>
+							<th scope="col" style="width: 10%;">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in pendingApprover %}
+							{% if (item.getCreativeStatus == 0) %}
+								<tr>
+									<td data-label="Title">
+										{{item.getInstitution}}
+										{{item.getName}}
+									</td>
+									<td data-label="Preview">
+										<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="User">
+										{{ item.getUser.getUsername }}
+									</td>
+									<td data-label="Last Updated">
+										{{ item.getDateCreated|date('Y-m-d') }}
+									</td>
+									<td data-label="Status">
+										{% if (item.getApprover == null) %}
+											<p>Communicator: <strong>Not specified</strong><br></p>
+										{% else %}
+											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+										{% endif %}
+
+										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
+
+									</td>
+									<td data-label="Actions">
+										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+											View
+										</a>
+									</td>
+								</tr>
 							{% endif %}
-
-							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
-
-						</td>
-						<td data-label="Actions">
-							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
-								View
-							</a>
-						</td>
-					</tr>
-				{% endif %}
-				{% endfor %}
-			</tbody>
-		</table>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
 		{% endif %}
 
 		<h4 class="dcf-mt-6">Your lockups</h4>
@@ -143,7 +149,7 @@
 					<tr>
 						<td data-label="Title">
 							{{item.getInstitution}}
-							{{item.getDepartment}}
+							{{item.getName}}
 						</td>
 						<td data-label="Preview">
 							<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
@@ -152,16 +158,17 @@
 							{% if item.getApprover != null%}
 								{{item.getApprover.getName}}
 							{% else %}
-								Communicator not specified
+								<strong>Communicator not specified</strong>
 							{% endif %}
 						</td>
 						<td data-label="Status">
 							{% if (item.getApprover == null) %}
-							<p>Communicator: <strong>Not specified</strong><br></p>
+								<p>Communicator:
+									<strong>Not specified</strong><br></p>
 							{% else %}
-							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
 							{% endif %}
 
 							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}

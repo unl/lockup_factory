@@ -12,7 +12,7 @@ use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 use App\Service\Auth;
 
 
-class IndexController extends BaseController
+class HomePage extends BaseController
 {
     /**
      * @Route("/", name="homePage", methods={"GET"})

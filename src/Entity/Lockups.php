@@ -35,7 +35,7 @@ class Lockups
     private $institution;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $department;
+    private $name;
 
     #[ORM\Column(type: 'integer', options:["default"=> 0])]
     private $Generating;
@@ -156,14 +156,14 @@ class Lockups
         return $this;
     }
 
-    public function getDepartment(): ?string
+    public function getName(): ?string
     {
-        return $this->department;
+        return $this->name;
     }
 
-    public function setDepartment(?string $department): self
+    public function setName(?string $name): self
     {
-        $this->department = $department;
+        $this->name = $name;
 
         return $this;
     }

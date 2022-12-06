@@ -6,6 +6,10 @@ use App\Entity\Lockups;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
+
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -48,20 +52,36 @@ class LockupsRepository extends ServiceEntityRepository
     /**
      * @return Lockups[] Returns an array of LockupsFields objects
      */
-    public function searchNames(string $value): array
+    public function searchNames(string $value, int $id = null): array
     {
         $searchArr = [];
 
         $entityManager = $this->getEntityManager();
 
-        $institutionQuery = $entityManager->createQuery(
-            'SELECT p
-            FROM App\Entity\Lockups p
-            WHERE p.institution LIKE :value
-            OR 
-            p.department LIKE :value
-            ORDER BY p.institution ASC'
-        )->setParameter('value', '%' . $value . '%');
+        if ($id != null) {
+            $institutionQuery = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.institution LIKE :value
+                OR 
+                p.name LIKE :value
+                AND
+                p.user = :id
+                ORDER BY p.name ASC'
+            )->setParameters(new ArrayCollection([
+                new Parameter('value', '%' . $value . '%'),
+                new Parameter('id', $id)
+            ]));
+        } else {
+            $institutionQuery = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.institution LIKE :value
+                OR 
+                p.name LIKE :value
+                ORDER BY p.name ASC'
+            )->setParameter('value', '%' . $value . '%');
+        }
 
         // returns an array of Product objects
         return $institutionQuery->getResult();

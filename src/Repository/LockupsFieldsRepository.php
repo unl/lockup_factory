@@ -8,6 +8,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
+
 /**
  * @method LockupsFields|null find($id, $lockMode = null, $lockVersion = null)
  * @method LockupsFields|null findOneBy(array $criteria, array $orderBy = null)
@@ -65,16 +68,31 @@ class LockupsFieldsRepository extends ServiceEntityRepository
     /**
      * @return LockupsFields[] Returns an array of LockupsFields objects
      */
-    public function searchField(string $value): array
+    public function searchField(string $value, int $id = null): array
     {
         $entityManager = $this->getEntityManager();
 
-        $query = $entityManager->createQuery(
-            'SELECT p
-            FROM App\Entity\LockupsFields p
-            WHERE p.value LIKE :value
-            ORDER BY p.value ASC'
-        )->setParameter('value', '%'.$value.'%');
+        if ($id != null) {
+            $query = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\LockupsFields p
+                WHERE p.value LIKE :value
+                -- AND
+                -- p.lockups.id = :id
+                ORDER BY p.value ASC'
+            )->setParameters(new ArrayCollection([
+                new Parameter('value', '%' . $value . '%')
+                // new Parameter('id', $id)
+            ]));
+        } else {
+            $query = $entityManager->createQuery(
+                'SELECT p
+                FROM App\Entity\LockupsFields p
+                WHERE p.value LIKE :value
+                ORDER BY p.value ASC'
+            )->setParameter('value', '%'.$value.'%');
+        }
+
 
         // returns an array of Product objects
         return $query->getResult();

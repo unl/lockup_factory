@@ -35,7 +35,7 @@ use Symfony\Component\Serializer\Serializer;
 class CreateLockupsController extends BaseController
 {
     /**
-     * @Route("/lockups/create/", name="createLockups2", methods={"GET"})
+     * @Route("/lockups/create/", name="createLockups", methods={"GET"})
      */
     public function createLockups(ManagerRegistry $doctrine, Auth $auth, Lockups $lockups = null, array $lockupFields = array(), array $errorMsg = null): Response
     {
@@ -75,18 +75,29 @@ class CreateLockupsController extends BaseController
 
 
     /**
-     * @Route("/lockups/create/", name="addLockup2", methods={"POST"})
+     * @Route("/lockups/create/", name="addLockup", methods={"POST"})
      */
     public function addLockup(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, Auth $auth, LockupsGenerator $lockupsGenerator, int $id = 0)
     {
         $auth->requireAuth();
         $errorMsg = array();
         $entityManager = $doctrine->getManager();
+        $submittedToken = $request->request->get('token');
+
+
 
         $lockupTemplateID = (int)$request->request->get('lockuptemplate');
         $approver = (int)$request->request->get('approver');
         $institution = (string)$request->get('institution');
         $lockupName = (string)$request->get('lockupName');
+
+        if (!$this->isCsrfTokenValid('add-lockups', $submittedToken)) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Error",
+                'errorBody' => "There has been error with your request."
+            ]);
+            return $response;
+        }
 
 
         $lockupTemplates = $doctrine->getRepository(LockupTemplates::class)->find($lockupTemplateID);

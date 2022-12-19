@@ -116,6 +116,7 @@
 			<form method="POST" action="" class="dcf-form">
 				<!--  name stores the post form data -->
 				<input type="hidden" id="lockupTemplateId" name="lockuptemplate" value="1">
+				<input type="hidden" name="token" value="{{ csrf_token('create-lockups') }}"/>
 				<div class="dcf-mt-6">
 					{% for item in all_lockups_fields %}
 					<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class"
@@ -136,12 +137,12 @@
 						<div class="dcf-mb-3">
 							<label for="exampleFormControlInput1" class="form-label">College/Organization/Institution
 								Acronym</label>
-							<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution">
+							<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" required>
 						</div>
 
 						<div class="dcf-mb-3">
 							<label for="exampleFormControlInput1" class="form-label">Lockup Name</label>
-							<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName">
+							<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" required>
 						</div>
 					</div>
 					<div class="dcf-mb-3">
@@ -269,12 +270,15 @@
 		// first set all fields to display: none
 		for (let j = 0; j < InputDiv.length; j++) {
 			InputDiv[j].style.display = "none";
+			InputField[j].required = false;
+
 		}
 		// now check for field class names in the SVG tab and display the field div accordingly.
 		// as of now, the only way to assign fields to the SVG is through the SVG code itself.
 		for (let j = 0; j < InputDiv.length; j++) {
 			if (selectedSvgTab.getElementsByClassName(inputArray[j]['slug']).length != 0) {
 				InputDiv[j].style.display = "block";
+				InputField[j].required = true;
 			}
 		}
 	}

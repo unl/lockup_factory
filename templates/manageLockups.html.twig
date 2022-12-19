@@ -181,6 +181,7 @@
 								View
 							</a>
 							<form action="/lockups/manage/" method="POST" style="display: inline;">
+							    <input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
 								<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
 								<input type="hidden" name="id" value="{{item.getId}}">
 							</form>

@@ -121,7 +121,7 @@ class LockupsController extends BaseController
     //     $lockups->setPublic(1);
     //     $lockups->setDateCreated(new \DateTime());
     //     $errors = $validator->validate($lockups);
-        
+
     //     $lockupsStyle = array(
     //         'lockup_id' => $lockups->getId(),
     //         'style' => $template->getStyle(),
@@ -267,10 +267,10 @@ class LockupsController extends BaseController
         } else if ($auth->isApprover()) {
             $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
         }
-        
+
 
         if ($auth->isCreative() || $auth->isAdmin()) {
-        $pendingCreative = $core->getPendingCreativeLockups();
+            $pendingCreative = $core->getPendingCreativeLockups();
         }
 
         if ($search != "") {
@@ -287,7 +287,7 @@ class LockupsController extends BaseController
                 'search' => $search,
                 'pendingApprover'  => $pendingApprover,
                 'pendingCreative' => $pendingCreative
-            ]); 
+            ]);
         }
 
         // get user's lockups
@@ -315,6 +315,16 @@ class LockupsController extends BaseController
         $id = $request->request->get('id');
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
 
+        $submittedToken = $request->request->get('token');
+
+        if (!$this->isCsrfTokenValid('delete-lockups', $submittedToken)) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Error!",
+                'errorBody' => "There has been an error with your request."
+            ]);
+            return $response;
+        }
+
         $entityManager = $doctrine->getManager();
 
         if ($lockups == null || ($auth->getUser() != $lockups->getUser() && !$auth->isAdmin())) {
@@ -324,8 +334,7 @@ class LockupsController extends BaseController
             ]);
             return $response;
         }
-        if ($lockups != null)
-        {
+        if ($lockups != null) {
             $entityManager->remove($lockups);
         }
         $entityManager->flush();
@@ -351,14 +360,14 @@ class LockupsController extends BaseController
         } else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
             return $this->redirectToRoute('downloadLockups', [
                 'id' => $id
-            ], 302); 
+            ], 302);
         }
 
         if ($action == "new-lockup") {
             $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully created the lockup";
         } elseif ($action == "edit-lockup") {
-            $alert['title'] ="Success!";
+            $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.";
         }
 
@@ -379,12 +388,20 @@ class LockupsController extends BaseController
     public function lockupsActions(int $id, ManagerRegistry $doctrine, Request $request, Auth $auth): Response
     {
         $auth->requireAuth();
-        $id = $request->request->get('id');
         $action = $request->request->get('action');
         $role = $request->request->get('role');
         $creative_feedback = $request->request->get('creative-feedback');
         $communicator_feedback = $request->request->get('communicator-feedback');
         $publish = $request->request->get('publishLockup');
+
+        $submittedToken = $request->request->get('token');
+        if (!$this->isCsrfTokenValid('lockups-action', $submittedToken)) {
+            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                'errorTitle' => "Error!",
+                'errorBody' => "There has been an error with your request."
+            ]);
+            return $response;
+        }
 
         $lockups = $doctrine->getRepository(Lockups::class)->find($id);
 
@@ -404,7 +421,6 @@ class LockupsController extends BaseController
                 'id' => $id
             ]);
             return $response;
-            
         } else if ($publish == "0") {
             $lockups->setPublic(0);
             $entityManager = $doctrine->getManager();
@@ -519,7 +535,7 @@ class LockupsController extends BaseController
      */
     public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
     {
-        
+
         $auth->requireAuth();
         $response = $this->forward('App\Controller\LockupsController::addLockup', [
             'id' => $id
@@ -579,7 +595,7 @@ class LockupsController extends BaseController
         }
 
         $lockupsGenerator->generateLockups($id);
-        
+
         return $this->redirectToRoute('downloadLockups', [
             'id' => $id
         ], 302);
@@ -606,13 +622,12 @@ class LockupsController extends BaseController
                 $lockupsGenerator->createPreview($item->getId());
             }
         }
-        
-            $response = $this->forward('App\Controller\LockupsController::errorPage', [
-                'errorTitle' => "DONE found!",
-                'errorBody' => "The requested lockup could be found."
-            ]);
-            return $response;
 
+        $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            'errorTitle' => "DONE found!",
+            'errorBody' => "The requested lockup could be found."
+        ]);
+        return $response;
     }
 
 

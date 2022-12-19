@@ -62,6 +62,7 @@
 						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
 					{% endif %}
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
+						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
 							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
@@ -77,6 +78,7 @@
 					<h4>Admin Actions</h4>
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
+					    <input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
 							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
@@ -116,6 +118,7 @@
 					{% endif %}
 					{% if Lockup.getCommunicatorStatus != 1 %}
 						<form method="POST" style="display: inline;">
+							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 							<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
 							<input type="hidden" name="id" value="{{Lockup.getId}}">
 							<input type="hidden" name="role" value="approver">
@@ -124,6 +127,7 @@
 					{% endif %}
 					{% if Lockup.getCommunicatorStatus != 2 %}
 						<form method="POST" style="display: inline;">
+							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 							<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
 							<input type="hidden" name="id" value="{{Lockup.getId}}">
 							<input type="hidden" name="role" value="approver">
@@ -159,6 +163,7 @@
 					{% endif %}
 					{% if Lockup.getCreativeStatus != 1 %}
 						<form method="POST" style="display: inline;">
+							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 							<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
 							<input type="hidden" name="id" value="{{Lockup.getId}}">
 							<input type="hidden" name="role" value="creative">
@@ -167,6 +172,7 @@
 					{% endif %}
 					{% if Lockup.getCreativeStatus != 2 %}
 						<form method="POST" style="display: inline;">
+							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 							<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
 							<input type="hidden" name="id" value="{{Lockup.getId}}">
 							<input type="hidden" name="role" value="creative">
@@ -216,6 +222,7 @@
 
 				{% if ((user.isApprover == true) and (Lockup.getApprover == user.getUser)) or (user.isAdmin) %}
 					<form class="dcf-form" method="POST" style="display: inline;">
+						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<input type="hidden" name="id" value="{{Lockup.getId}}">
 						<div class="dcf-form-group">
 							<label for="communicator-feedback">Feedback</label>
@@ -267,6 +274,7 @@
 
 				{% if (user.isCreative == true) or (user.isAdmin) %}
 					<form class="dcf-form" method="POST" style="display: inline;">
+						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-form-group">
 							<label for="creative-feedback">Feedback</label>
 

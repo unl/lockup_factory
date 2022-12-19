@@ -19,7 +19,7 @@ use App\Service\Core;
 class LockupsLibraryController extends BaseController
 {
     /**
-     * @Route("/lockups/library", name="lockupsLibrary")
+     * @Route("/lockups/library", name="lockupsLibrary", methods={"GET","POST"})
      */
     public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core, Auth $auth): Response
     {

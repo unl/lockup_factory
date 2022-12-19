@@ -12,12 +12,12 @@ use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 use App\Service\Auth;
 
 
-class HomePage extends BaseController
+class HomePageController extends BaseController
 {
     /**
      * @Route("/", name="homePage", methods={"GET"})
      */
-    public function homePage(ManagerRegistry $doctrine, Auth $auth): Response
+    public function homePage(ManagerRegistry $doctrine): Response
     {
         return $this->render('base.html.twig', [
             'page_template' => "homepage.html.twig",

@@ -22,7 +22,6 @@ yarn-error.log
 .idea
 
 # This project
-/public/lockups/*
-/templates/wdn/
-/public/wdn/
+/templates/wdn
+/public/wdn
 

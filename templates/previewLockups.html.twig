@@ -64,7 +64,7 @@
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
 						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
-							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
+							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
@@ -80,7 +80,7 @@
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
 					    <input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
-							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
+							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">

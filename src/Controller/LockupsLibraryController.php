@@ -21,19 +21,18 @@ class LockupsLibraryController extends BaseController
     /**
      * @Route("/lockups/library", name="lockupsLibrary", methods={"GET","POST"})
      */
-    public function lockupsLibrary(ManagerRegistry $doctrine, LockupsFieldsRepository $lockupsFieldsRepository, Request $request, Core $core, Auth $auth): Response
+    public function lockupsLibrary(Request $request, Core $core, Auth $auth): Response
     {
         $auth->requireAuth();
         $approver = $request->request->get("approver");
         $user_id = $request->request->get("user_id");
         $search = (string)$request->query->get('search_term');
-        $maxResults = 20;
+        $maxResults = 50;
         $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
         if ($search != "") {
             $searchLockupResult = $core->search($search, false);
             $searchLockupResult = $core->sortByOrganization($searchLockupResult);
-            $pageLength = (int)(((count($searchLockupResult) % $maxResults) != 0) ? ((count($searchLockupResult) / $maxResults) + 1) : (count($searchLockupResult) / $maxResults));
-            $searchLockupResult = $core->lockupsLibraryManager($searchLockupResult, $page, $maxResults);
+            $searchLockupResult = $core->lockupsLibraryWrapper($searchLockupResult);
 
             return $this->render('base.html.twig', [
                 'page_template' => "lockupsLibrary.html.twig",
@@ -43,35 +42,26 @@ class LockupsLibraryController extends BaseController
                 'search' => $search,
                 'auth' => $auth,
                 'currentPage' => $page,
-                'totalPage' => $pageLength,
+                'totalPage' => 1,
                 'approver' => $approver,
                 'user_id' => $user_id
             ]); 
         }
-        // if ($auth->isAdmin() == true) {
-        //     $publicLockups = $doctrine->getRepository(Lockups::class)->findAll();
-        // } else {
-        //     $publicLockups = $doctrine->getRepository(Lockups::class)->findBy(['public' => 1]);
-        // }
-        // $searchLockupResult = array_slice($searchLockupResult, ($page - 1) * $maxResults, $maxResults);
-        
-
-
 
         $publicLockups = $core->getLockupsLibraryLockups();
-        $lockupsForOrgName = $core->lockupsLibraryManager($publicLockups, 1, 999999);
+        $lockupsForOrgName = $core->lockupsLibraryManager($publicLockups, 1, count($publicLockups) + 1);
         $pageLength = (int)(((count($publicLockups) % $maxResults) != 0) ? ((count($publicLockups) / $maxResults) + 1) : (count($publicLockups) / $maxResults));
 
         if ($approver != null ) {
             $pageLength = 1;
             $page = 1;
-            $maxResults = 99999999;
+            $maxResults = count($publicLockups) + 1;
         }
 
         if ($user_id != "") {
             $pageLength = 1;
             $page = 1;
-            $maxResults = 99999999;        
+            $maxResults = count($publicLockups) + 1;        
         }
 
         $publicLockups = $core->lockupsLibraryManager($publicLockups, $page, $maxResults);

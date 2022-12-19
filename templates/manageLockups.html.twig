@@ -1,5 +1,11 @@
 {% block body %}
 	<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+		{% if alert['title'] is defined %}
+			<div class="dcf-notice {{ alert_type|default('dcf-notice-success') }}" hidden>
+				<h2>{{ alert['title'] }}</h2>
+				<div>{{ alert['msg'] }}</div>
+			</div>
+		{% endif %}
 		<h3>Manage Lockups</h3>
 		<p>Welcome
 			{{ auth.getUsername }},</p>
@@ -50,7 +56,8 @@
 									</td>
 									<td data-label="Status">
 										{% if (item.getApprover == null) %}
-											<p>Communicator: <strong>Not specified</strong><br></p>
+											<p>Communicator:
+												<strong>Not specified</strong><br></p>
 										{% else %}
 											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
 											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
@@ -108,7 +115,8 @@
 									</td>
 									<td data-label="Status">
 										{% if (item.getApprover == null) %}
-											<p>Communicator: <strong>Not specified</strong><br></p>
+											<p>Communicator:
+												<strong>Not specified</strong><br></p>
 										{% else %}
 											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
 											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}

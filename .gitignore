@@ -23,5 +23,6 @@ yarn-error.log
 
 # This project
 /public/lockups/*
-/templates/wdn
+/templates/wdn/
+/public/wdn/
 

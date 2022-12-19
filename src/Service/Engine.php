@@ -49,6 +49,7 @@ class Engine
         }
         return $this->getQuery($queryName);
     }
+    
 
     public function getUser(string $userName, bool $refresh = false) {
         $queryName = "user:" . $userName;

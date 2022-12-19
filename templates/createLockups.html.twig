@@ -27,7 +27,7 @@
 			</div>
 			<div style="max-height: 60vh; overflow-y: auto;">
 				<div id="horizontal-tab">
-					<div class="dcf-grid-halves dcf-grid dcf-grid-full@md">
+					<div class="dcf-grid-full dcf-grid-halves@sm dcf-grid dcf-grid-full@md">
 						{% for categories in lockup_categories %}
 						{% for lockupTemplates in categories.getLockupTemplates %}
 						{% if lockupTemplates.getStyle == "h" %}

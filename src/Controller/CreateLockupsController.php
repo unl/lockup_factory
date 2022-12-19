@@ -96,7 +96,7 @@ class CreateLockupsController extends BaseController
             $lockups = $doctrine->getRepository(Lockups::class)->find($id);
             // lockup not found
             if ($lockups == null) {
-                $response = $this->forward('App\Controller\LockupsController::errorPage', [
+                $response = $this->forward('App\Controller\AlertsController::errorPage', [
                     'errorTitle' => "Not found!",
                     'errorBody' => "The requested lockup could not be found."
                 ]);
@@ -120,6 +120,8 @@ class CreateLockupsController extends BaseController
         if ($approver != -1 && $approver != 0) {
             $approverUser = $doctrine->getRepository(Users::class)->find($approver); // add check for approver if null or not
             $lockups->setApprover($approverUser); // add verify approver script
+        } elseif ($approver == -1) {
+            $lockups->setApprover(null);
         }
 
         $lockups->setTemplate($lockupTemplates);
@@ -154,7 +156,7 @@ class CreateLockupsController extends BaseController
         if ($emptyLockupFields == true) {
             $errorMsg['title'] = "Empty Field";
             $errorMsg['body'] = "You have an error in your submission.";
-            $response = $this->forward('App\Controller\CreateLockupsController::createLockups2', [
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
                 'lockupFields' => $tempLockupFields
@@ -166,7 +168,7 @@ class CreateLockupsController extends BaseController
         if (count($errors) > 0) {
             $errorMsg['title'] = "Error";
             $errorMsg['body'] = "You have an error in your submission.";
-            $response = $this->forward('App\Controller\CreateLockupsController::createLockups2', [
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
                 'lockupFields' => $tempLockupFields
@@ -178,7 +180,7 @@ class CreateLockupsController extends BaseController
         if ($institution == "") {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please enter your Institution Name/ Acronym.";
-            $response = $this->forward('App\Controller\CreateLockupsController::createLockups2', [
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
                 'lockupFields' => $tempLockupFields
@@ -189,7 +191,7 @@ class CreateLockupsController extends BaseController
         if ($lockupName == "") {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please enter your Lockups name.";
-            $response = $this->forward('App\Controller\CreateLockupsController::createLockups2', [
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
                 'lockupFields' => $tempLockupFields
@@ -202,7 +204,7 @@ class CreateLockupsController extends BaseController
         if (($approver == 0)) {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please select your Communicator Contract.";
-            $response = $this->forward('App\Controller\CreateLockupsController::createLockups2', [
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
                 'lockupFields' => $tempLockupFields
@@ -225,5 +227,46 @@ class CreateLockupsController extends BaseController
         return $this->redirectToRoute('previewLockups', [
             'id' => $lockups->getId()
         ], 302);
+    }
+
+    /**
+     * @Route("/lockups/edit/{id}", name="editLockups", methods={"GET"})
+     */
+    public function editLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
+    {
+        $auth->requireAuth();
+        $lockupFieldsArray = array();
+        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+        if ($lockup == null || ($lockup->getUser() != $auth->getUser() && !$auth->isAdmin())) {
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+            ]);
+            return $response;
+        }
+
+        foreach($lockup->getLockupsFields() as $eachLockupFields) {
+            array_push($lockupFieldsArray, $eachLockupFields);
+        }
+        $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
+            'lockups' => $lockup,
+            'lockupFields' => $lockupFieldsArray
+
+        ]);
+        return $response;
+    }
+
+        /**
+     * @Route("/lockups/edit/{id}", name="editedLockups", methods={"POST"})
+     */
+    public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
+    {
+        
+        $auth->requireAuth();
+        $response = $this->forward('App\Controller\CreateLockupsController::addLockup', [
+            'id' => $id
+
+        ]);
+        return $response;
     }
 }

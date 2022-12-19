@@ -45,7 +45,7 @@ class LockupsGenerator
     public function createPreview(int $id): bool
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
-        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+        $lockupFields = $lockups->getLockupsFields();
         $array = $this->fetchLockupTemplates($id);
         foreach ($array as $template) {
             if ($template->getStyle() == "h") {
@@ -73,7 +73,7 @@ class LockupsGenerator
         $this->doctrine->getManager()->flush();
 
         $array = $this->fetchLockupTemplates($id);
-        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
+        $lockupFields = $lockups->getLockupsFields();
 
         $styles = array('RGB', 'pms186cp', '4c', 'blk');
 
@@ -84,7 +84,7 @@ class LockupsGenerator
         $this->lockupsConverter->deteleLockupsFolder();
 
         //remove existing files from db
-        $delete_lockup_files = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $id]);
+        $delete_lockup_files = $lockups->getLockupFiles();
 
         foreach ($delete_lockup_files as $item) {
             $this->doctrine->getManager()->remove(($item));

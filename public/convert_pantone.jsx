@@ -4,6 +4,7 @@ var rootFolder = (new File($.fileName)).parent.absoluteURI;
 
 // this is the file name given by the system for the lockups
 var fileName = rootFolder.split("/");
+console.log(fileName);
 fileName = fileName.pop();
 fileName = fileName.substring(0, fileName.lastIndexOf("_lockups"));
 fileName = fileName.substring(2);
@@ -15,28 +16,28 @@ createFile(rootFolder+"/Nv_"+fileName+"/4c CMYK/Nv_"+fileName+"_4c_rev.ai", root
 createFile(rootFolder+"/Nv_"+fileName+"/4c CMYK/Nv_"+fileName+"_4c.ai", rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp.ai");
 
 function createFile(sourceDoc, destDoc){
-    sourceDoc = open(new File(sourceDoc));
-    destDoc = open(new File(destDoc));
+        sourceDoc = open(new File(sourceDoc));
+        destDoc = open(new File(destDoc));
+        
+        var scarlet = destDoc.swatches.getByName("PANTONE 186 CP");
+        var four_h_green = destDoc.swatches.getByName("PANTONE 347 U");
     
-    var scarlet = destDoc.swatches.getByName("PANTONE 186 CP");
-    var four_h_green = destDoc.swatches.getByName("PANTONE 347 U");
-
-    sourceDoc.activate(); 
-
-    sourceDoc.selection = null; 
-    sourceDoc.artboards.setActiveArtboardIndex(0); 
-    sourceDoc.selectObjectsOnActiveArtboard(); 
-    sel = sourceDoc.selection; 
-    moveObjects(sel, destDoc); 
-
-    var pathItems = destDoc.pathItems;
-
-    for (var i = 0; i < pathItems.length; i++) {
-        setPantone(pathItems[i], scarlet, four_h_green);
-    };
-
-    sourceDoc.close(SaveOptions.DONOTSAVECHANGES);
-    destDoc.close(SaveOptions.SAVECHANGES);
+        sourceDoc.activate(); 
+    
+        sourceDoc.selection = null; 
+        sourceDoc.artboards.setActiveArtboardIndex(0); 
+        sourceDoc.selectObjectsOnActiveArtboard(); 
+        sel = sourceDoc.selection; 
+        moveObjects(sel, destDoc); 
+    
+        var pathItems = destDoc.pathItems;
+    
+        for (var i = 0; i < pathItems.length; i++) {
+            setPantone(pathItems[i], scarlet, four_h_green);
+        };
+    
+        sourceDoc.close(SaveOptions.DONOTSAVECHANGES);
+        destDoc.close(SaveOptions.SAVECHANGES);
 }
 
 function setPantone(pathItem, scarlet, four_h_green){    

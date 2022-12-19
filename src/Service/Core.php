@@ -49,7 +49,6 @@ class Core
         // }
 
         $searchField = ($id != null ) ? $this->lockupsFieldsRepository->searchField(value: $search, id: $id) : $this->lockupsFieldsRepository->searchField(value: $search);
-        // echo(var_dump($searchField));
         foreach ($searchField as $searchItem) {
             array_push($searchArr, $searchItem->getLockup());
         }
@@ -62,8 +61,6 @@ class Core
 
 
         $newSearchArr = $this->removeDuplicateLockupsfromArray($searchArr);
-
-        // $searchArr = array_unique($searchArr);
 
         foreach ($newSearchArr as $arrItem) {
             if ($private) {
@@ -161,22 +158,29 @@ class Core
 
     public function searchWrapper(array $lockups, string $searchTerm): array
     { // takes an array of lockups and search term and searches from the array
-        $lockupsArray = [];
-        $pushed = false;
+        $searchedLockupsArray = [];
         foreach ($lockups as $lockup) {
-            $lockup_fields = $this->doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $lockup->getId()], ['approver.organization' => "ASC"]);
+            $pushed = false;
+            // find in lockups name
+            if (str_contains(strtolower($lockup->getName()), strtolower($searchTerm))) {
+                $pushed = true;
+            }
+            // find in lockups institution
+            if (str_contains(strtolower($lockup->getInstitution()), strtolower($searchTerm))) {
+                $pushed = true;
+            }
+            // find in fields
+            $lockup_fields = $lockup->getLockupsFields();
             foreach ($lockup_fields as $field) {
-                if (strpos($field->getValue(), $searchTerm)) {
-                    // array_push($lockupsArray, $lockup);
+                if (str_contains(strtolower($field->getValue()), strtolower($searchTerm))) {
                     $pushed = true;
                 }
             }
-            if (strpos($lockup->getInstitution(), $searchTerm) || strpos($lockup->getDepartment(), $searchTerm) || $pushed) {
-                array_push($lockupsArray, $lockup);
-                $pushed = false;
+            if ($pushed == true) {
+                array_push($searchedLockupsArray, $lockup);
             }
         }
-        return $lockupsArray;
+        return $searchedLockupsArray;
     }
 
     public function getLockupsLibraryLockups(): array

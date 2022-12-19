@@ -63,7 +63,7 @@
 					{% endif %}
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
 						<div class="dcf-input-checkbox">
-							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
+							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
@@ -78,7 +78,7 @@
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
 					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
 						<div class="dcf-input-checkbox">
-							<input type="checkbox" value="0" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
+							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
 							<label for="publishLockup">Publish lockup?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">

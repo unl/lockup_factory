@@ -1,1 +1,0 @@
-{"version":3,"sources":["?"],"names":["removeCriticalCSS","el","document","getElementById","parentNode","removeChild","coreStyles","onloadCSS"],"mappings":"CAAA,WACE,GAAIA,GAAoB,WACtB,GAAIC,GAAKC,SAASC,eAAe,mBACjCF,GAAGG,WAAWC,YAAYJ,IAGxBK,EAAaJ,SAASC,eAAe,eACzCI,WAAUD,EAAY,WACpBN","file":"clearCriticalCSS.js"}

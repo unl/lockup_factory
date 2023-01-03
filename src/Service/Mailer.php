@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use PHPMailer\PHPMailer\PHPMailer;
 
 
+
 class Mailer
 {
     private $mail;

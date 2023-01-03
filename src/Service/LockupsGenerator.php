@@ -9,6 +9,7 @@ use App\Service\Core;
 use App\Entity\LockupFiles;
 use App\Entity\LockupsFields;
 use App\Entity\LockupTemplates;
+use Doctrine\ORM\Cache\Lock;
 use Doctrine\Persistence\ManagerRegistry;
 
 class LockupsGenerator
@@ -42,21 +43,21 @@ class LockupsGenerator
     }
 
 
-    public function createPreview(int $id): bool
+    public function createPreview(Lockups $lockup): bool
     {
-        $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
-        $lockupFields = $lockups->getLockupsFields();
-        $array = $this->fetchLockupTemplates($id);
+        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(["lockup" => $lockup->getId()]);
+
+        $array = $this->fetchLockupTemplates($lockup->getId());
         foreach ($array as $template) {
             if ($template->getStyle() == "h") {
                 $horizontal = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, 'h', 'RGB', false, true);
-                $lockups->setPreviewH($horizontal);
+                $lockup->setPreviewH($horizontal);
             } else if ($template->getStyle() == "v") {
                 $vertical = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, 'v', 'RGB', false, true);
-                $lockups->setPreviewV($vertical);
+                $lockup->setPreviewV($vertical);
             }
         }
-        $this->doctrine->getManager()->persist($lockups);
+        $this->doctrine->getManager()->persist($lockup);
         $this->doctrine->getManager()->flush();
         return true;
     }

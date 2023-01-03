@@ -92,7 +92,7 @@ class CreateLockupsController extends BaseController
         $lockupName = (string)$request->get('lockupName');
 
         if (!$this->isCsrfTokenValid('add-lockups', $submittedToken)) {
-            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
                 'errorTitle' => "Error",
                 'errorBody' => "There has been error with your request."
             ]);
@@ -128,7 +128,7 @@ class CreateLockupsController extends BaseController
         }
 
 
-        if ($approver != -1 && $approver != 0) {
+        if ($approver != -1 && $approver != "") {
             $approverUser = $doctrine->getRepository(Users::class)->find($approver); // add check for approver if null or not
             $lockups->setApprover($approverUser); // add verify approver script
         } elseif ($approver == -1) {
@@ -146,7 +146,7 @@ class CreateLockupsController extends BaseController
         $lockups->setPublic(1);
         $lockups->setDateCreated(new \DateTime());
         $errors = $validator->validate($lockups);
-        $entityManager->persist($lockups);
+        // $entityManager->persist($lockups);
 
         $tempLockupFields = array();
         $emptyLockupFields = false;
@@ -159,6 +159,7 @@ class CreateLockupsController extends BaseController
                 $temp->setValue($request->request->get($lockupTemplateFieldSlug));
                 array_push($tempLockupFields, $temp);
                 $entityManager->persist($temp);
+                // $lockups->addLockupsFields($temp);
                 // $lockups->addLockupsFields($temp);
             } else {
                 $emptyLockupFields = true;
@@ -212,7 +213,7 @@ class CreateLockupsController extends BaseController
 
 
 
-        if (($approver == 0)) {
+        if (($approver == "")) {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please select your Communicator Contract.";
             $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
@@ -226,15 +227,8 @@ class CreateLockupsController extends BaseController
         $entityManager->persist($lockups);
         $entityManager->flush();
 
-        // add lockup fields now
-        // foreach($lockupFieldsArray as $eachLockupFields) {
-        //     $lockups->addLockupsFields($eachLockupFields);
-        // }
-        // $entityManager->persist($lockups);
-        // $entityManager->flush();
-        $lockupsGenerator->createPreview($lockups->getId());
+        $lockupsGenerator->createPreview($lockups);
 
-        // return $this->redirectToRoute('manageLockups', [], 302);
         return $this->redirectToRoute('previewLockups', [
             'id' => $lockups->getId()
         ], 302);

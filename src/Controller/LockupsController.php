@@ -112,7 +112,7 @@ class LockupsController extends BaseController
         $submittedToken = $request->request->get('token');
 
         if (!$this->isCsrfTokenValid('delete-lockups', $submittedToken)) {
-            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
                 'errorTitle' => "Error!",
                 'errorBody' => "There has been an error with your request."
             ]);
@@ -147,6 +147,7 @@ class LockupsController extends BaseController
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+        echo(count($lockup->getLockupsFields()));
         $action = (string)$request->query->get('action');
         if ($lockup == null) {
             $response = $this->forward('App\Controller\AlertsController::errorPage', [
@@ -195,7 +196,7 @@ class LockupsController extends BaseController
 
         $submittedToken = $request->request->get('token');
         if (!$this->isCsrfTokenValid('lockups-action', $submittedToken)) {
-            $response = $this->forward('App\Controller\LockupsController::errorPage', [
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
                 'errorTitle' => "Error!",
                 'errorBody' => "There has been an error with your request."
             ]);
@@ -323,52 +324,6 @@ class LockupsController extends BaseController
     {
         $auth->logout();
         return $this->redirectToRoute('homePage', [], 302);
-    }
-
-    /**
-     * @Route("/lockups/edit/{id}", name="editLockups", methods={"GET"})
-     */
-    public function editLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
-    {
-        $auth->requireAuth();
-        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
-        if ($lockup == null || ($lockup->getUser() != $auth->getUser() && !$auth->isAdmin())) {
-            $response = $this->forward('App\Controller\LockupsController::errorPage', [
-                'errorTitle' => "Not found!",
-                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
-            ]);
-            return $response;
-        }
-        $lockupFields = $doctrine->getRepository(LockupsFields::class)->findBy(['lockup' => $id]);
-        $lockupsStyle = array(
-            'lockup_id' => $lockup->getId(),
-            'style' => $lockup->getTemplate()->getStyle(),
-            'category' => $lockup->getTemplate()->getCategory()->getSlug(),
-            'template_id' => $lockup->getTemplate()->getId(),
-            'institution' => $lockup->getInstitution(),
-            'department' => $lockup->getDepartment(),
-            'approver' => ($lockup->getApprover() ? $lockup->getApprover()->getId() : -1)
-        );
-        $response = $this->forward('App\Controller\LockupsController::createLockups', [
-            'fields' => $lockupFields,
-            'lockupStyle' => $lockupsStyle
-
-        ]);
-        return $response;
-    }
-
-    /**
-     * @Route("/lockups/edit/{id}", name="editedLockups", methods={"POST"})
-     */
-    public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
-    {
-        
-        $auth->requireAuth();
-        $response = $this->forward('App\Controller\LockupsController::addLockup', [
-            'id' => $id
-
-        ]);
-        return $response;
     }
 
     /**

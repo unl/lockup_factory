@@ -116,7 +116,7 @@
 			<form method="POST" action="" class="dcf-form">
 				<!--  name stores the post form data -->
 				<input type="hidden" id="lockupTemplateId" name="lockuptemplate" value="1">
-				<input type="hidden" name="token" value="{{ csrf_token('create-lockups') }}"/>
+				<input type="hidden" name="token" value="{{ csrf_token('add-lockups') }}"/>
 				<div class="dcf-mt-6">
 					{% for item in all_lockups_fields %}
 					<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class"
@@ -153,8 +153,8 @@
 							</p>
 						</div>
 						<select def id="approver" name="approver"
-							class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-							<option value="0">Select your Communicator Contact</option>
+							class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded" required>
+							<option value="">Select your Communicator Contact</option>
 							{% for item in approvers %}
 							<option value="{{item.getId}}">{{item.getName}}
 								({{ item.getOrganizationAcronym }})</option>

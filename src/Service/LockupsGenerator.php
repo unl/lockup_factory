@@ -45,7 +45,7 @@ class LockupsGenerator
     public function createPreview(int $id): bool
     {
         $lockups = $this->doctrine->getRepository(Lockups::class)->find($id);
-        $lockupFields = $lockups->getLockupsFields();
+        $lockupFields = $this->doctrine->getRepository(LockupsFields::class)->findBy(["lockup" => $id]);
         $array = $this->fetchLockupTemplates($id);
         foreach ($array as $template) {
             if ($template->getStyle() == "h") {

@@ -4,16 +4,15 @@ var rootFolder = (new File($.fileName)).parent.absoluteURI;
 
 // this is the file name given by the system for the lockups
 var fileName = rootFolder.split("/");
-console.log(fileName);
 fileName = fileName.pop();
 fileName = fileName.substring(0, fileName.lastIndexOf("_lockups"));
 fileName = fileName.substring(2);
 
-createFile(rootFolder+"/Nh_"+fileName+"/4c CMYK/Nh_"+fileName+"_4c_rev.ai", rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp_rev.ai");
-createFile(rootFolder+"/Nh_"+fileName+"/4c CMYK/Nh_"+fileName+"_4c.ai", rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp.ai");
+createFile(rootFolder+"/Nh_"+fileName+"/4c_CMYK/Nh_"+fileName+"_4c_rev.ai", rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp_rev.ai");
+createFile(rootFolder+"/Nh_"+fileName+"/4c_CMYK/Nh_"+fileName+"_4c.ai", rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp.ai");
 
-createFile(rootFolder+"/Nv_"+fileName+"/4c CMYK/Nv_"+fileName+"_4c_rev.ai", rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp_rev.ai");
-createFile(rootFolder+"/Nv_"+fileName+"/4c CMYK/Nv_"+fileName+"_4c.ai", rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp.ai");
+createFile(rootFolder+"/Nv_"+fileName+"/4c_CMYK/Nv_"+fileName+"_4c_rev.ai", rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp_rev.ai");
+createFile(rootFolder+"/Nv_"+fileName+"/4c_CMYK/Nv_"+fileName+"_4c.ai", rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp.ai");
 
 function createFile(sourceDoc, destDoc){
         sourceDoc = open(new File(sourceDoc));

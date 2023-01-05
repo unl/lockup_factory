@@ -98,13 +98,13 @@ class LockupsGenerator
                 $styles = array('RGB');
             }
             foreach ($styles as $style) {
-                $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, false);
+                $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, false, false);
 
                 $this->lockupsConverter->saveSvg($lockups, $svgFile, $template->getStyle(), false, $style);
 
                 if ($template->getSlug() != 'v_social') // no reverse for this style
                 {
-                    $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, true);
+                    $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, true, false);
                     $this->lockupsConverter->saveSvg($lockups, $svgFile, $template->getStyle(), true, $style);
                 }
             }

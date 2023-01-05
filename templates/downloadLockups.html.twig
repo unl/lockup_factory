@@ -47,7 +47,7 @@
 					<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
 
 				{% elseif Lockup.getIsGenerated == 1 %}
-					{% if auth.isAdmin == true or Lockup.getPublic == 1 %}
+					{% if (Lockup.getUser == auth.getUser) or auth.isAdmin == true or Lockup.getPublic == 1 %}
 						<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-6" id="generatedBtn">Download All (.zip)</a>
 
 						<div class="dcf-bleed dcf-wrapper dcf-mt-6 dcf-mb-6">

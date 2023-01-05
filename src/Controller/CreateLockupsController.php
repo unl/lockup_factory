@@ -2,18 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\LockupFiles;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Lockups;
 use App\Entity\LockupsFields;
-use App\Repository\LockupsFieldsRepository;
 use App\Entity\LockupTemplates;
 use App\Entity\LockupTemplatesFields;
-use App\Entity\Feedbacks;
 use App\Entity\Users;
 use App\Entity\LockupTemplatesCategories;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
@@ -24,8 +20,6 @@ use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 
 use App\Service\Auth;
 use App\Service\LockupsGenerator;
-use App\Service\Core;
-use App\Service\Engine;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -58,7 +52,6 @@ class CreateLockupsController extends BaseController
 
         // $lockupsFields = null ;
 
-        // echo (var_dump($lockups));
         return $this->render('base.html.twig', [
             'page_template' => "createLockups.html.twig",
             'page_name' => "CreateLockups",
@@ -270,7 +263,6 @@ class CreateLockupsController extends BaseController
         $auth->requireAuth();
         $response = $this->forward('App\Controller\CreateLockupsController::addLockup', [
             'id' => $id
-
         ]);
         return $response;
     }

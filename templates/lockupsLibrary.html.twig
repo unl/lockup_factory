@@ -23,13 +23,12 @@
 		<form id="orgForm" method="POST">
 		<label class="dcf-txt-sm" for="approver">Select organization name</label>
 		
-		<select def id="organization" name="approver"
+		<select id="organization" name="approver"
 			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-            <option value="0">Select approving organization</option>
-		{% for key, value in allLockups%}
-			<option value="{{ key }}">{{ key }}</option>
-		
-		{% endfor %}
+            <option value="0" selected>Select approving organization</option>
+			{% for key, value in allLockups%}
+				<option value="{{ key }}">{{ key }}</option>
+			{% endfor %}
 		</select>
 		</form>
 		</fieldset>
@@ -269,11 +268,9 @@ userIdField.value = userId;
 	let approverOrg = "{{ approver | default("")}}";
 
 	function sendOrganizationInput() {
-		if (org_list.value != "0") {
 		orgForm.submit();
-		}
 	}
-	if (approverOrg != null) {
+	if (approverOrg != "") {
 		org_list.value = approverOrg;
 	}
 	</script>

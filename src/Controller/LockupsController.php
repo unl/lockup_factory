@@ -2,25 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\LockupFiles;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Lockups;
-use App\Entity\LockupsFields;
-use App\Repository\LockupsFieldsRepository;
-use App\Entity\LockupTemplates;
-use App\Entity\LockupTemplatesFields;
+
 use App\Entity\Feedbacks;
-use App\Entity\Users;
-use App\Entity\LockupTemplatesCategories;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-
-use Symfony\Component\Serializer\Serializer;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -147,7 +133,6 @@ class LockupsController extends BaseController
     {
         $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
-        echo(count($lockup->getLockupsFields()));
         $action = (string)$request->query->get('action');
         if ($lockup == null) {
             $response = $this->forward('App\Controller\AlertsController::errorPage', [
@@ -239,7 +224,7 @@ class LockupsController extends BaseController
             $entityManager->persist($lockups);
             $entityManager->flush();
             $alert['title'] = "Success!";
-            $alert['msg'] = "Lockup has been unpublished from public.";
+            $alert['msg'] = "Lockup has been unpublished from the public.";
             $response = $this->forward('App\Controller\LockupsController::previewLockups', [
                 'id' => $id,
                 'alert' => $alert

@@ -62,7 +62,7 @@ class LockupsConverter
 
     public function createZip(Lockups $lockup) {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
-        $fileName = "N_" . $this->core->getLockupFileName($lockup) . "lockups.zip";
+        $fileName = "N_" . $this->core->getLockupFileName($lockup) . "_lockups.zip";
         $zippathName = $this->saveFolder() . $fileName;
 
         $zipDownloadUrl = $this->urlSuffix . $this->savePath() . $fileName;
@@ -110,18 +110,18 @@ class LockupsConverter
         switch ($color) {
             case "RGB":
                 $pathName = $pathName . "RGB_HEX/";
-                $fileName = $fileName . "RGB";
+                $fileName = $fileName . "_RGB";
                 break;
             case "pms186cp":
                 $pathName = $pathName  . "PMS186cp/";
-                $fileName = $fileName . "pms186cp";
+                $fileName = $fileName . "_pms186cp";
                 break;
             case "4c":
                 $pathName = $pathName . "4c_CMYK/";
-                $fileName = $fileName . "4c";
+                $fileName = $fileName . "_4c";
                 break;
             case "blk":
-                $fileName = $fileName . "blk";
+                $fileName = $fileName . "_blk";
                 if ($rev) {
                     $pathName = $pathName . "Rev/";
                 } else {

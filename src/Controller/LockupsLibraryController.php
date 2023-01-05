@@ -1,9 +1,6 @@
 <?php
 namespace App\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Lockups;
-use App\Repository\LockupsFieldsRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +63,7 @@ class LockupsLibraryController extends BaseController
 
         $publicLockups = $core->lockupsLibraryManager($publicLockups, $page, $maxResults);
 
-        if ($approver != null ) {
+        if ($approver != null && $approver != 0 ) {
             $filteredLockups = [];
             $filteredLockups[$approver] = $publicLockups[$approver];
         } else {

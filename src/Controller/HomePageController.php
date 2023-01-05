@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 
 
-use App\Service\Auth;
 
 
 class HomePageController extends BaseController

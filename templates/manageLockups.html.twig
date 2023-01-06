@@ -39,7 +39,7 @@
 					</thead>
 					<tbody>
 						{% for item in pendingCreative %}
-							{% if item.getCommunicatorStatus == 0  %}
+							{% if item.getCreativeStatus == 0  %}
 								<tr>
 									<td data-label="Title">
 										{{item.getInstitution}}
@@ -59,9 +59,9 @@
 											<p>Communicator:
 												<strong>Not specified</strong><br></p>
 										{% else %}
-											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-											{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected<br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br></p>") | raw}}
 										{% endif %}
 
 										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
@@ -98,7 +98,7 @@
 					</thead>
 					<tbody>
 						{% for item in pendingApprover %}
-							{% if (item.getCreativeStatus == 0) %}
+							{% if (item.getCommunicatorStatus == 0) %}
 								<tr>
 									<td data-label="Title">
 										{{item.getInstitution}}
@@ -118,9 +118,9 @@
 											<p>Communicator:
 												<strong>Not specified</strong><br></p>
 										{% else %}
-											{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-											{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-											{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br></p>") | raw}}
 										{% endif %}
 
 										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
@@ -174,9 +174,9 @@
 								<p>Communicator:
 									<strong>Not specified</strong><br></p>
 							{% else %}
-								{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-								{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-								{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 1) ? "<p>Approver: <strong>Approved</strong><br></p>" | raw}}
+								{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" | raw}}
 							{% endif %}
 
 							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
@@ -219,4 +219,10 @@ window.addEventListener('inlineJSReady', function () {
 WDN.initializePlugin('pagination');
 }, false);
 	</script>
+		<style>
+	.table-preview .preview {
+		padding: 2px;
+		background-color: #fff;
+	}
+	</style>
 {% endblock %}

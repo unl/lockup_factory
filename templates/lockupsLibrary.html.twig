@@ -92,8 +92,10 @@
 				{% for item in value %}
 					<tr>
 						<td data-label="Title">
+						<a href="/lockups/download/{{item.getId}}">
 							{{item.getName}}
 							{{item.getInstitution}}
+							</a>
 						</td>
 						<td data-label="Approved">
 							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
@@ -109,7 +111,7 @@
 						</td>
 						<td data-label="Preview">
 							<a href="/lockups/download/{{item.getId}}">
-								<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+								<div class="table-preview" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
 							</a>
 						</td>
 					</tr>
@@ -130,12 +132,16 @@
 				{% for item in value%}
 					<tr>
 						<td data-label="Title">
+						<a href="/lockups/download/{{item.getId}}">
 							{{item.getName}}
 							{{item.getInstitution}}
+						</a>
 						</td>
 						<td data-label="Preview">
 							<a href="/lockups/download/{{item.getId}}">
-								<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+								<div class="table-preview">
+								{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
+								</div>
 							</a>
 						</td>
 					</tr>
@@ -281,4 +287,10 @@ userIdField.value = userId;
 		WDN.initializePlugin('pagination');
 		}, false);
 	</script>
+	<style>
+	.table-preview .preview {
+		padding: 2px;
+		background-color: #fff;
+	}
+	</style>
 {% endblock %}

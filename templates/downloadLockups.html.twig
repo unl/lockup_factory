@@ -33,7 +33,7 @@
 
 		{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
 			<div class="dcf-txt-center dcf-mb-4">
-				<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+				<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
 			</div>
 		{% endif %}
 
@@ -122,24 +122,24 @@
 						</div>
 
 
-						<table class="dcf-table dcf-table-striped dcf-table-bordered dcf-w-100%">
+						<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
 							<thead>
 								<tr>
-									<th>Name</th>
-									<th>Orientation</th>
-									<th>Style</th>
-									<th>Format</th>
+									<th scope="Col">Name</th>
+									<th scope="Col">Orientation</th>
+									<th scope="Col">Style</th>
+									<th scope="Col">Format</th>
 								</tr>
 							</thead>
 							<tbody>
 								{% for item in Lockup.getLockupFiles%}
 									<tr class="lockupsData">
-										<td id="lockupFileName">
+										<td data-label="Name" id="lockupFileName">
 											<a href="{{item.getUrl}}">{{ item.getFileName}}</a>
 										</td>
-										<td id="lockupOrient">{{ item.getOrient}}</td>
-										<td id="lockupStyle">{{ item.getStyle}}</td>
-										<td id="lockupFormat">{{ item.getFormat}}</td>
+										<td data-label="Orientation" id="lockupOrient">{{ item.getOrient}}</td>
+										<td data-label="Style" id="lockupStyle">{{ item.getStyle}}</td>
+										<td data-label="Format" id="lockupFormat">{{ item.getFormat}}</td>
 									</tr>
 								{% endfor %}
 							</tbody>

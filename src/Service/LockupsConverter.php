@@ -245,7 +245,14 @@ class LockupsConverter
         $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
         #for .ai
-        copy($epsDirectory, $aiDirectory);
+        
+        if ($orient == "h") {
+            $aiTemplateDir = $this->projectRoot . "//public//Nh_template.ai";
+        } else {
+            $aiTemplateDir = $this->projectRoot . "//public//Nv_template.ai";
+
+        }
+        copy($aiTemplateDir, $aiDirectory);
 
         $lockupFileClass[4] = new LockupFiles();
         $lockupFileClass[4]->setFileName($fileName . ".ai");

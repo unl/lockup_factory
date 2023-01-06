@@ -199,7 +199,7 @@ $feedbacks = [];
   }
 
   if ($item['approver_id'] == null) {
-    $lockup['approver_id'] = 15;
+    $lockup['approver_id'] = null;
   } else {
     $lockup['approver_id'] = (int)$item['approver_id'];
   }
@@ -267,8 +267,13 @@ $feedbacks = [];
   // echo (var_dump($lockup));
   // echo (var_dump($tempFields));
   // echo (var_dump($feedbacks));
+  if ($lockup['approver_id'] == null) {
+    $query = "INSERT INTO `lockups` (`template_id`, `status`, `user_id`, `institution`, `name`, `generating`, `is_generated`, `creative_status`,  `communicator_status`, `public`, `approver_id`, `organization`, `date_created`) VALUES ('" . $lockup['template_id'] . "', '0', '" . $lockup['user_id'] . "', '" . $lockup['institution'] . "', '" . $lockup['department'] . "', '0', '0', '" . $lockup['creative_status'] . "', '" . $lockup['communicator_status'] . "', '" . $lockup['public'] . "', NULL, '" . $lockup['organization'] . "', '" . $lockup['date_created'] . "');";
 
-  $query = "INSERT INTO `lockups` (`template_id`, `status`, `user_id`, `institution`, `name`, `generating`, `is_generated`, `creative_status`,  `communicator_status`, `public`, `approver_id`, `organization`, `date_created`) VALUES ('" . $lockup['template_id'] . "', '0', '" . $lockup['user_id'] . "', '" . $lockup['institution'] . "', '" . $lockup['department'] . "', '0', '0', '" . $lockup['creative_status'] . "', '" . $lockup['communicator_status'] . "', '" . $lockup['public'] . "', '" . $lockup['approver_id'] . "', '" . $lockup['organization'] . "', '" . $lockup['date_created'] . "');";
+  } else {
+    $query = "INSERT INTO `lockups` (`template_id`, `status`, `user_id`, `institution`, `name`, `generating`, `is_generated`, `creative_status`,  `communicator_status`, `public`, `approver_id`, `organization`, `date_created`) VALUES ('" . $lockup['template_id'] . "', '0', '" . $lockup['user_id'] . "', '" . $lockup['institution'] . "', '" . $lockup['department'] . "', '0', '0', '" . $lockup['creative_status'] . "', '" . $lockup['communicator_status'] . "', '" . $lockup['public'] . "', '" . $lockup['approver_id'] . "', '" . $lockup['organization'] . "', '" . $lockup['date_created'] . "');";
+
+  }
 
   // echo ($query);
   $res = $connMain->query($query);

@@ -97,7 +97,7 @@ class LockupsRepository extends ServiceEntityRepository
             $query = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE p.CreativeStatus = 0
+                WHERE p.CommunicatorStatus = 0
                 ORDER BY p.DateCreated DESC'
             );
         } else {

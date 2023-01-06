@@ -386,7 +386,7 @@ class LockupsController extends BaseController
 
         foreach ($lockup as $item) {
             if ($item->getPreviewH() == null && $item->getPreviewV() == null) {
-                $lockupsGenerator->createPreview($item->getId());
+                $lockupsGenerator->createPreview($item);
             }
         }
         

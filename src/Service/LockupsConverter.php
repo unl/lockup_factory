@@ -216,7 +216,7 @@ class LockupsConverter
 
         #for eps
         // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -C' . '-h500' . ' -w500 --export-eps=' . $epsDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape -C --export-eps=' . $epsDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
         # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
         if ($color == '4c' || $color == 'pms186cp') {
@@ -245,14 +245,18 @@ class LockupsConverter
         $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
         #for .ai
-        
-        if ($orient == "h") {
-            $aiTemplateDir = $this->projectRoot . "//public//Nh_template.ai";
+        if ($color = "pms186cp") {
+            if ($orient == "h") {
+                $aiTemplateDir = $this->projectRoot . "/public/Nh_template.ai";
+            } else {
+                $aiTemplateDir = $this->projectRoot . "/public/Nv_template.ai";
+    
+            }
+            copy($aiTemplateDir, $aiDirectory);
         } else {
-            $aiTemplateDir = $this->projectRoot . "//public//Nv_template.ai";
-
+            copy($epsDirectory, $aiDirectory);
         }
-        copy($aiTemplateDir, $aiDirectory);
+
 
         $lockupFileClass[4] = new LockupFiles();
         $lockupFileClass[4]->setFileName($fileName . ".ai");

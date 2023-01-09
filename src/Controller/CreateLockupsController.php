@@ -122,7 +122,7 @@ class CreateLockupsController extends BaseController
 
 
         if ($approver != -1 && $approver != "") {
-            $approverUser = $doctrine->getRepository(Users::class)->find($approver); // add check for approver if null or not
+            $approverUser = $doctrine->getRepository(Users::class)->find($approver); // TODO: add check for approver if null or not
             $lockups->setApprover($approverUser); // add verify approver script
         } elseif ($approver == -1) {
             $lockups->setApprover(null);

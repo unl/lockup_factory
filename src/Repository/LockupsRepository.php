@@ -72,7 +72,8 @@ class LockupsRepository extends ServiceEntityRepository
                 new Parameter('value', '%' . $value . '%'),
                 new Parameter('id', $id)
             ]));
-        } else {
+        }
+        else {
             $institutionQuery = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
@@ -93,22 +94,38 @@ class LockupsRepository extends ServiceEntityRepository
     public function pendingApprover(int $id = 0): array
     {
         $entityManager = $this->getEntityManager();
-        if ($id == 0 ) {
+        $today = new \DateTime();
+        $lastDate = new \DateTime();
+        $lastDate->modify('-30 day');
+        if ($id == 0) {
             $query = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
                 WHERE p.CommunicatorStatus = 0
+                AND
+                p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'
-            );
-        } else {
+            )->setParameters(new ArrayCollection([
+                new Parameter('lastDate', $lastDate),
+                new Parameter('today', $today)
+            ]));
+
+        }
+        else {
             $query = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
                 WHERE p.CommunicatorStatus = 0
                 AND
                 p.approver = :id
+                AND
+                p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'
-            )->setParameter('id', $id);
+            )->setParameters(new ArrayCollection([
+                new Parameter('lastDate', $lastDate),
+                new Parameter('today', $today),
+                new Parameter('id', $id)
+            ]));
         }
 
         // returns an array of Product objects
@@ -121,43 +138,106 @@ class LockupsRepository extends ServiceEntityRepository
     public function pendingCreative(): array
     {
         $entityManager = $this->getEntityManager();
+        $today = new \DateTime();
+        $lastDate = new \DateTime();
+        $lastDate->modify('-30 day');
         $query = $entityManager->createQuery(
             'SELECT p
             FROM App\Entity\Lockups p
             WHERE p.CreativeStatus = 0
+            AND
+            p.DateCreated between :lastDate AND :today
             ORDER BY p.DateCreated DESC'
-        );
+        )->setParameters(new ArrayCollection([
+            new Parameter('lastDate', $lastDate),
+            new Parameter('today', $today)
+        ]));
 
         // returns an array of Product objects
         return $query->getResult();
     }
 
-    // /**
-    //  * @return Lockups[] Returns an array of Lockups objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function dailyDigestApprover($approver): array
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $entityManager = $this->getEntityManager();
+        $today = new \DateTime();
+        $lastDate = new \DateTime();
+        $lastDate->modify('-24 hour');
+        $query = $entityManager->createQuery(
+            'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.CommunicatorStatus = 0
+                AND
+                p.approver = :approver
+                AND
+                p.DateCreated between :lastDate AND :today
+                ORDER BY p.DateCreated DESC'
+        )->setParameters(new ArrayCollection([
+            new Parameter('lastDate', $lastDate),
+            new Parameter('today', $today),
+            new Parameter('approver', $approver)
+        ]));
 
-    /*
-    public function findOneBySomeField($value): ?Lockups
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+
+        // returns an array of Product objects
+        return $query->getResult();
     }
-    */
+
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function dailyDigestCreative(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $today = new \DateTime();
+        $lastDate = new \DateTime();
+        $lastDate->modify('-24 hour');
+        $query = $entityManager->createQuery(
+            'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE p.CreativeStatus = 0
+                AND
+                p.DateCreated between :lastDate AND :today
+                ORDER BY p.DateCreated DESC'
+        )->setParameters(new ArrayCollection([
+            new Parameter('lastDate', $lastDate),
+            new Parameter('today', $today)
+        ]));
+
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+// /**
+//  * @return Lockups[] Returns an array of Lockups objects
+//  */
+/*
+ public function findByExampleField($value)
+ {
+ return $this->createQueryBuilder('l')
+ ->andWhere('l.exampleField = :val')
+ ->setParameter('val', $value)
+ ->orderBy('l.id', 'ASC')
+ ->setMaxResults(10)
+ ->getQuery()
+ ->getResult()
+ ;
+ }
+ */
+
+/*
+ public function findOneBySomeField($value): ?Lockups
+ {
+ return $this->createQueryBuilder('l')
+ ->andWhere('l.exampleField = :val')
+ ->setParameter('val', $value)
+ ->getQuery()
+ ->getOneOrNullResult()
+ ;
+ }
+ */
 }

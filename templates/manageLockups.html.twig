@@ -24,7 +24,7 @@
 		{% if pendingCreative[0] is defined %}
 
 			{% if auth.isCreative or auth.isAdmin %}
-				<h4>Lockups needing UComm approval.
+				<h4>Recent lockups needing UComm approval.
 				</h4>
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>
@@ -33,8 +33,8 @@
 							<th scope="col" style="width: 25%;">Preview</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
-							<th scope="col" style="width: 25%;">Status</th>
-							<th scope="col" style="width: 10%;">Actions</th>
+							<th scope="col" style="width: 20%;">Status</th>
+							<th scope="col" style="width: 15%;">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -73,6 +73,13 @@
 										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
 											View
 										</a>
+										{% if auth.isAdmin %}
+											<form action="/lockups/manage/" method="POST" style="display: inline;">
+												<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
+												<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
+												<input type="hidden" name="id" value="{{item.getId}}">
+											</form>
+										{% endif %}
 									</td>
 								</tr>
 							{% endif %}
@@ -82,8 +89,8 @@
 			{% endif %}
 		{% endif %}
 		{% if pendingApprover[0] is defined %}
-			{% if auth.isApprover or auth.isAdmin %}
-				<h4 class="dcf-mt-6">Lockups needing communicator approval.
+			{% if auth.isApprover or auth.isAdmin or auth.isCreative %}
+				<h4 class="dcf-mt-6">Recent lockups needing communicator approval.
 				</h4>
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>
@@ -92,8 +99,8 @@
 							<th scope="col" style="width: 25%;">Preview</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
-							<th scope="col" style="width: 25%;">Status</th>
-							<th scope="col" style="width: 10%;">Actions</th>
+							<th scope="col" style="width: 20%;">Status</th>
+							<th scope="col" style="width: 15%;">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -132,6 +139,13 @@
 										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
 											View
 										</a>
+										{% if auth.isAdmin %}
+											<form action="/lockups/manage/" method="POST" style="display: inline;">
+												<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
+												<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
+												<input type="hidden" name="id" value="{{item.getId}}">
+											</form>
+										{% endif %}
 									</td>
 								</tr>
 							{% endif %}
@@ -189,7 +203,7 @@
 								View
 							</a>
 							<form action="/lockups/manage/" method="POST" style="display: inline;">
-							    <input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
+								<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
 								<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
 								<input type="hidden" name="id" value="{{item.getId}}">
 							</form>
@@ -219,10 +233,10 @@ window.addEventListener('inlineJSReady', function () {
 WDN.initializePlugin('pagination');
 }, false);
 	</script>
-		<style>
-	.table-preview .preview {
-		padding: 2px;
-		background-color: #fff;
-	}
+	<style>
+		.table-preview .preview {
+			padding: 2px;
+			background-color: #fff;
+		}
 	</style>
 {% endblock %}

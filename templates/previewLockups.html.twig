@@ -54,10 +54,12 @@
 		</div>
 
 		<div>
-			{% if user.getUser == Lockup.getUser %}
+			{% if user.getUser == Lockup.getUser and user.isAdmin != true %}
 				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
 					<h4>User Actions</h4>
+					{% if Lockup.getIsGenerated == 0 %}
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+					{% endif %}
 					{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
 						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
 					{% endif %}
@@ -73,7 +75,7 @@
 				</div>
 			{% endif %}
 
-			{% if user.getUser != Lockup.getUser and user.isAdmin %}
+			{% if user.isAdmin %}
 				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
 					<h4>Admin Actions</h4>
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
@@ -92,7 +94,7 @@
 				</div>
 			{% endif %}
 
-			{% if (user.isApprover and (user.getUser == Lockup.getApprover)) or user.isAdmin %}
+			{% if (user.isApprover and (user.getUser == Lockup.getApprover)) or user.isAdmin or user.isCreative %}
 				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
 					<h4>Communicator Actions</h4>
 					{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}

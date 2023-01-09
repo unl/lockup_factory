@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Lockups;
 use App\Entity\Users;
-use App\Entity\LockupsFields;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LockupsRepository;
 use App\Repository\LockupsFieldsRepository;

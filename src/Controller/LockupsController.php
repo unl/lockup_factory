@@ -16,6 +16,7 @@ use WDN\Bundle\FrameworkBundle\Controller\BaseController;
 use App\Service\Auth;
 use App\Service\LockupsGenerator;
 use App\Service\Core;
+use App\Service\Mailer;
 
 
 class LockupsController extends BaseController
@@ -32,9 +33,10 @@ class LockupsController extends BaseController
         $pendingApprover = array();
         // $page = ((int)$request->query->get('page')) ? (int)$request->query->get('page') : 1;
 
-        if ($auth->isAdmin()) {
+        if ($auth->isAdmin() || $auth->isCreative()) {
             $pendingApprover = $core->getPendingApproverLockups();
-        } else if ($auth->isApprover()) {
+        }
+        else if ($auth->isApprover()) {
             $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
         }
 
@@ -47,13 +49,14 @@ class LockupsController extends BaseController
             $searchLockupResult = $core->search($search, true);
             if ($auth->isAdmin()) {
                 $pendingApprover = $core->getPendingApproverLockups();
-            } else if ($auth->isApprover()) {
+            }
+            else if ($auth->isApprover()) {
                 $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
             }
-            
-    
+
+
             if ($auth->isCreative() || $auth->isAdmin()) {
-            $pendingCreative = $core->getPendingCreativeLockups();
+                $pendingCreative = $core->getPendingCreativeLockups();
             }
             $pendingCreative = $core->searchWrapper($pendingCreative, $search);
             $pendingApprover = $core->searchWrapper($pendingApprover, $search);
@@ -64,7 +67,7 @@ class LockupsController extends BaseController
                 'auth' => $auth,
                 'search' => $search,
                 'alert' => $alert,
-                'pendingApprover'  => $pendingApprover,
+                'pendingApprover' => $pendingApprover,
                 'pendingCreative' => $pendingCreative
             ]);
         }
@@ -80,7 +83,7 @@ class LockupsController extends BaseController
             'lockups_array' => $product,
             'auth' => $auth,
             'search' => $search,
-            'pendingApprover'  => $pendingApprover,
+            'pendingApprover' => $pendingApprover,
             'pendingCreative' => $pendingCreative
         ]);
     }
@@ -140,7 +143,8 @@ class LockupsController extends BaseController
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
             return $response;
-        } else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
+        }
+        else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
             return $this->redirectToRoute('downloadLockups', [
                 'id' => $id
             ], 302);
@@ -149,7 +153,8 @@ class LockupsController extends BaseController
         if ($action == "new-lockup") {
             $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully created the lockup";
-        } elseif ($action == "edit-lockup") {
+        }
+        elseif ($action == "edit-lockup") {
             $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.";
         }
@@ -168,7 +173,7 @@ class LockupsController extends BaseController
     /**
      * @Route("/lockups/preview/{id}", name="lockupsActions", methods={"POST"})
      */
-    public function lockupsActions(int $id, ManagerRegistry $doctrine, Request $request, Auth $auth): Response
+    public function lockupsActions(int $id, ManagerRegistry $doctrine, Request $request, Auth $auth, Mailer $mailer): Response
     {
         $auth->requireAuth();
         $alert = array();
@@ -197,7 +202,8 @@ class LockupsController extends BaseController
                 'errorTitle' => "Access denied!",
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
-        };
+        }
+        ;
 
         if ($lockups == null) {
             $response = $this->forward('App\Controller\AlertsController::errorPage', [
@@ -218,7 +224,8 @@ class LockupsController extends BaseController
                 'alert' => $alert
             ]);
             return $response;
-        } else if ($publish == "0") {
+        }
+        else if ($publish == "0") {
             $lockups->setPublic(0);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($lockups);
@@ -265,17 +272,23 @@ class LockupsController extends BaseController
                 }
                 break;
             case "approver":
-                if (($auth->isApprover() && $lockups->getApprover() == $auth->getUser()) or $auth->isAdmin()) {
+                if (($auth->isApprover() && $lockups->getApprover() == $auth->getUser()) or $auth->isAdmin() or $auth->isCreative()) {
                     switch ($action) {
                         case "approve":
                             $msg = "LOCKUP APPROVED";
                             $lockups->setCommunicatorStatus(1);
+                            if ($auth->isCreative() or $auth->isAdmin()) {
+                                $lockups->setApprover(null);
+                            }
                             $alert['title'] = "Success!";
                             $alert['msg'] = "Lockup has been approved. Owner of the lockups has been notified.";
                             break;
                         case "deny":
                             $msg = "LOCKUP DENIED";
                             $lockups->setCommunicatorStatus(2);
+                            if ($auth->isCreative() or $auth->isAdmin()) {
+                                $lockups->setApprover(null);
+                            }
                             $alert['title'] = "Success!";
                             $alert['msg'] = "Lockup has been denied. Owner of the lockups has been notified.";
                             break;
@@ -291,9 +304,25 @@ class LockupsController extends BaseController
         }
 
         $entityManager = $doctrine->getManager();
+        $lockups->setDateCreated(new \DateTime());
         $entityManager->persist($lockups);
         $entityManager->persist($feedback);
         $entityManager->flush();
+
+
+        if ($lockups->getCreativeStatus() == 1 and $lockups->getCommunicatorStatus() == 1) {
+            $body = '
+            Your lockup, ' . $lockups->getName() . ', has been approved and is ready to generate.
+            <br><br>
+            Please visit <a href="http://lockups.unl.edu/lockups/preview/' . $lockups->getId() . '">http://lockups.unl.edu/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
+            <br><br>
+            If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
+            <br><br>
+            UNL Lockup Factory';
+
+            $mailer->sendMail($lockups->getUser()->getEmail(), "Lockup Approved", $body);
+        }
+
 
         $response = $this->forward('App\Controller\LockupsController::previewLockups', [
             'id' => $id,
@@ -389,12 +418,12 @@ class LockupsController extends BaseController
                 $lockupsGenerator->createPreview($item);
             }
         }
-        
-            $response = $this->forward('App\Controller\AlertsController::errorPage', [
-                'errorTitle' => "DONE found!",
-                'errorBody' => "The requested lockup could be found."
-            ]);
-            return $response;
+
+        $response = $this->forward('App\Controller\AlertsController::errorPage', [
+            'errorTitle' => "DONE found!",
+            'errorBody' => "The requested lockup could be found."
+        ]);
+        return $response;
 
     }
 }

@@ -110,18 +110,18 @@ class LockupsConverter
         switch ($color) {
             case "RGB":
                 $pathName = $pathName . "RGB_HEX/";
-                $fileName = $fileName . "_RGB";
+                $fileName = $fileName . "RGB";
                 break;
             case "pms186cp":
                 $pathName = $pathName  . "PMS186cp/";
-                $fileName = $fileName . "_pms186cp";
+                $fileName = $fileName . "pms186cp";
                 break;
             case "4c":
                 $pathName = $pathName . "4c_CMYK/";
-                $fileName = $fileName . "_4c";
+                $fileName = $fileName . "4c";
                 break;
             case "blk":
-                $fileName = $fileName . "_blk";
+                $fileName = $fileName . "blk";
                 if ($rev) {
                     $pathName = $pathName . "Rev/";
                 } else {
@@ -245,17 +245,17 @@ class LockupsConverter
         $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
         #for .ai
-        if ($color = "pms186cp") {
-            if ($orient == "h") {
-                $aiTemplateDir = $this->projectRoot . "/public/Nh_template.ai";
-            } else {
-                $aiTemplateDir = $this->projectRoot . "/public/Nv_template.ai";
+        // if ($color = "pms186cp") {
+        //     if ($orient == "h") {
+        //         $aiTemplateDir = $this->projectRoot . "/public/Nh_template.ai";
+        //     } else {
+        //         $aiTemplateDir = $this->projectRoot . "/public/Nv_template.ai";
     
-            }
-            copy($aiTemplateDir, $aiDirectory);
-        } else {
-            copy($epsDirectory, $aiDirectory);
-        }
+        //     }
+        //     copy($aiTemplateDir, $aiDirectory);
+        // } else {
+        copy($epsDirectory, $aiDirectory);
+        // }
 
 
         $lockupFileClass[4] = new LockupFiles();

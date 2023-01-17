@@ -31,27 +31,31 @@
 			</div>
 		</div>
 
-		{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
-			<div class="dcf-txt-center dcf-mb-4">
-				<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
-			</div>
-		{% endif %}
 
 		<div class="dcf-txt-center">
 			<div class="loader dcf-mr-auto dcf-ml-auto dcf-mt-8 dcf-mb-9 " id="generatingLoader" style="display: none;">Loading...</div>
 			{% if lockupsApproved %}
 				{% if Lockup.getIsGenerated == 0 %}
 					{# <a href="/lockups/generate/{{ Lockup.getId }}" class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</a> #}
-					<button class="dcf-btn dcf-btn-primary" id="generateBtn">Generate Files</button>
+					<button class="dcf-btn dcf-btn-primary dcf-mb-3" id="generateBtn">Generate Files</button>
+					{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
+						<div class="dcf-txt-center dcf-mb-4">
+							<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
+						</div>
+					{% endif %}
 					<button class="dcf-btn dcf-btn-primary" disabled="" id="generatingBtn" style="display: none;">Generating Lockups...</button>
 					<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary" id="generatedBtn" style="display: none;">Download All (.zip)</a>
 
 				{% elseif Lockup.getIsGenerated == 1 %}
 					{% if (Lockup.getUser == auth.getUser) or auth.isAdmin == true or Lockup.getPublic == 1 %}
-						<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-6" id="generatedBtn">Download All (.zip)</a>
-
+						<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-3" id="generatedBtn">Download All (.zip)</a>
+						{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
+							<div class="dcf-txt-center dcf-mb-4">
+								<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
+							</div>
+						{% endif %}
 						<div class="dcf-bleed dcf-wrapper dcf-mt-6 dcf-mb-6">
-							<table class="dcf-table dcf-table-bordered dcf-w-max-xl dcf-mr-auto dcf-ml-auto text-left">
+							<table class="dcf-table dcf-table-bordered dcf-w-max-xl dcf-mr-auto dcf-ml-auto dcf-txt-left">
 								<thead>
 									<tr>
 										<th>
@@ -184,7 +188,7 @@ generatingLoader.style.display = "none";
 location.reload();
 });
 
-xhr.open("GET", "/lockups/generate/  {{ Lockup.getId }}");
+xhr.open("GET", "/lockups/generate/    {{ Lockup.getId }}");
 xhr.send();
 return xhr;
 }

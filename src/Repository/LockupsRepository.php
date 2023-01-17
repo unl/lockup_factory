@@ -212,6 +212,34 @@ class LockupsRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function dailyDigestPendingLockups(): array
+    {
+        // get lockups older than 30 days that have not been approved yet
+        $entityManager = $this->getEntityManager();
+        $lastDate = new \DateTime();
+        $lastDate->modify('-24 hour');
+        $query = $entityManager->createQuery(
+            'SELECT p
+                FROM App\Entity\Lockups p
+                WHERE
+                p.DateCreated < :lastDate
+                AND
+                p.CommunicatorStatus = 0
+                OR
+                p.CreativeStatus = 0
+                ORDER BY p.DateCreated DESC'
+        )->setParameters(new ArrayCollection([
+            new Parameter('lastDate', $lastDate)
+        ]));
+
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
 // /**
 //  * @return Lockups[] Returns an array of Lockups objects
 //  */

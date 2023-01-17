@@ -66,9 +66,24 @@
   min-height: 100%;
 }
 
-.table-preview .preview {
-    max-height: 70px;
+/* Center the lockups in the table cell*/
+.table-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+/* Consistent sizing for vertical and horizontal */
+.table-preview .preview {
+  max-height: 9em;
+  max-width: 100%; /* Or like 18em */
+  width: auto;
+  height: auto;
+}
+
+/* .table-preview .preview {
+    max-height: 70px;
+} */
 
 .lockups-preview {
     background-color: #fff;
@@ -131,4 +146,9 @@
   40% {
     box-shadow: 0 2.5em 0 0;
   }
+}
+
+
+.svg-black {
+  filter: brightness(0) saturate(100%) invert(0%) sepia(2%) saturate(9%) hue-rotate(351deg) brightness(104%) contrast(103%);
 }

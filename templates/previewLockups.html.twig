@@ -57,19 +57,21 @@
 			{% if user.getUser == Lockup.getUser and user.isAdmin != true %}
 				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
 					<h4>User Actions</h4>
-					{% if Lockup.getIsGenerated == 0 %}
+					{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
 					{% endif %}
 					{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
 						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
 					{% endif %}
-					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
+					<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
+					<div class="dcf-form-group">
 						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
 							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
-							<label for="publishLockup">Publish lockup?</label>
+							<label for="publishLockup">Publish lockup after approval?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
+					</div>
 					</form>
 					{# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
 				</div>
@@ -78,14 +80,18 @@
 			{% if user.isAdmin %}
 				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
 					<h4>Admin Actions</h4>
+					{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
 					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
-					<form class="dcf-d-inline-block dcf-ml-4" id="publishLockupForm" method="POST">
+					{% endif %}
+					<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
+					<div class="dcf-form-group">
 					    <input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
 							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
-							<label for="publishLockup">Publish lockup?</label>
+							<label for="publishLockup">Publish lockup after approval?</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
+						</div>
 					</form>
 					{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
 						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
@@ -184,9 +190,8 @@
 				</div>
 			{% endif %}
 
-			<h4>Feedbacks</h4>
 			<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-				<h5>Communicator</h5>
+				<h5>Communicator Feedback</h5>
 				{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}
 					<div class="dcf-mb-4 dcf-rounded">
 						{{ Lockup.getApprover.getName | default('Communicator not specified') }}
@@ -239,7 +244,7 @@
 
 			{# ucomm block #}
 			<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-				<h5>Creative</h5>
+				<h5>Creative Feedback</h5>
 				{% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
 					<div class="dcf-mb-4">
 						UComm:

@@ -24,17 +24,17 @@
 		{% if pendingCreative[0] is defined %}
 
 			{% if auth.isCreative or auth.isAdmin %}
-				<h4>Recent lockups needing UComm approval.
-				</h4>
+				<h4>Recent Lockups Needing UComm Approval</h4>
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>
 						<tr>
 							<th scope="col" style="width: 15%;">Title</th>
-							<th scope="col" style="width: 25%;">Preview</th>
+							<th scope="col" style="width: 20%;">Preview</th>
+							<th scope="col" style="width: 12%;">Template</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
 							<th scope="col" style="width: 20%;">Status</th>
-							<th scope="col" style="width: 15%;">Actions</th>
+							<th scope="col" style="width: 13%;">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -46,7 +46,10 @@
 										{{item.getName}}
 									</td>
 									<td data-label="Preview">
-										<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="Template">
+										{{ item.getTemplate.getName }}
 									</td>
 									<td data-label="User">
 										{{ item.getUser.getUsername }}
@@ -74,7 +77,7 @@
 											View
 										</a>
 										{% if auth.isAdmin %}
-											<form action="/lockups/manage/" method="POST" style="display: inline;">
+											<form class="dcf-form" action="/lockups/manage/" method="POST" style="display: inline;">
 												<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
 												<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
 												<input type="hidden" name="id" value="{{item.getId}}">
@@ -90,17 +93,17 @@
 		{% endif %}
 		{% if pendingApprover[0] is defined %}
 			{% if auth.isApprover or auth.isAdmin or auth.isCreative %}
-				<h4 class="dcf-mt-6">Recent lockups needing communicator approval.
-				</h4>
+				<h4 class="dcf-mt-6">Recent Lockups Needing Communicator Approval</h4>
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>
 						<tr>
 							<th scope="col" style="width: 15%;">Title</th>
-							<th scope="col" style="width: 25%;">Preview</th>
+							<th scope="col" style="width: 20%;">Preview</th>
+							<th scope="col" style="width: 12%;">Template</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
 							<th scope="col" style="width: 20%;">Status</th>
-							<th scope="col" style="width: 15%;">Actions</th>
+							<th scope="col" style="width: 13%;">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -112,7 +115,10 @@
 										{{item.getName}}
 									</td>
 									<td data-label="Preview">
-										<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="Template">
+										{{ item.getTemplate.getName }}
 									</td>
 									<td data-label="User">
 										{{ item.getUser.getUsername }}
@@ -140,7 +146,7 @@
 											View
 										</a>
 										{% if auth.isAdmin %}
-											<form action="/lockups/manage/" method="POST" style="display: inline;">
+											<form class="dcf-form" action="/lockups/manage/" method="POST" style="display: inline;">
 												<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
 												<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
 												<input type="hidden" name="id" value="{{item.getId}}">
@@ -159,11 +165,12 @@
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
-					<th scope="col" style="width: 20%;">Title</th>
-					<th scope="col" style="width: 25%;">Preview</th>
-					<th scope="col" style="width: 20%;">Approver</th>
+					<th scope="col" style="width: 15%;">Title</th>
+					<th scope="col" style="width: 20%;">Preview</th>
+					<th scope="col" style="width: 17%;">Template</th>
+					<th scope="col" style="width: 15%;">Approver</th>
 					<th scope="col" style="width: 20%;">Status</th>
-					<th scope="col" style="width: 15%;">Actions</th>
+					<th scope="col" style="width: 13%;">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -174,7 +181,10 @@
 							{{item.getName}}
 						</td>
 						<td data-label="Preview">
-							<div class="table-preview">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+							<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+						</td>
+						<td data-label="Template">
+							{{ item.getTemplate.getName }}
 						</td>
 						<td data-label="Approver">
 							{% if item.getApprover != null%}
@@ -202,7 +212,7 @@
 							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
 								View
 							</a>
-							<form action="/lockups/manage/" method="POST" style="display: inline;">
+							<form class="dcf-form" action="/lockups/manage/" method="POST" style="display: inline;">
 								<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
 								<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
 								<input type="hidden" name="id" value="{{item.getId}}">

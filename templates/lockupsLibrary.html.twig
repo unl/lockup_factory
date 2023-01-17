@@ -17,141 +17,148 @@
 
 		<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-grid-thirds@lg dcf-mb-6 dcf-row-gap-1 dcf-col-gap-vw">
 
-		<div>
-		<fieldset>
-		<legend class="dcf-legend">Filter by Organization</legend>
-		<form id="orgForm" method="POST">
-		<label class="dcf-txt-sm" for="approver">Select organization name</label>
-		
-		<select id="organization" name="approver"
-			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-            <option value="0" selected>Select approving organization</option>
-			{% for key, value in allLockups%}
-				<option value="{{ key }}">{{ key }}</option>
-			{% endfor %}
-		</select>
-		</form>
-		</fieldset>
-		</div>
+			<div>
+				<form class="dcf-form" id="orgForm" method="POST">
+					<fieldset>
+						<legend class="dcf-legend">Filter By Organization</legend>
+						<div class="dcf-form-group">
+							<label class="dcf-txt-sm" for="approver">Select organization name</label>
+							<select id="organization" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+								<option value="0" selected>Select approving organization</option>
+								{% for key, value in allLockups%}
+									<option value="{{ key }}">{{ key }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</fieldset>
+				</form>
+			</div>
 
-		{% if auth.isAdmin %}
+			{% if auth.isAdmin %}
 
-		<div>
-		<fieldset>
-		<legend class="dcf-legend">Filter by user</legend>
-		
+				<div>
 					<form class="dcf-form" method="POST">
-				<label for="search-term">Enter username</label>
-				<div class="dcf-input-group">
-					<input value="" type="text" name="user_id" id="userIdField">
-					<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
-					{% if user_id != "" %}
-						<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
-					{% endif %}
+						<fieldset>
+							<legend class="dcf-legend">Filter By User</legend>
+							<div class="dcf-form-group">
+								<label for="search-term">Enter username</label>
+								<div class="dcf-input-group">
+									<input value="" type="text" name="user_id" id="userIdField">
+									<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+									{% if user_id != "" %}
+										<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+									{% endif %}
+								</div>
+							</div>
+						</fieldset>
+					</form>
 				</div>
-			</form>
-		</fieldset>
-		</div>
 
-		{# <div>
-		<fieldset>
-		<legend class="dcf-legend">More filters</legend>
-		<label class="dcf-txt-sm" for="approver">Select organization name</label>
-		<select def id="approver" name="approver"
-			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-		{% for key, value in allLockups %}
-			<option value="0">{{ key }}</option>
-		
-		{% endfor %}
-		</select>
-		</fieldset>
-		</div> #}
+				{# <div>
+										<fieldset>
+										<legend class="dcf-legend">More filters</legend>
+										<label class="dcf-txt-sm" for="approver">Select organization name</label>
+										<select def id="approver" name="approver"
+											class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+										{% for key, value in allLockups %}
+											<option value="0">{{ key }}</option>
+										
+										{% endfor %}
+										</select>
+										</fieldset>
+										</div> #}
 
-		{% endif %}
+			{% endif %}
 
 		</div>
 
 		{% if user_id != "" %}
-		<h3>Lockups for user {{ user_id }}</h3>
+			<h3>Lockups for user
+				{{ user_id }}</h3>
 		{% endif %}
 
 		{% for key, value in lockups_array%}
-		{% if auth.isAdmin %}
-		<h4>All lockups for {{ key }}</h4>
-		{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
-		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-			<thead>
-				<tr>
-					<th style="width: 30%;" scope="col">Title</th>
-					<th style="width: 25%;" scope="col">Status</th>
-					<th style="width: 15%;" scope="col">Public</th>
-					<th style="width: 30%;" scope="col">Preview</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in value %}
-					<tr>
-						<td data-label="Title">
-						<a href="/lockups/download/{{item.getId}}">
-							{{item.getName}}
-							{{item.getInstitution}}
-							</a>
-						</td>
-						<td data-label="Approved">
-							{{(item.getCommunicatorStatus == 0) ? "<p>Communicator: <strong>Awaiting Approval</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 1) ? "<p>Communicator: <strong>Approved</strong><br></p>" | raw}}
-							{{(item.getCommunicatorStatus == 2) ? "<p>Communicator: <strong>Rejected</strong><br></p>" | raw}}
+			{% if auth.isAdmin %}
+				<h4>All lockups for
+					{{ key }}</h4>
+				{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
+				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+					<thead>
+						<tr>
+							<th style="width: 30%;" scope="col">Title</th>
+							<th style="width: 25%;" scope="col">Status</th>
+							<th style="width: 15%;" scope="col">Publish lockup after approval</th>
+							<th style="width: 30%;" scope="col">Preview</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in value %}
+							<tr>
+								<td data-label="Title">
+									<a href="/lockups/download/{{item.getId}}">
+										{{item.getName}}
+										{{item.getInstitution}}
+									</a>
+								</td>
+								<td data-label="Approved">
+									{% if (item.getApprover == null) %}
+										<p>Communicator:
+											<strong>Not specified</strong><br></p>
+									{% else %}
+										{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
+										{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
+										{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected</strong><br></p>") | raw}}
+									{% endif %}
 
-							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-							{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
-							{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
-						</td>
-						<td data-label="Public">
-							{{ (item.getPublic == 1) ? "Published" : "Not published" }}
-						</td>
-						<td data-label="Preview">
-							<a href="/lockups/download/{{item.getId}}">
-								<div class="table-preview" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-							</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		{% else %}
-		<h4>Lockups approved for {{ key }}</h4>
-		
-		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-			<thead>
-				<tr>
-					<th style="width: 60%;" scope="col">Title</th>
-					<th style="width: 40%;" scope="col">Preview</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in value%}
-					<tr>
-						<td data-label="Title">
-						<a href="/lockups/download/{{item.getId}}">
-							{{item.getName}}
-							{{item.getInstitution}}
-						</a>
-						</td>
-						<td data-label="Preview">
-							<a href="/lockups/download/{{item.getId}}">
-								<div class="table-preview">
-								{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
-								</div>
-							</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		{% endif %}
+									{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+									{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+									{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
+								</td>
+								<td data-label="Publish lockup after approval">
+									{{ (item.getPublic == 1) ? "Yes" : "No" }}
+								</td>
+								<td data-label="Preview">
+									<a href="/lockups/download/{{item.getId}}">
+										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-2" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<h4>Lockups approved for
+					{{ key }}</h4>
+
+				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+					<thead>
+						<tr>
+							<th style="width: 60%;" scope="col">Title</th>
+							<th style="width: 40%;" scope="col">Preview</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in value%}
+							<tr>
+								<td data-label="Title">
+									<a href="/lockups/download/{{item.getId}}">
+										{{item.getName}}
+										{{item.getInstitution}}
+									</a>
+								</td>
+								<td data-label="Preview">
+									<a href="/lockups/download/{{item.getId}}">
+										<div class="table-preview">
+											{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
+										</div>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
 		{% endfor %}
-		
-
 
 
 		{# Pagination Script #}
@@ -257,7 +264,7 @@ searchTermField.value = searchTerm;
 }
 	</script>
 
-		<script>
+	<script>
 		// user search script
 let userId = "{{ user_id }}";
 let userIdField = document.getElementById("userIdField");
@@ -267,30 +274,30 @@ userIdField.value = userId;
 	</script>
 
 	<script>
-	// filter by organization script
-	const org_list = document.getElementById("organization");
-	const orgForm = document.getElementById("orgForm");
-    org_list.addEventListener("change", sendOrganizationInput);
-	let approverOrg = "{{ approver | default("")}}";
+		// filter by organization script
+const org_list = document.getElementById("organization");
+const orgForm = document.getElementById("orgForm");
+org_list.addEventListener("change", sendOrganizationInput);
+let approverOrg = "{{ approver | default("") }}";
 
-	function sendOrganizationInput() {
-		orgForm.submit();
-	}
-	if (approverOrg != "") {
-		org_list.value = approverOrg;
-	}
+function sendOrganizationInput() {
+orgForm.submit();
+}
+if (approverOrg != "") {
+org_list.value = approverOrg;
+}
 	</script>
 
 	<script>
 		// pagination javascript
-		window.addEventListener('inlineJSReady', function () {
-		WDN.initializePlugin('pagination');
-		}, false);
+window.addEventListener('inlineJSReady', function () {
+WDN.initializePlugin('pagination');
+}, false);
 	</script>
 	<style>
-	.table-preview .preview {
-		padding: 2px;
-		background-color: #fff;
-	}
+		.table-preview .preview {
+			padding: 2px;
+			background-color: #fff;
+		}
 	</style>
 {% endblock %}

@@ -296,4 +296,11 @@ class Core
         }
         return $this->lockupsLibraryManager($filteredLockups, 1, 999999);
     }
+
+    public function previouslyApproved()
+    {
+        $user = $this->auth->getUser();
+        $previouslyApprovedLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['approver' => $user->getId()], ['DateCreated' => 'DESC']);
+        return $previouslyApprovedLockups;
+    }
 }

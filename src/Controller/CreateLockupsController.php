@@ -46,7 +46,8 @@ class CreateLockupsController extends BaseController
 
         if ($lockups != null && count($lockupFields) == 0) {
             $lockupFields = null;
-        } elseif ($lockups != null && count($lockupFields) > 0) {
+        }
+        elseif ($lockups != null && count($lockupFields) > 0) {
             $lockupFields = $serializer->serialize($lockupFields, 'json', [AbstractNormalizer::ATTRIBUTES => ['fields' => ["slug"], 'value']]);
         }
 
@@ -115,8 +116,9 @@ class CreateLockupsController extends BaseController
             foreach ($lockups->getLockupFiles() as $existingLockupFields) {
                 $lockups->removeLockupFile($existingLockupFields);
             }
-        } else {
-            $lockups =  new Lockups;
+        }
+        else {
+            $lockups = new Lockups;
             $lockups->setUser($auth->getUser());
         }
 
@@ -124,7 +126,8 @@ class CreateLockupsController extends BaseController
         if ($approver != -1 && $approver != "") {
             $approverUser = $doctrine->getRepository(Users::class)->find($approver); // TODO: add check for approver if null or not
             $lockups->setApprover($approverUser); // add verify approver script
-        } elseif ($approver == -1) {
+        }
+        elseif ($approver == -1) {
             $lockups->setApprover(null);
         }
 
@@ -141,20 +144,34 @@ class CreateLockupsController extends BaseController
         $errors = $validator->validate($lockups);
         // $entityManager->persist($lockups);
 
+
+
+        // check if subject is all caps
+        $subjectAllCaps = false;
+
+
         $tempLockupFields = array();
         $emptyLockupFields = false;
         foreach ($lockupTemplates->getTemplateFields() as $templateFields) {
             $lockupTemplateFieldSlug = $templateFields->getLockupFields()->getSlug();
             if ($request->request->get($lockupTemplateFieldSlug) != "") {
+                if ($lockupTemplateFieldSlug == "subject_first_line" or $lockupTemplateFieldSlug == "subject_second_line") {
+                    $getSubjectText = $request->request->get($lockupTemplateFieldSlug);
+                    trim($getSubjectText);
+                    if (ctype_upper($getSubjectText) == true) {
+                        $subjectAllCaps = true;
+                    }
+                }
                 $temp = new LockupsFields;
                 $temp->setLockup($lockups);
                 $temp->setFields($templateFields->getLockupFields());
                 $temp->setValue($request->request->get($lockupTemplateFieldSlug));
                 array_push($tempLockupFields, $temp);
                 $entityManager->persist($temp);
-                // $lockups->addLockupsFields($temp);
-                // $lockups->addLockupsFields($temp);
-            } else {
+            // $lockups->addLockupsFields($temp);
+            // $lockups->addLockupsFields($temp);
+            }
+            else {
                 $emptyLockupFields = true;
             }
         }
@@ -170,6 +187,7 @@ class CreateLockupsController extends BaseController
         }
         // error checking
 
+        // general validation erros
         if (count($errors) > 0) {
             $errorMsg['title'] = "Error";
             $errorMsg['body'] = "You have an error in your submission.";
@@ -182,6 +200,7 @@ class CreateLockupsController extends BaseController
             return $response;
         }
 
+        // check instituion name
         if ($institution == "") {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please enter your Institution Name/ Acronym.";
@@ -193,6 +212,7 @@ class CreateLockupsController extends BaseController
             return $response;
         }
 
+        // check lockups name
         if ($lockupName == "") {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please enter your Lockups name.";
@@ -205,10 +225,22 @@ class CreateLockupsController extends BaseController
         }
 
 
-
-        if (($approver == "")) {
+        // check approver
+        if ($approver == "") {
             $errorMsg['title'] = "Error!";
             $errorMsg['body'] = "Please select your Communicator Contract.";
+            $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
+                'errorMsg' => $errorMsg,
+                'lockups' => $lockups,
+                'lockupFields' => $tempLockupFields
+            ]);
+            return $response;
+        }
+
+        // check is subject is all CAPS
+        if ($subjectAllCaps == true) {
+            $errorMsg['title'] = "Error!";
+            $errorMsg['body'] = "Subject line cannot have uppercase characters.";
             $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
                 'errorMsg' => $errorMsg,
                 'lockups' => $lockups,
@@ -243,7 +275,7 @@ class CreateLockupsController extends BaseController
             return $response;
         }
 
-        foreach($lockup->getLockupsFields() as $eachLockupFields) {
+        foreach ($lockup->getLockupsFields() as $eachLockupFields) {
             array_push($lockupFieldsArray, $eachLockupFields);
         }
         $response = $this->forward('App\Controller\CreateLockupsController::createLockups', [
@@ -254,12 +286,12 @@ class CreateLockupsController extends BaseController
         return $response;
     }
 
-        /**
+    /**
      * @Route("/lockups/edit/{id}", name="editedLockups", methods={"POST"})
      */
     public function editedLockups(int $id, ManagerRegistry $doctrine, Auth $auth): Response
     {
-        
+
         $auth->requireAuth();
         $response = $this->forward('App\Controller\CreateLockupsController::addLockup', [
             'id' => $id

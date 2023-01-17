@@ -45,6 +45,12 @@ class LockupsController extends BaseController
             $pendingCreative = $core->getPendingCreativeLockups();
         }
 
+        if ($auth->isApprover()) {
+            $previouslyApproved = $core->previouslyApproved();
+        } else {
+            $previouslyApproved = array();
+        }
+
         if ($search != "") {
             $searchLockupResult = $core->search($search, true);
             if ($auth->isAdmin()) {
@@ -68,7 +74,8 @@ class LockupsController extends BaseController
                 'search' => $search,
                 'alert' => $alert,
                 'pendingApprover' => $pendingApprover,
-                'pendingCreative' => $pendingCreative
+                'pendingCreative' => $pendingCreative,
+                'previouslyApproved' => $previouslyApproved
             ]);
         }
 
@@ -84,7 +91,8 @@ class LockupsController extends BaseController
             'auth' => $auth,
             'search' => $search,
             'pendingApprover' => $pendingApprover,
-            'pendingCreative' => $pendingCreative
+            'pendingCreative' => $pendingCreative,
+            'previouslyApproved' => $previouslyApproved
         ]);
     }
 
@@ -111,6 +119,13 @@ class LockupsController extends BaseController
         $entityManager = $doctrine->getManager();
 
         if ($lockups == null || ($auth->getUser() != $lockups->getUser() && !$auth->isAdmin())) {
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
+            ]);
+            return $response;
+        }
+        if (($auth->getUser() != $lockups->getUser() && !$auth->isAdmin() && $lockups->getApprover() != $auth->getUser())) {
             $response = $this->forward('App\Controller\AlertsController::errorPage', [
                 'errorTitle' => "Not found!",
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."

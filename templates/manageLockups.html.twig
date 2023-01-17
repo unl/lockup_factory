@@ -30,7 +30,7 @@
 						<tr>
 							<th scope="col" style="width: 15%;">Title</th>
 							<th scope="col" style="width: 20%;">Preview</th>
-							<th scope="col" style="width: 12%;">Template</th>
+							<th scope="col" style="width: 12%;">Category</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
 							<th scope="col" style="width: 20%;">Status</th>
@@ -48,8 +48,8 @@
 									<td data-label="Preview">
 										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
 									</td>
-									<td data-label="Template">
-										{{ item.getTemplate.getName }}
+									<td data-label="Category">
+										{{ item.getTemplate.getCategory.getName }}
 									</td>
 									<td data-label="User">
 										{{ item.getUser.getUsername }}
@@ -99,7 +99,7 @@
 						<tr>
 							<th scope="col" style="width: 15%;">Title</th>
 							<th scope="col" style="width: 20%;">Preview</th>
-							<th scope="col" style="width: 12%;">Template</th>
+							<th scope="col" style="width: 12%;">Category</th>
 							<th scope="col" style="width: 10%;">User</th>
 							<th scope="col" style="width: 10%;">Last Updated</th>
 							<th scope="col" style="width: 20%;">Status</th>
@@ -117,8 +117,8 @@
 									<td data-label="Preview">
 										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
 									</td>
-									<td data-label="Template">
-										{{ item.getTemplate.getName }}
+									<td data-label="Category">
+										{{ item.getTemplate.getCategory.getName }}
 									</td>
 									<td data-label="User">
 										{{ item.getUser.getUsername }}
@@ -161,13 +161,13 @@
 			{% endif %}
 		{% endif %}
 
-		<h4 class="dcf-mt-6">Your lockups</h4>
+		<h4 class="dcf-mt-6">Your Lockups</h4>
 		<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 			<thead>
 				<tr>
 					<th scope="col" style="width: 15%;">Title</th>
 					<th scope="col" style="width: 20%;">Preview</th>
-					<th scope="col" style="width: 17%;">Template</th>
+					<th scope="col" style="width: 17%;">Category</th>
 					<th scope="col" style="width: 15%;">Approver</th>
 					<th scope="col" style="width: 20%;">Status</th>
 					<th scope="col" style="width: 13%;">Actions</th>
@@ -183,8 +183,8 @@
 						<td data-label="Preview">
 							<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
 						</td>
-						<td data-label="Template">
-							{{ item.getTemplate.getName }}
+						<td data-label="Category">
+							{{ item.getTemplate.getCategory.getName }}
 						</td>
 						<td data-label="Approver">
 							{% if item.getApprover != null%}
@@ -222,6 +222,72 @@
 				{% endfor %}
 			</tbody>
 		</table>
+
+			{% if auth.isApprover and (previouslyApproved[0] is defined) %}
+				<h4 class="dcf-mt-6">Lockups You Have Access to</h4>
+				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+					<thead>
+						<tr>
+							<th scope="col" style="width: 15%;">Title</th>
+							<th scope="col" style="width: 20%;">Preview</th>
+							<th scope="col" style="width: 12%;">Category</th>
+							<th scope="col" style="width: 10%;">User</th>
+							<th scope="col" style="width: 10%;">Last Updated</th>
+							<th scope="col" style="width: 20%;">Status</th>
+							<th scope="col" style="width: 13%;">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in previouslyApproved %}
+								<tr>
+									<td data-label="Title">
+										{{item.getInstitution}}
+										{{item.getName}}
+									</td>
+									<td data-label="Preview">
+										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="Category">
+										{{ item.getTemplate.getCategory.getName }}
+									</td>
+									<td data-label="User">
+										{{ item.getUser.getUsername }}
+									</td>
+									<td data-label="Last Updated">
+										{{ item.getDateCreated|date('Y-m-d') }}
+									</td>
+									<td data-label="Status">
+										{% if (item.getApprover == null) %}
+											<p>Communicator:
+												<strong>Not specified</strong><br></p>
+										{% else %}
+											{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br></p>") | raw}}
+										{% endif %}
+
+										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
+
+									</td>
+									<td data-label="Actions">
+										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+											View
+										</a>
+										{% if auth.isApprover %}
+											<form class="dcf-form" action="/lockups/manage/" method="POST" style="display: inline;">
+												<input type="hidden" name="token" value="{{ csrf_token('delete-lockups') }}"/>
+												<button type="submit" class="dcf-btn dcf-btn-primary">Delete</button>
+												<input type="hidden" name="id" value="{{item.getId}}">
+											</form>
+										{% endif %}
+									</td>
+								</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
 	</div>
 
 	<script>

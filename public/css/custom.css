@@ -19,9 +19,26 @@
     /* cursor: pointer; */
 }
 
+.lockup-templates-event-listener{
+  cursor: pointer;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 50;
+}
+
+.lockup-templates-event-listener:hover {
+  transition: .5s;
+}
+
 .img-thumb-active {
     background-color: rgba(0, 0, 0, .07);
     z-index: 100;
+}
+
+.unl-bg-lighter-gray-custom {
+  background-color: var(--btn-inverse-secondary)!important;
 }
 
 .svgTabs {

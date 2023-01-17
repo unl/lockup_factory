@@ -29,9 +29,9 @@
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates %}
 										{% if lockupTemplates.getStyle == "h" %}
-											<div class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}}" style="display: none;" value="{{categories.getSlug}}">
-												<img style="width: 400px; height: auto; background-color: #fff; padding: 1px;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
-												<div id="{{lockupTemplates.getId}}" class="dcf-absolute img-thumb {{ (lockupTemplates.getId == 1) ? " img-thumb-active"}}"></div>
+											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded" style="display: none;" value="{{categories.getSlug}}">
+												<img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
+												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
 											</div>
 										{% endif %}
 									{% endfor %}
@@ -43,9 +43,9 @@
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates %}
 										{% if lockupTemplates.getStyle == "v" %}
-											<div class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}}" style="display: none;" value="{{categories.getSlug}}">
+											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded" style="display: none;" value="{{categories.getSlug}}">
 												<img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
-												<div id="{{lockupTemplates.getId}}" class="dcf-absolute img-thumb"></div>
+												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
 											</div>
 										{% endif %}
 									{% endfor %}
@@ -115,9 +115,12 @@
 								<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class" style="display: {{(item.getId == 1) ? " block" : " none" }};">
 									<label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
 									<input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}" {{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}} placeholder="{{item.getPlaceholder}}">
-									<p style="font-size: .8em;font-style: italic;" class="dcf-mt-2">{{user.isAdmin ? "Unlimited" :
+									{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%} 
+									<span style="font-size: .8em;font-style: italic;">Please do not use all caps.</span>
+									{% endif %}
+									<span style="font-size: .8em;font-style: italic;" class="dcf-mt-2">{{user.isAdmin ? "Unlimited" :
 							"Maximum " ~ item.getLength }}
-										characters.</p>
+										characters.</span>
 								</div>
 							{% endfor %}
 						</div>
@@ -140,7 +143,7 @@
 							</div>
 							<hr>
 							<div class="dcf-form-group">
-								<div style="display:none;" id="commNotListed" class="unl-bg-lightest-gray dcf-p-2 dcf-mb-2 dcf-rounded">
+								<div style="display:none;" id="commNotListed" class="unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
 									<p class="dcf-mb-0">
 										<strong>Are you sure your communicator is not listed?</strong>
 									</p>
@@ -232,24 +235,33 @@ for (let i = 0; i < lockupTemplates.length; i++) {
 lockupTemplates[i].addEventListener("click", selectLockupTemplate);
 }
 
+document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
+
 function selectLockupTemplate(event) { // try catch because event object isn't passed when calling the function manually during edit lockups page
 try {
 elementId = event.target.id;
 } catch (error) {
 elementId = event.id;
 }
+
+let lockupTemplatesSelector = document.getElementById("lockup-templates-" + elementId);
+
+
 let selectedSvgTab = document.getElementById(elementId + "svg");
 templateFormInput.value = elementId;
 // remove the active tag from all the lockups
 for (let i = 0; i < lockupTemplates.length; i++) {
-let childElement = lockupTemplates[i].getElementsByClassName("img-thumb");
-childElement[0].classList.remove("img-thumb-active");
+try {
+lockupTemplates[i].classList.remove("unl-bg-lighter-gray-custom");
+} catch {
+
+}
 }
 // add the active tag to the selected element
 try {
-event.target.classList.add("img-thumb-active");
+lockupTemplatesSelector.classList.add("unl-bg-lighter-gray-custom");
 } catch (error) {
-event.classList.add("img-thumb-active");
+lockupTemplatesSelector.add("unl-bg-lighter-gray-custom");
 }
 // change the SVG tabs too
 // first set display: none to all SVG tabs
@@ -278,7 +290,7 @@ InputField[j].required = true;
 		</script>
 
 		<script>
-			// category selector script
+			// category dropdown selector script
 const category_list = document.getElementById("category_list");
 updateCategoryListing()
 category_list.addEventListener("change", updateCategoryListing);

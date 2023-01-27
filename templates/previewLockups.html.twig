@@ -68,7 +68,7 @@
 						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
 						<div class="dcf-input-checkbox">
 							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
-							<label for="publishLockup">Publish lockup after approval?</label>
+							<label for="publishLockup">Make public after approval.</label>
 						</div>
 						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
 					</div>

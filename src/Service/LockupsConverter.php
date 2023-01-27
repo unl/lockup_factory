@@ -31,7 +31,8 @@ class LockupsConverter
 
     }
 
-    public function setLockup(Lockups $lockups) {
+    public function setLockup(Lockups $lockups)
+    {
         $this->lockups = $lockups;
         return;
     }
@@ -39,28 +40,32 @@ class LockupsConverter
     private function createFolder(string $folderName): string
     {
         if (!file_exists($folderName)) {
-		// mkdir($folderName, 0770, true);
-		exec('mkdir ' . $folderName);
+            // mkdir($folderName, 0770, true);
+            exec('mkdir ' . $folderName);
         }
         return $folderName;
     }
 
-    public function deteleLockupsFolder() {
-        exec('rm -rf '. $this->saveFolder());
+    public function deteleLockupsFolder()
+    {
+        exec('rm -rf ' . $this->saveFolder());
     }
 
-    public function savePath() : string {
+    public function savePath(): string
+    {
         $savePath = (string)$this->lockups->getId() . "_" . $this->core->getLockupFileName($this->lockups) . "/";
         return $savePath;
     }
 
-    public function saveFolder() : string {
+    public function saveFolder(): string
+    {
         $saveFolder = $this->saveDirectory . "/" . $this->savePath();
         $this->createFolder($saveFolder);
         return $saveFolder;
     }
 
-    public function createZip(Lockups $lockup) {
+    public function createZip(Lockups $lockup)
+    {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
         $fileName = "N_" . $this->core->getLockupFileName($lockup) . "_lockups.zip";
         $zippathName = $this->saveFolder() . $fileName;
@@ -68,8 +73,7 @@ class LockupsConverter
         $zipDownloadUrl = $this->urlSuffix . $this->savePath() . $fileName;
 
         $zip = new ZipArchive;
-        if ($zip->open($zippathName, ZipArchive::CREATE) === TRUE)
-            {
+        if ($zip->open($zippathName, ZipArchive::CREATE) === TRUE) {
             // Add files to the zip file
             foreach ($lockupFiles as $item) {
                 $zip->addFile($item->getDirectory(), $item->getPathName());
@@ -98,12 +102,17 @@ class LockupsConverter
 
     public function convertAll(Lockups $lockups, string $SvgPath, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
+        // echo($color . "\n");
+        // echo($orient . "\n");
+        // echo($rev . "\n");
+
         $fileName = $this->core->getLockupFileName($lockups);
         $pathName = "";
         if ($orient == "h") {
             $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
             $fileName = "Nh_" . $fileName;
-        } else {
+        }
+        else {
             $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
             $fileName = "Nv_" . $fileName;
         }
@@ -113,7 +122,7 @@ class LockupsConverter
                 $fileName = $fileName . "RGB";
                 break;
             case "pms186cp":
-                $pathName = $pathName  . "PMS186cp/";
+                $pathName = $pathName . "PMS186cp/";
                 $fileName = $fileName . "pms186cp";
                 break;
             case "4c":
@@ -124,7 +133,8 @@ class LockupsConverter
                 $fileName = $fileName . "blk";
                 if ($rev) {
                     $pathName = $pathName . "Rev/";
-                } else {
+                }
+                else {
                     $pathName = $pathName . "Black/";
                 }
                 break;
@@ -180,39 +190,42 @@ class LockupsConverter
 
         #for png
 
-        // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -h 800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+        if ($color != "4c") {
+            // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec('inkscape -h 800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
 
-        $lockupFileClass[1] = new LockupFiles();
-        $lockupFileClass[1]->setFileName($fileName . ".png");
-        $lockupFileClass[1]->setFormat("png");
-        $lockupFileClass[1]->setLockup($lockups);
-        $lockupFileClass[1]->setOrient($orient);
-        $lockupFileClass[1]->setStyle($color);
-        $lockupFileClass[1]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[1]->setUrl($this->urlSuffix . $this->savePath() . $pngPathName);
-        $lockupFileClass[1]->setDirectory($pngDirectory);
-        $lockupFileClass[1]->setPathName($pngPathName);
-        $this->doctrine->getManager()->persist($lockupFileClass[1]);
+            $lockupFileClass[1] = new LockupFiles();
+            $lockupFileClass[1]->setFileName($fileName . ".png");
+            $lockupFileClass[1]->setFormat("png");
+            $lockupFileClass[1]->setLockup($lockups);
+            $lockupFileClass[1]->setOrient($orient);
+            $lockupFileClass[1]->setStyle($color);
+            $lockupFileClass[1]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[1]->setUrl($this->urlSuffix . $this->savePath() . $pngPathName);
+            $lockupFileClass[1]->setDirectory($pngDirectory);
+            $lockupFileClass[1]->setPathName($pngPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[1]);
 
 
-        #for jpg | convert is a imagemagick function
-        $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
-        // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
-        exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
+            #for jpg | convert is a imagemagick function
+            $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
+            // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
+            exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
 
-        $lockupFileClass[2] = new LockupFiles();
-        $lockupFileClass[2]->setFileName($fileName . ".jpg");
-        $lockupFileClass[2]->setFormat("jpg");
-        $lockupFileClass[2]->setLockup($lockups);
-        $lockupFileClass[2]->setOrient($orient);
-        $lockupFileClass[2]->setStyle($color);
-        $lockupFileClass[2]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[2]->setUrl($this->urlSuffix . $this->savePath() . $jpgPathName);
-        $lockupFileClass[2]->setDirectory($jpgDirectory);
-        $lockupFileClass[2]->setPathName($jpgPathName);
-        $this->doctrine->getManager()->persist($lockupFileClass[2]);
+            $lockupFileClass[2] = new LockupFiles();
+            $lockupFileClass[2]->setFileName($fileName . ".jpg");
+            $lockupFileClass[2]->setFormat("jpg");
+            $lockupFileClass[2]->setLockup($lockups);
+            $lockupFileClass[2]->setOrient($orient);
+            $lockupFileClass[2]->setStyle($color);
+            $lockupFileClass[2]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[2]->setUrl($this->urlSuffix . $this->savePath() . $jpgPathName);
+            $lockupFileClass[2]->setDirectory($jpgDirectory);
+            $lockupFileClass[2]->setPathName($jpgPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[2]);
+        }
+
 
         #for eps
         // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
@@ -244,18 +257,21 @@ class LockupsConverter
         $lockupFileClass[3]->setPathName($epsPathName);
         $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
+
         #for .ai
-        // if ($color = "pms186cp") {
-        //     if ($orient == "h") {
-        //         $aiTemplateDir = $this->projectRoot . "/public/Nh_template.ai";
-        //     } else {
-        //         $aiTemplateDir = $this->projectRoot . "/public/Nv_template.ai";
-    
-        //     }
-        //     copy($aiTemplateDir, $aiDirectory);
-        // } else {
-        copy($epsDirectory, $aiDirectory);
-        // }
+        if ($color == "pms186cp") {
+            if ($orient == "h") {
+                $aiTemplateDir = $this->projectRoot . "/public/Nh_template.ai";
+            }
+            else {
+                $aiTemplateDir = $this->projectRoot . "/public/Nv_template.ai";
+
+            }
+            copy($aiTemplateDir, $aiDirectory);
+        }
+        else {
+            copy($epsDirectory, $aiDirectory);
+        }
 
 
         $lockupFileClass[4] = new LockupFiles();
@@ -277,7 +293,7 @@ class LockupsConverter
         //         $options = '-dProcessColorModel=/DeviceCMYK ';
         //     }
         //     exec('ps2pdf ' . $options . ' "' . $epsDirectory . '" "' . $pdfDirectory . '" 2>&1', $backend_output, $return_var);
-    
+
         //     $lockupFileClass[5] = new LockupFiles();
         //     $lockupFileClass[5]->setFileName($fileName . ".pdf");
         //     $lockupFileClass[5]->setFormat("pdf");

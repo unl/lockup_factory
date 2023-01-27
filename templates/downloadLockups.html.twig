@@ -7,11 +7,6 @@
 					<div class="horiz lockups-border dcf-d-flex dcf-ai-center">
 						<div class="lockups-download dcf-p-4 dcf-d-flex-col dcf-w-100%">
 							{{ Lockup.getPreviewH | raw }}
-							<p class="dcf-txt-center">
-								<i>
-									Horizontal
-								</i>
-							</p>
 						</div>
 					</div>
 				{% endif %}
@@ -20,11 +15,6 @@
 						<div class="lockups-download dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
 							{{ Lockup.getPreviewV | raw }}
 						</div>
-						<p class="dcf-txt-center">
-							<i>
-								Vertical
-							</i>
-						</p>
 					</div>
 
 				{% endif %}
@@ -139,7 +129,7 @@
 								{% for item in Lockup.getLockupFiles%}
 									<tr class="lockupsData">
 										<td data-label="Name" id="lockupFileName">
-											<a href="{{item.getUrl}}">{{ item.getFileName}}</a>
+											<a download href="{{item.getUrl}}">{{ item.getFileName}}</a>
 										</td>
 										<td data-label="Orientation" id="lockupOrient">{{ item.getOrient}}</td>
 										<td data-label="Style" id="lockupStyle">{{ item.getStyle}}</td>

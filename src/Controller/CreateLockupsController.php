@@ -50,6 +50,16 @@ class CreateLockupsController extends BaseController
         elseif ($lockups != null && count($lockupFields) > 0) {
             $lockupFields = $serializer->serialize($lockupFields, 'json', [AbstractNormalizer::ATTRIBUTES => ['fields' => ["slug"], 'value']]);
         }
+        
+        if ($lockups == null) {
+            $editLockupTemplate = null;
+        } else {
+            if ($lockups->getTemplate()->getStyle() == "h") {
+                $editLockupTemplate = $doctrine->getRepository(LockupTemplates::class)->find($lockups->getTemplate()->getLinksTo());
+            } else {
+                $editLockupTemplate = $lockups->getTemplate();
+            }
+        }
 
         // $lockupsFields = null ;
 
@@ -63,7 +73,8 @@ class CreateLockupsController extends BaseController
             'approvers' => $approverList,
             'lockups' => $lockups,
             'lockupFields' => $lockupFields,
-            'error_msg' => $errorMsg
+            'error_msg' => $errorMsg,
+            'editLockupTemplate' => $editLockupTemplate
         ]);
     }
 

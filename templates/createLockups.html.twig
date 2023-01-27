@@ -3,9 +3,9 @@
 		<div class="dcf-wrapper dcf-bleed dcf-pb-7">
 			<div class="dcf-grid dcf-col-gap-vw">
 				<div class="dcf-col-100% dcf-col-25%-start@md dcf-rounded dcf-pb-6">
-					<h5 class="dcf-mb-5">Select Your Template</h5>
+					<h5 class="dcf-mb-5">Select Lockup Style</h5>
 					<div class="dcf-mb-6">
-						<div>
+						{# <div>
 							<div class="dcf-form-group dcf-w-100% dcf-d-inline-flex dcf-flex-nowrap dcf-p-1 dcf-rounded dcf-b-1 dcf-b-solid unl-b-light-gray">
 								<div id="horizontal-button" class="dcf-input-switch" style="width: 50%;">
 									<input id="campus-city" name="campus" type="radio" value="city" checked>
@@ -16,7 +16,8 @@
 									<label for="campus-east" class="dcf-w-100%">Vertical</label>
 								</div>
 							</div>
-						</div>
+						</div> #}
+						<p>Most options also include a horizontal template.</p>
 						<select id="category_list" name="category_list" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-mt-2">
 							{% for item in lockup_categories %}
 								<option value="{{item.getSlug}}">{{item.getName}}</option>
@@ -24,7 +25,7 @@
 						</select>
 					</div>
 					<div style="max-height: 60vh; overflow-y: auto;">
-						<div id="horizontal-tab">
+						<div id="horizontal-tab" style="display: none;">
 							<div class="dcf-grid-full dcf-grid-halves@sm dcf-grid dcf-grid-full@md">
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates %}
@@ -38,12 +39,12 @@
 								{% endfor %}
 							</div>
 						</div>
-						<div id="vertical-tab" style="display: none;">
+						<div id="vertical-tab">
 							<div class="dcf-grid-halves dcf-grid dcf-grid-full@md">
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates %}
 										{% if lockupTemplates.getStyle == "v" %}
-											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded" style="display: none;" value="{{categories.getSlug}}">
+											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded {{ (lockupTemplates.getId == 4) ? "unl-bg-lighter-gray-custom" : ""}}" style="display: none;" value="{{categories.getSlug}}">
 												<img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
 												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
 											</div>
@@ -82,7 +83,7 @@
 										{% if lockupTemplates.getLinksTo != null%}
 											{% for lockupsCategories in lockup_categories %}
 												{% for subitem in lockupsCategories.getLockupTemplates %}
-													{% if(subitem.getId == lockupTemplates.getLinksTo) %}
+													{% if (subitem.getId == lockupTemplates.getLinksTo) %}
 														<div>
 															<div class="dcf-txt-center">
 																<h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
@@ -116,9 +117,9 @@
 									<label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
 									<input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}" {{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}} placeholder="{{item.getPlaceholder}}">
 									{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%} 
-									<span style="font-size: .8em;font-style: italic;">Please do not use all caps.</span>
+									<span class="dcf-form-help">Please do not use all caps.</span>
 									{% endif %}
-									<span style="font-size: .8em;font-style: italic;" class="dcf-mt-2">{{user.isAdmin ? "Unlimited" :
+									<span class="dcf-mt-2 dcf-form-help">{{user.isAdmin ? "Unlimited" :
 							"Maximum " ~ item.getLength }}
 										characters.</span>
 								</div>
@@ -126,23 +127,26 @@
 						</div>
 							<hr>
 							<div class="dcf-form-group">
-								<b class="dcf-mb-4 dcf-d-block">For the filename
+								<b class="dcf-mb-4 dcf-d-block">Lockup Filename
 								</b>
 								<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
 									<div>
 										<label for="institution" class="form-label">College/Organization/Institution
 																			Acronym</label>
-										<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" required>
+										<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" placeholder="e.g. COB" required>
 									</div>
 
 									<div>
 										<label for="lockupName" class="form-label">Lockup Name</label>
-										<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" required>
+										<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
 									</div>
 								</div>
+								<p class="dcf-mt-3">Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup</span></p>
 							</div>
 							<hr>
 							<div class="dcf-form-group">
+															<b class="dcf-mb-4 dcf-d-block">Communicator Contact
+								</b>
 								<div style="display:none;" id="commNotListed" class="unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
 									<p class="dcf-mb-0">
 										<strong>Are you sure your communicator is not listed?</strong>
@@ -173,28 +177,28 @@
 
 
 		<!-- tabs script -->
-		<script>
-			const horizontalBtn = document.getElementById("horizontal-button");
-const verticalBtn = document.getElementById("vertical-button");
-const horizontalTab = document.getElementById("horizontal-tab");
-const verticalTab = document.getElementById("vertical-tab");
+ 		<script>
+// 			const horizontalBtn = document.getElementById("horizontal-button");
+// const verticalBtn = document.getElementById("vertical-button");
+// const horizontalTab = document.getElementById("horizontal-tab");
+// const verticalTab = document.getElementById("vertical-tab");
 
-horizontalBtn.addEventListener("click", function () {
-switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab)
-});
+// horizontalBtn.addEventListener("click", function () {
+// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab)
+// });
 
-verticalBtn.addEventListener("click", function () {
-switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab)
-});
+// verticalBtn.addEventListener("click", function () {
+// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab)
+// });
 
-function switchTabs(btnClicked, btnCurrent, tabClicked, tabCurrent) {
-btnClicked.getElementsByTagName("input")[0].checked = true;
-btnCurrent.getElementsByTagName("input")[0].checked = false;
+// function switchTabs(btnClicked, btnCurrent, tabClicked, tabCurrent) {
+// btnClicked.getElementsByTagName("input")[0].checked = true;
+// btnCurrent.getElementsByTagName("input")[0].checked = false;
 
-tabCurrent.style.display = "none";
-tabClicked.style.display = "block";
-}
-		</script>
+// tabCurrent.style.display = "none";
+// tabClicked.style.display = "block";
+// }
+// 		</script>
 
 		<!-- script to connect input field and svg rendered texts -->
 		<script>
@@ -207,9 +211,7 @@ for (let k = 0; k < inputArray.length; k++) {
 Svg[k] = document.getElementsByClassName(inputArray[k]['slug']);
 InputDiv[k] = document.getElementById(inputArray[k]['slug']);
 InputField[k] = InputDiv[k].getElementsByTagName("input")[0];
-InputField[k].addEventListener("input", function () {
-updateSvgs(k)
-});
+InputField[k].addEventListener("input", function () {updateSvgs(k)});
 }
 
 InputField[0].value = "";
@@ -235,7 +237,7 @@ for (let i = 0; i < lockupTemplates.length; i++) {
 lockupTemplates[i].addEventListener("click", selectLockupTemplate);
 }
 
-document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
+// document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
 
 function selectLockupTemplate(event) { // try catch because event object isn't passed when calling the function manually during edit lockups page
 try {
@@ -314,19 +316,19 @@ lockupTemplates[i].style.display = "none";
 // # reads json value as text so length of "[]" = 2 #
 // }
 let lockupFields = {{ lockupFields | raw }};
-let lockupStyle = "{{ lockups.getTemplate.getStyle }}";
-let lockupCategory = "{{ lockups.getTemplate.getCategory.getSlug }}";
-let lockupTemplateID = "{{ lockups.getTemplate.getId }}";
-let lockupInstitution = "{{ lockups.getInstitution }}";
-let lockupName = "{{ lockups.getName }}";
-let lockupApprover = "{{ (lockups.getApprover.getId is defined) ? lockups.getApprover.getId : 0 }}";
+let lockupStyle = "{{ lockups.getTemplate.getStyle }}"; // h or v
+let lockupCategory = "{{ lockups.getTemplate.getCategory.getSlug }}"; // category
+let lockupTemplateID = "{{ editLockupTemplate.getId }}"; // template ID
+let lockupInstitution = "{{ lockups.getInstitution }}"; // college institution
+let lockupName = "{{ lockups.getName }}"; // lockup name
+let lockupApprover = "{{ (lockups.getApprover.getId is defined) ? lockups.getApprover.getId : 0 }}"; // lockup approver
 
 
-if (lockupStyle == "h") {
-switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
-} else if (lockupStyle == "v") {
-switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
-}
+// if (lockupStyle == "h") {
+// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
+// } else if (lockupStyle == "v") {
+// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
+// }
 
 if (lockupCategory != "") {
 category_list.value = lockupCategory;
@@ -380,5 +382,38 @@ commNotListed.style.display = "none";
 });
 		</script>
 
+<script>
+// javascript code to dynamically generate lockup name
+const lockupNameElement = document.getElementById("lockupName");
+const institutionElement = document.getElementById("institution");
+const generatedLockupName = document.getElementById("generateLockupName");
+
+institutionElement.addEventListener("input", function() {updateGeneratedLockupName()});
+lockupNameElement.addEventListener("input", function() {updateGeneratedLockupName()});
+
+
+function updateGeneratedLockupName() {
+	let getInstitutionName = institutionElement.value;
+	let getLockupName = lockupNameElement.value;
+
+	if (getInstitutionName === "") {
+		getInstitutionName = "COB";
+	}
+	if (getLockupName === "") {
+		getLockupName = "Sample Lockup";
+	}
+	let sanitizedInstitutionName = getInstitutionName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
+	let sanitizedLockupName = getLockupName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
+
+	sanitizedInstitutionName = sanitizedInstitutionName.replace(" ", "_");
+	sanitizedLockupName = sanitizedLockupName.replace(" ", "_");
+
+
+	generatedLockupName.textContent = sanitizedInstitutionName + "_" + sanitizedLockupName;
+}
+</script>
+
 	{% endblock %}
 {% endblock %}
+
+

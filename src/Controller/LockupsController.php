@@ -47,7 +47,8 @@ class LockupsController extends BaseController
 
         if ($auth->isApprover()) {
             $previouslyApproved = $core->previouslyApproved();
-        } else {
+        }
+        else {
             $previouslyApproved = array();
         }
 
@@ -324,6 +325,22 @@ class LockupsController extends BaseController
         $entityManager->persist($feedback);
         $entityManager->flush();
 
+        if ($action == "feedback") {
+            $body = '
+            Your lockup, ' . $lockups->getName() . ', has been given a new feedback.
+            <br><br>
+            Feedback Text: <br> '
+                . $msg .
+                '<br><br>
+            Please visit <a href="http://lockups.unl.edu/lockups/preview/' . $lockups->getId() . '">http://lockups.unl.edu/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
+            <br><br>
+            If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
+            <br><br>
+            UNL Lockup Factory';
+
+            $mailer->sendMail($lockups->getUser()->getEmail(), "Lockup Approved", $body);
+        }
+
 
         if ($lockups->getCreativeStatus() == 1 and $lockups->getCommunicatorStatus() == 1) {
             $body = '
@@ -407,9 +424,15 @@ class LockupsController extends BaseController
 
         $lockupsGenerator->generateLockups($id);
 
-        return $this->redirectToRoute('downloadLockups', [
-            'id' => $id
-        ], 302);
+        // return $this->redirectToRoute('downloadLockups', [
+        //     'id' => $id
+        // ], 302);
+        $response = $this->forward('App\Controller\AlertsController::errorPage', [
+            'errorTitle' => "DONE!",
+            'errorBody' => "The requested lockup could not be found."
+        ]);
+        return $response;
+
     }
 
     /**

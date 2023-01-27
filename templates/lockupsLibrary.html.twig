@@ -22,9 +22,9 @@
 					<fieldset>
 						<legend class="dcf-legend">Filter By Organization</legend>
 						<div class="dcf-form-group">
-							<label class="dcf-txt-sm" for="approver">Select organization name</label>
+							<label class="dcf-txt-sm" for="approver">Select Organization Name</label>
 							<select id="organization" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-								<option value="0" selected>Select approving organization</option>
+								<option value="0" selected>Select Approving Organization</option>
 								{% for key, value in allLockups%}
 									<option value="{{ key }}">{{ key }}</option>
 								{% endfor %}
@@ -73,13 +73,13 @@
 		</div>
 
 		{% if user_id != "" %}
-			<h3>Lockups for user
+			<h3>Lockups For User
 				{{ user_id }}</h3>
 		{% endif %}
 
 		{% for key, value in lockups_array%}
 			{% if auth.isAdmin %}
-				<h4>All lockups for
+				<h4>All Lockups For
 					{{ key }}</h4>
 				{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
@@ -87,7 +87,7 @@
 						<tr>
 							<th style="width: 30%;" scope="col">Title</th>
 							<th style="width: 25%;" scope="col">Status</th>
-							<th style="width: 15%;" scope="col">Publish lockup after approval</th>
+							<th style="width: 15%;" scope="col">Make public after approval</th>
 							<th style="width: 30%;" scope="col">Preview</th>
 						</tr>
 					</thead>
@@ -127,7 +127,7 @@
 					</tbody>
 				</table>
 			{% else %}
-				<h4>Lockups approved for
+				<h4>Lockups Approved For
 					{{ key }}</h4>
 
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
@@ -148,7 +148,7 @@
 								</td>
 								<td data-label="Preview">
 									<a href="/lockups/download/{{item.getId}}">
-										<div class="table-preview">
+										<div style="background-color: #fff;" class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1>
 											{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
 										</div>
 									</a>

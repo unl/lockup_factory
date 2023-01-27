@@ -97,6 +97,9 @@ class LockupsGenerator
             if ($template->getSlug() == "v_social") { // only RGB for this one
                 $styles = array('RGB');
             }
+            if ($template->getSlug() == "h_ncta" || $template->getSlug() == "v_ncta") {
+                $styles = array('blk');
+            }
             foreach ($styles as $style) {
                 $svgFile = $this->SvgGenerator->createLockup($template->getSlug(), $lockupFields, $template->getStyle(), $style, false, false);
 

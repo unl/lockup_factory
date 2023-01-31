@@ -23,6 +23,7 @@ class Auth
         $this->entityManager = $doctrine->getManager();
         $this->root_url = $appUrl;
         $this->engine = $engine;
+        
 
         // $this->engine = $engine;
 

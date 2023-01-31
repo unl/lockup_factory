@@ -21,10 +21,7 @@ use App\Service\Mailer;
 
 class LockupsController extends BaseController
 {
-    private $rootUrl;
-    public function __construct(string $appUrl) {
-        $this->rootUrl = $appUrl;
-    }
+
     /**
      * @Route("/lockups/manage", name="manageLockups", methods={"GET"})
      */
@@ -336,7 +333,7 @@ class LockupsController extends BaseController
             Feedback: <br> '
                 . $msg .
                 '<br><br>
-            Please visit <a href="http://' . $this->rootUrl .'/lockups/preview/' . $lockups->getId() . '">http://' . $this->rootUrl .'/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
+            Please visit <a href="http://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">http://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
             <br><br>
             If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
             <br><br>
@@ -350,7 +347,7 @@ class LockupsController extends BaseController
             $body = '
             Your lockup, ' . $lockups->getName() . ', has been approved and is ready to generate.
             <br><br>
-            Please visit <a href="http://' . $this->rootUrl .'/lockups/preview/' . $lockups->getId() . '">http://' . $this->rootUrl .'/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
+            Please visit <a href="http://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">http://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
             <br><br>
             If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu or DXG at 2-9878 or dxg@listserv.unl.edu
             <br><br>

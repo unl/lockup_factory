@@ -43,6 +43,9 @@ class LockupTemplates
     #[ORM\OneToMany(mappedBy: 'LockupTemplates', targetEntity: TemplateFields::class)]
     private $templateFields;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $preview;
+
     public function __construct()
     {
         $this->template = new ArrayCollection();
@@ -176,6 +179,18 @@ class LockupTemplates
                 $templateField->setLockupTemplates(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPreview(): ?string
+    {
+        return $this->preview;
+    }
+
+    public function setPreview(?string $preview): self
+    {
+        $this->preview = $preview;
 
         return $this;
     }

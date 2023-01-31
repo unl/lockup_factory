@@ -31,7 +31,8 @@
 									{% for lockupTemplates in categories.getLockupTemplates %}
 										{% if lockupTemplates.getStyle == "h" %}
 											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded" style="display: none;" value="{{categories.getSlug}}">
-												<img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
+												{# <img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}"> #}
+												{{lockupTemplates.getPreview | raw}}
 												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
 											</div>
 										{% endif %}
@@ -44,8 +45,9 @@
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates %}
 										{% if lockupTemplates.getStyle == "v" %}
-											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded {{ (lockupTemplates.getId == 4) ? "unl-bg-lighter-gray-custom" : ""}}" style="display: none;" value="{{categories.getSlug}}">
-												<img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
+											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-1 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded {{ (lockupTemplates.getId == 4) ? "unl-bg-lighter-gray-custom" : ""}}" style="display: none;" value="{{categories.getSlug}}">
+												{{lockupTemplates.getPreview | raw}}
+												{# <img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}"> #}
 												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
 											</div>
 										{% endif %}

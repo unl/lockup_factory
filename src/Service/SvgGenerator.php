@@ -173,7 +173,7 @@ class SvgGenerator
             $svg->addAttribute("class", "preview");
         }
 
-        if (($template == "h_ncta" || $template = "v_ncta") && $preview) {
+        if (($template == "h_ncta" || $template == "v_ncta") && $preview) {
             $main_text_color = self::BLACK;
             $secondary_text_color = self::BLACK;
             $n_main_color = self::BLACK;

@@ -16,3 +16,10 @@ Install Lockup Factory
 8. Visit https://lockups-local.unl.edu:8000/
 
 Note: If you're using Apache, you need to give write permission to the `/public/lockups` folder.
+
+** User Roles **
+
+`default` The standard Lockup Factory user.
+`creative` UComm Approver
+`approver` Approvers from different departments.
+`admin` The admin user with special privileges.

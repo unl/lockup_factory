@@ -141,7 +141,7 @@
 										<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
 									</div>
 								</div>
-								<p class="dcf-mt-3">Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup</span></p>
+								<p class="dcf-mt-3">Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span></p>
 							</div>
 							<hr>
 							<div class="dcf-form-group">
@@ -406,10 +406,11 @@ function updateGeneratedLockupName() {
 	let sanitizedLockupName = getLockupName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
 
 	sanitizedInstitutionName = sanitizedInstitutionName.replace(" ", "_");
-	sanitizedLockupName = sanitizedLockupName.replace(" ", "_");
+	sanitizedInstitutionName = sanitizedInstitutionName.toUpperCase(); //uppercase
+ 	sanitizedLockupName = sanitizedLockupName.replace(" ", "_");
 
 
-	generatedLockupName.textContent = sanitizedInstitutionName + "_" + sanitizedLockupName;
+	generatedLockupName.textContent = sanitizedInstitutionName + "_" + sanitizedLockupName + ".zip";
 }
 </script>
 

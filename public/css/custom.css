@@ -169,3 +169,9 @@
 .svg-black {
   filter: brightness(0) saturate(100%) invert(0%) sepia(2%) saturate(9%) hue-rotate(351deg) brightness(104%) contrast(103%);
 }
+
+.lf-font-display-italic {
+  font-family: "Mercury Display A", "Mercury Display B"!important;
+  font-style: italic!important;
+  font-weight: 400!important;
+ }

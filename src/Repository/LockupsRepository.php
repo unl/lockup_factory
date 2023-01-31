@@ -200,6 +200,8 @@ class LockupsRepository extends ServiceEntityRepository
                 FROM App\Entity\Lockups p
                 WHERE p.CreativeStatus = 0
                 AND
+                WHERE p.CommunicatorStatus != 0
+                AND
                 p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'
         )->setParameters(new ArrayCollection([
@@ -235,6 +237,52 @@ class LockupsRepository extends ServiceEntityRepository
             new Parameter('lastDate', $lastDate)
         ]));
 
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function deniedUserLockups(int $userID): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Lockups p
+            WHERE p.CreativeStatus = 2
+            OR
+            p.CommunicatorStatus = 2
+            AND
+            p.user = :userID
+            ORDER BY p.DateCreated DESC'
+        )->setParameters(new ArrayCollection([
+            new Parameter('userID', $userID)
+        ]));
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    /**
+     * @return Lockups[] Returns an array of Lockups objects
+     */
+    public function pendingUserLockups(int $userID): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Lockups p
+            WHERE p.CreativeStatus = 0
+            OR
+            p.CommunicatorStatus = 0
+            AND
+            p.user = :userID
+            ORDER BY p.DateCreated DESC'
+        )->setParameters(new ArrayCollection([
+            new Parameter('userID', $userID)
+        ]));
 
         // returns an array of Product objects
         return $query->getResult();

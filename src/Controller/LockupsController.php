@@ -82,14 +82,22 @@ class LockupsController extends BaseController
         }
 
         // get user's lockups
-        $product = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser()]);
-        $product = array_reverse($product);
+        $approvedUserLockups = $doctrine->getRepository(Lockups::class)->findBy(['user' => $auth->getUser(), 'CreativeStatus' => 1, 'CommunicatorStatus' => 1]);
+        $approvedUserLockups = array_reverse($approvedUserLockups);
+
+        $deniedUserLockups = $core->getDeniedUserLockups($auth->getUser()->getId());
+        $deniedUserLockups = array_reverse($deniedUserLockups);
+
+        $pendingUserLockups = $core->getPendingUserLockups($auth->getUser()->getId());
+        $pendingUserLockups = array_reverse($pendingUserLockups);
 
 
         return $this->render('base.html.twig', [
             'page_template' => "manageLockups.html.twig",
             'page_name' => "ManageLockups",
-            'lockups_array' => $product,
+            'approvedUserLockups' => $approvedUserLockups,
+            'deniedUserLockups' => $deniedUserLockups,
+            'pendingUserLockups' => $pendingUserLockups,
             'auth' => $auth,
             'search' => $search,
             'pendingApprover' => $pendingApprover,

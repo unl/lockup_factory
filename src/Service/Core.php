@@ -303,4 +303,13 @@ class Core
         $previouslyApprovedLockups = $this->doctrine->getRepository(Lockups::class)->findBy(['approver' => $user->getId()], ['DateCreated' => 'DESC']);
         return $previouslyApprovedLockups;
     }
+
+
+    public function getPendingUserLockups(int $userID) {
+        return $this->lockupsRepository->pendingUserLockups($userID);
+    }
+
+    public function getDeniedUserLockups(int $userID) {
+        return $this->lockupsRepository->deniedUserLockups($userID);
+    }
 }

@@ -3,6 +3,12 @@
     font-weight: 600;
     src: url('/fonts/tungsten600.ttf');
  }
+
+ @font-face {
+  font-family: Mercury Display A;
+  font-weight: 600;
+  src: url('/fonts/mercury/MercuryDisplay-SemIta.otf');
+}
 .img-thumb {
     border-radius: 6px;
     top: 0px;

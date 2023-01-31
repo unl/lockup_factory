@@ -2,18 +2,24 @@
 	<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
 		<h3>Download Lockup Files</h3>
 		<div class="dcf-w-max-xl dcf-mr-auto dcf-ml-auto dcf-mb-6">
-			<div class="dcf-grid dcf-grid-full dcf-grid-halves@lg dcf-col-gap-vw dcf-row-gap-1">
+			<div class="dcf-grid dcf-grid-full dcf-grid-halves@lg dcf-col-gap-vw dcf-row-gap-9">
 				{% if Lockup.getPreviewH != null%}
-					<div class="horiz lockups-border dcf-d-flex dcf-ai-center">
+					<div class="horiz lockups-border dcf-d-flex dcf-ai-center dcf-relative">
 						<div class="lockups-download dcf-p-4 dcf-d-flex-col dcf-w-100%">
 							{{ Lockup.getPreviewH | raw }}
+						</div>
+						<div class="dcf-absolute" style="bottom: -40px; right: 40%;">
+						<p class="dcf-mb-0">Horizontal</p>
 						</div>
 					</div>
 				{% endif %}
 				{% if Lockup.getPreviewV != null%}
-					<div class="vert lockups-border">
+					<div class="vert lockups-border dcf-relative">
 						<div class="lockups-download dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
 							{{ Lockup.getPreviewV | raw }}
+						</div>
+												<div class="dcf-absolute" style="bottom: -40px; right: 40%;">
+						<p class="dcf-mb-0">Vertical</p>
 						</div>
 					</div>
 
@@ -68,7 +74,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="dcf-d-flex dcf-flex-row dcf-mb-3 dcf-jc-flex-start">
+						<div class="dcf-d-flex download-filter dcf-mb-3 dcf-jc-flex-start dcf-col-gap-2 dcf-row-gap-1">
 							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
 								<span class="dcf-mr-1">
 									<nobr>Orientation:</nobr>
@@ -80,7 +86,7 @@
 								</select>
 							</div>
 
-							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
 								<span class="dcf-mr-1">
 									<nobr>Style:</nobr>
 								</span>
@@ -94,7 +100,7 @@
 							</div>
 
 
-							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
 								<span class="dcf-mr-1">
 									<nobr>Format:</nobr>
 								</span>
@@ -109,7 +115,7 @@
 								</select>
 							</div>
 
-							<div class="dcf-d-flex dcf-flex-row dcf-ai-center dcf-ml-3">
+							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
 								<a class="dcf-btn dcf-btn-secondary" id="showAll" href="#" role="button">Reset</a>
 
 							</div>

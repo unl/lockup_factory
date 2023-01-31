@@ -21,6 +21,9 @@ services:
     App\Service\Auth:
         arguments:
             $appUrl: 'app.app_url'
+    App\Controller\LockupsController:
+        arguments:
+            $appUrl: 'app.app_url'
 
 
     # add more service definitions when explicit configuration is needed

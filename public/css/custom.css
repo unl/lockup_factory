@@ -175,3 +175,13 @@
   font-style: italic!important;
   font-weight: 400!important;
  }
+
+
+ .download-filter {
+  flex-direction: column;
+}
+ @media screen and (min-width: 56.12em) {
+  .download-filter {
+    flex-direction: row;
+  }
+ }

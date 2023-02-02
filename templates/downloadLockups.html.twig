@@ -9,7 +9,7 @@
 							{{ Lockup.getPreviewH | raw }}
 						</div>
 						<div class="dcf-absolute" style="bottom: -40px; right: 40%;">
-						<p class="dcf-mb-0">Horizontal</p>
+							<p class="dcf-mb-0">Horizontal</p>
 						</div>
 					</div>
 				{% endif %}
@@ -18,8 +18,8 @@
 						<div class="lockups-download dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
 							{{ Lockup.getPreviewV | raw }}
 						</div>
-												<div class="dcf-absolute" style="bottom: -40px; right: 40%;">
-						<p class="dcf-mb-0">Vertical</p>
+						<div class="dcf-absolute" style="bottom: -40px; right: 40%;">
+							<p class="dcf-mb-0">Vertical</p>
 						</div>
 					</div>
 
@@ -44,7 +44,7 @@
 
 				{% elseif Lockup.getIsGenerated == 1 %}
 					{% if (Lockup.getUser == auth.getUser) or auth.isAdmin == true or Lockup.getPublic == 1 %}
-						<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-3" id="generatedBtn">Download All (.zip)</a>
+						{# <a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-m-4 dcf-mb-3" id="generatedBtn">Download All (.zip)</a> #}
 						{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
 							<div class="dcf-txt-center dcf-mb-4">
 								<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
@@ -116,8 +116,8 @@
 							</div>
 
 							<div class="dcf-d-flex dcf-flex-row dcf-ai-center">
-								<a class="dcf-btn dcf-btn-secondary" id="showAll" href="#" role="button">Reset</a>
-
+								<a class="dcf-btn dcf-btn-secondary" id="showAll" href="#" role="button">Reset Filter</a>
+								<a href="{{Lockup.getZipUrl}}" class="dcf-btn dcf-btn-primary dcf-ml-3" id="generatedBtn">Download All (.zip)</a>
 							</div>
 						</div>
 
@@ -151,6 +151,11 @@
 					<h2>Lockups hasn't been approved yet.</h2>
 					<div>You can't generate it right now.</div>
 				</div>
+				{% if auth.isAdmin or Lockup.getUser == auth.getUser %}
+					<div class="dcf-txt-center dcf-mt-4 dcf-mb-4">
+						<a href="/lockups/preview/{{ Lockup.getId }}" class="dcf-btn dcf-btn-secondary">Manage Lockup</a>
+					</div>
+				{% endif %}
 			{% endif %}
 
 		</div>
@@ -184,7 +189,7 @@ generatingLoader.style.display = "none";
 location.reload();
 });
 
-xhr.open("GET", "/lockups/generate/    {{ Lockup.getId }}");
+xhr.open("GET", "/lockups/generate/     {{ Lockup.getId }}");
 xhr.send();
 return xhr;
 }

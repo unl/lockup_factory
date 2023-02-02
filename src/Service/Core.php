@@ -109,8 +109,10 @@ class Core
     public function getLockupFileName(Lockups $lockups): string
     {
         $lockups_name = $lockups->getName();
+        $department_name = strtoupper($lockups->getInstitution());
         $lockups_name = str_replace(" ", "_", $lockups_name);
-        $lockups_name = $lockups_name . "__";
+        $department_name = str_replace(" ", "_", $department_name);
+        $lockups_name = $department_name . "_" . $lockups_name . "_";
         $this->lockups = $lockups;
         return $lockups_name;
     }

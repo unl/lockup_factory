@@ -109,12 +109,32 @@ class LockupsConverter
         $fileName = $this->core->getLockupFileName($lockups);
         $pathName = "";
         if ($orient == "h") {
-            $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
-            $fileName = "Nh_" . $fileName;
+            if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
+                $pathName = "Nh_m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $fileName;
+            }
+            else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
+                $pathName = "Nh_e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_e_" . $fileName;
+            }
+            else {
+                $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $fileName;
+            }
         }
         else {
-            $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
-            $fileName = "Nv_" . $fileName;
+            if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
+                $pathName = "Nv_m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $fileName;
+            }
+            else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
+                $pathName = "Nv_e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_e_" . $fileName;
+            }
+            else {
+                $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $fileName;
+            }
         }
         switch ($color) {
             case "RGB":
@@ -170,60 +190,67 @@ class LockupsConverter
         $lockupFileClass = [];
 
         #for svg
-        // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape' . ' --export-plain-svg=' . $svgDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
-        // echo (var_dump($backend_output));
-        // echo ($svgDirectory);
 
-        $lockupFileClass[0] = new LockupFiles();
-        $lockupFileClass[0]->setFileName($fileName . ".svg");
-        $lockupFileClass[0]->setFormat("svg");
-        $lockupFileClass[0]->setLockup($lockups);
-        $lockupFileClass[0]->setOrient($orient);
-        $lockupFileClass[0]->setStyle($color);
-        $lockupFileClass[0]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[0]->setUrl($this->urlSuffix . $this->savePath() . $svgPathName);
-        $lockupFileClass[0]->setDirectory($svgDirectory);
-        $lockupFileClass[0]->setPathName($svgPathName);
-        $this->doctrine->getManager()->persist($lockupFileClass[0]);
+        if ($color != "4c" || $color != "pms186cp") {
+
+            // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec('inkscape' . ' --export-plain-svg=' . $svgDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+            // echo (var_dump($backend_output));
+            // echo ($svgDirectory);
+
+            $lockupFileClass[0] = new LockupFiles();
+            $lockupFileClass[0]->setFileName($fileName . ".svg");
+            $lockupFileClass[0]->setFormat("svg");
+            $lockupFileClass[0]->setLockup($lockups);
+            $lockupFileClass[0]->setOrient($orient);
+            $lockupFileClass[0]->setStyle($color);
+            $lockupFileClass[0]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[0]->setUrl($this->urlSuffix . $this->savePath() . $svgPathName);
+            $lockupFileClass[0]->setDirectory($svgDirectory);
+            $lockupFileClass[0]->setPathName($svgPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[0]);
+        }
 
 
         #for png
 
-        if ($color != "4c") {
+        if ($color != "pms186cp") {
             // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
             exec('inkscape -h 800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
 
+            if ($color != "4c") {
+                $lockupFileClass[1] = new LockupFiles();
+                $lockupFileClass[1]->setFileName($fileName . ".png");
+                $lockupFileClass[1]->setFormat("png");
+                $lockupFileClass[1]->setLockup($lockups);
+                $lockupFileClass[1]->setOrient($orient);
+                $lockupFileClass[1]->setStyle($color);
+                $lockupFileClass[1]->setTemplate($lockups->getTemplate());
+                $lockupFileClass[1]->setUrl($this->urlSuffix . $this->savePath() . $pngPathName);
+                $lockupFileClass[1]->setDirectory($pngDirectory);
+                $lockupFileClass[1]->setPathName($pngPathName);
+                $this->doctrine->getManager()->persist($lockupFileClass[1]);
 
-            $lockupFileClass[1] = new LockupFiles();
-            $lockupFileClass[1]->setFileName($fileName . ".png");
-            $lockupFileClass[1]->setFormat("png");
-            $lockupFileClass[1]->setLockup($lockups);
-            $lockupFileClass[1]->setOrient($orient);
-            $lockupFileClass[1]->setStyle($color);
-            $lockupFileClass[1]->setTemplate($lockups->getTemplate());
-            $lockupFileClass[1]->setUrl($this->urlSuffix . $this->savePath() . $pngPathName);
-            $lockupFileClass[1]->setDirectory($pngDirectory);
-            $lockupFileClass[1]->setPathName($pngPathName);
-            $this->doctrine->getManager()->persist($lockupFileClass[1]);
+            }
+            if ($rev == false) {
 
+                #for jpg | convert is a imagemagick function
+                $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
+                // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
+                exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
 
-            #for jpg | convert is a imagemagick function
-            $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
-            // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
-            exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
-
-            $lockupFileClass[2] = new LockupFiles();
-            $lockupFileClass[2]->setFileName($fileName . ".jpg");
-            $lockupFileClass[2]->setFormat("jpg");
-            $lockupFileClass[2]->setLockup($lockups);
-            $lockupFileClass[2]->setOrient($orient);
-            $lockupFileClass[2]->setStyle($color);
-            $lockupFileClass[2]->setTemplate($lockups->getTemplate());
-            $lockupFileClass[2]->setUrl($this->urlSuffix . $this->savePath() . $jpgPathName);
-            $lockupFileClass[2]->setDirectory($jpgDirectory);
-            $lockupFileClass[2]->setPathName($jpgPathName);
-            $this->doctrine->getManager()->persist($lockupFileClass[2]);
+                $lockupFileClass[2] = new LockupFiles();
+                $lockupFileClass[2]->setFileName($fileName . ".jpg");
+                $lockupFileClass[2]->setFormat("jpg");
+                $lockupFileClass[2]->setLockup($lockups);
+                $lockupFileClass[2]->setOrient($orient);
+                $lockupFileClass[2]->setStyle($color);
+                $lockupFileClass[2]->setTemplate($lockups->getTemplate());
+                $lockupFileClass[2]->setUrl($this->urlSuffix . $this->savePath() . $jpgPathName);
+                $lockupFileClass[2]->setDirectory($jpgDirectory);
+                $lockupFileClass[2]->setPathName($jpgPathName);
+                $this->doctrine->getManager()->persist($lockupFileClass[2]);
+            }
         }
 
 

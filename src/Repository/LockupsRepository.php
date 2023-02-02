@@ -251,9 +251,9 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
             FROM App\Entity\Lockups p
-            WHERE p.CreativeStatus = 2
+            WHERE (p.CreativeStatus = 2
             OR
-            p.CommunicatorStatus = 2
+            p.CommunicatorStatus = 2)
             AND
             p.user = :userID
             ORDER BY p.DateCreated DESC'
@@ -274,9 +274,9 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
             FROM App\Entity\Lockups p
-            WHERE p.CreativeStatus = 0
-            OR
-            p.CommunicatorStatus = 0
+            WHERE (p.CreativeStatus = 0
+            AND
+            p.CommunicatorStatus = 0)
             AND
             p.user = :userID
             ORDER BY p.DateCreated DESC'

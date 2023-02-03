@@ -111,7 +111,7 @@ class LockupsConverter
         if ($orient == "h") {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
                 $pathName = "Nh_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_" . $fileName;
+                $fileName = "Nh_m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
                 $pathName = "Nh_e_" . $this->core->getLockupFileName($lockups) . "/";
@@ -125,7 +125,7 @@ class LockupsConverter
         else {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
                 $pathName = "Nv_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_" . $fileName;
+                $fileName = "Nv_m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
                 $pathName = "Nv_e_" . $this->core->getLockupFileName($lockups) . "/";

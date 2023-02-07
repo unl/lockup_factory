@@ -164,9 +164,11 @@
 		<h4 class="dcf-mt-6">Your Lockups</h4>
 		<div class="dcf-tabs dcf-tabs-responsive">
 			<ul>
+			{% if (pendingUserLockups|length > 0)%}
 				<li>
 					<a href="#awaiting-approval">Awaiting Approval ({{pendingUserLockups | length}})</a>
 				</li>
+		{% endif %}
 				<li>
 					<a href="#approved">Approved ({{approvedUserLockups | length}})</a>
 				</li>
@@ -174,6 +176,7 @@
 					<a href="#denied">Denied ({{deniedUserLockups | length}})</a>
 				</li>
 			</ul>
+			{% if (pendingUserLockups|length > 0)%}
 			<div id="awaiting-approval" class="unl-bg-cream dcf-p-3">
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>
@@ -236,6 +239,8 @@
 					</tbody>
 				</table>
 			</div>
+		{% endif %}
+
 			<div id="approved" class="unl-bg-cream dcf-p-3">
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
 					<thead>

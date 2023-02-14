@@ -46,6 +46,9 @@ class LockupTemplates
     #[ORM\Column(type: 'text', nullable: true)]
     private $preview;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $ListingOrder;
+
     public function __construct()
     {
         $this->template = new ArrayCollection();
@@ -191,6 +194,18 @@ class LockupTemplates
     public function setPreview(?string $preview): self
     {
         $this->preview = $preview;
+
+        return $this;
+    }
+
+    public function getListingOrder(): ?int
+    {
+        return $this->ListingOrder;
+    }
+
+    public function setListingOrder(?int $ListingOrder): self
+    {
+        $this->ListingOrder = $ListingOrder;
 
         return $this;
     }

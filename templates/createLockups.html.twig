@@ -43,7 +43,7 @@
 						<div id="vertical-tab">
 							<div class="dcf-grid dcf-grid-full dcf-grid-halves@sm dcf-grid dcf-grid-full@md">
 								{% for categories in lockup_categories %}
-									{% for lockupTemplates in categories.getLockupTemplates %}
+									{% for lockupTemplates in categories.getLockupTemplates |sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
 										{% if lockupTemplates.getStyle == "v" %}
 											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-1 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded {{ (lockupTemplates.getId == 4) ? "unl-bg-lighter-gray-custom" : ""}}" style="display: none;" value="{{categories.getSlug}}">
 												{{lockupTemplates.getPreview | raw}}
@@ -407,9 +407,12 @@ function updateGeneratedLockupName() {
 	let sanitizedInstitutionName = getInstitutionName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
 	let sanitizedLockupName = getLockupName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
 
-	sanitizedInstitutionName = sanitizedInstitutionName.replace(" ", "_");
+
+	sanitizedInstitutionName = sanitizedInstitutionName.replaceAll(" ", "_");
 	sanitizedInstitutionName = sanitizedInstitutionName.toUpperCase(); //uppercase
- 	sanitizedLockupName = sanitizedLockupName.replace(" ", "_");
+
+
+ 	sanitizedLockupName = sanitizedLockupName.replaceAll(" ", "_");
 
 
 	generatedLockupName.textContent = sanitizedInstitutionName + "_" + sanitizedLockupName + ".zip";

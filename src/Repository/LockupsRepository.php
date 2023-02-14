@@ -101,7 +101,9 @@ class LockupsRepository extends ServiceEntityRepository
             $query = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE p.CommunicatorStatus = 0
+                WHERE (p.CommunicatorStatus = 0
+                AND
+                p.CreativeStatus != 2)
                 AND
                 p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'
@@ -115,7 +117,9 @@ class LockupsRepository extends ServiceEntityRepository
             $query = $entityManager->createQuery(
                 'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE p.CommunicatorStatus = 0
+                WHERE (p.CommunicatorStatus = 0
+                AND
+                p.CreativeStatus != 2)
                 AND
                 p.approver = :id
                 AND
@@ -144,7 +148,9 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
             FROM App\Entity\Lockups p
-            WHERE p.CreativeStatus = 0
+            WHERE (p.CreativeStatus = 0
+            AND
+            p.CommunicatorStatus = 1)
             AND
             p.DateCreated between :lastDate AND :today
             ORDER BY p.DateCreated DESC'
@@ -169,7 +175,9 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE p.CommunicatorStatus = 0
+                WHERE (p.CommunicatorStatus = 0
+                AND
+                p.CreativeStatus != 2)
                 AND
                 p.approver = :approver
                 AND
@@ -198,9 +206,9 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE p.CreativeStatus = 0
+                WHERE (p.CreativeStatus = 0
                 AND
-                WHERE p.CommunicatorStatus != 0
+                p.CommunicatorStatus = 1)
                 AND
                 p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'
@@ -275,8 +283,12 @@ class LockupsRepository extends ServiceEntityRepository
             'SELECT p
             FROM App\Entity\Lockups p
             WHERE (p.CreativeStatus = 0
-            AND
+            OR
             p.CommunicatorStatus = 0)
+            AND
+            (p.CreativeStatus != 2
+            OR
+            p.CommunicatorStatus != 2)
             AND
             p.user = :userID
             ORDER BY p.DateCreated DESC'

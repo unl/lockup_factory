@@ -55,18 +55,18 @@
 				</div>
 
 				{# <div>
-										<fieldset>
-										<legend class="dcf-legend">More filters</legend>
-										<label class="dcf-txt-sm" for="approver">Select organization name</label>
-										<select def id="approver" name="approver"
-											class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-										{% for key, value in allLockups %}
-											<option value="0">{{ key }}</option>
-										
-										{% endfor %}
-										</select>
-										</fieldset>
-										</div> #}
+														<fieldset>
+														<legend class="dcf-legend">More filters</legend>
+														<label class="dcf-txt-sm" for="approver">Select organization name</label>
+														<select def id="approver" name="approver"
+															class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+														{% for key, value in allLockups %}
+															<option value="0">{{ key }}</option>
+														
+														{% endfor %}
+														</select>
+														</fieldset>
+														</div> #}
 
 			{% endif %}
 
@@ -77,89 +77,96 @@
 				{{ user_id }}</h3>
 		{% endif %}
 
-		{% for key, value in lockups_array%}
-			{% if auth.isAdmin %}
-				<h4>All Lockups For
-					{{ key }}</h4>
-				{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
-				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-					<thead>
-						<tr>
-							<th style="width: 30%;" scope="col">Title</th>
-							<th style="width: 25%;" scope="col">Status</th>
-							<th style="width: 15%;" scope="col">Make public after approval</th>
-							<th style="width: 30%;" scope="col">Preview</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item in value %}
-							<tr>
-								<td data-label="Title">
-									<a href="/lockups/download/{{item.getId}}">
-										{{item.getName}}
-										{{item.getInstitution}}
-									</a>
-								</td>
-								<td data-label="Approved">
-									{% if (item.getApprover == null) %}
-										<p>Communicator:
-											<strong>Not specified</strong><br></p>
-									{% else %}
-										{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
-										{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
-										{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected</strong><br></p>") | raw}}
-									{% endif %}
-
-									{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-									{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
-									{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
-								</td>
-								<td data-label="Publish lockup after approval">
-									{{ (item.getPublic == 1) ? "Yes" : "No" }}
-								</td>
-								<td data-label="Preview">
-									<a href="/lockups/download/{{item.getId}}">
-										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-2" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-									</a>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			{% else %}
-				<h4>Lockups Approved For
-					{{ key }}</h4>
-
-				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-					<thead>
-						<tr>
-							<th style="width: 60%;" scope="col">Title</th>
-							<th style="width: 40%;" scope="col">Preview</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item in value%}
-							<tr>
-								<td data-label="Title">
-									<a href="/lockups/download/{{item.getId}}">
-										{{item.getName}}
-										{{item.getInstitution}}
-									</a>
-								</td>
-								<td data-label="Preview">
-									<a href="/lockups/download/{{item.getId}}">
-										<div style="background-color: #fff;" class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1>
-											{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
-										</div>
-									</a>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+		{% if (lockups_array is empty) %}
+			<p>No lockups found</p>
+		{% else %}
+			{% if search != "" %}
+				<h6>{{ lockups_array | length }}
+					items found</h6>
 			{% endif %}
-		{% endfor %}
+			{% for key, value in lockups_array%}
+				{% if auth.isAdmin %}
+					<h4>All Lockups For
+						{{ key }}</h4>
+					{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
+					<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+						<thead>
+							<tr>
+								<th style="width: 30%;" scope="col">Title</th>
+								<th style="width: 25%;" scope="col">Status</th>
+								<th style="width: 15%;" scope="col">Make public after approval</th>
+								<th style="width: 30%;" scope="col">Preview</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in value %}
+								<tr>
+									<td data-label="Title">
+										<a href="/lockups/download/{{item.getId}}">
+											{{item.getName}}
+											{{item.getInstitution}}
+										</a>
+									</td>
+									<td data-label="Approved">
+										{% if (item.getApprover == null) %}
+											<p>Communicator:
+												<strong>Not specified</strong><br></p>
+										{% else %}
+											{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
+											{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected</strong><br></p>") | raw}}
+										{% endif %}
 
+										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
+									</td>
+									<td data-label="Publish lockup after approval">
+										{{ (item.getPublic == 1) ? "Yes" : "No" }}
+									</td>
+									<td data-label="Preview">
+										<a href="/lockups/download/{{item.getId}}">
+											<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-2" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<h4>Lockups Approved For
+						{{ key }}</h4>
+
+					<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+						<thead>
+							<tr>
+								<th style="width: 60%;" scope="col">Title</th>
+								<th style="width: 40%;" scope="col">Preview</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in value %}
+								<tr>
+									<td data-label="Title">
+										<a href="/lockups/download/{{item.getId}}">
+											{{item.getName}}
+											{{item.getInstitution}}
+										</a>
+									</td>
+									<td data-label="Preview">
+										<a href="/lockups/download/{{item.getId}}">
+											<div style="background-color: #fff;" class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1">
+												{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
+											</div>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
 
 		{# Pagination Script #}
 

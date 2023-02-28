@@ -5,7 +5,7 @@ use Symfony\Component\Validator\Constraints\Length;
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "lockups";
+$database = "old";
 $databaseOfficial = "db_name";
 
 

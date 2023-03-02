@@ -287,7 +287,7 @@ class LockupsRepository extends ServiceEntityRepository
             p.CommunicatorStatus = 0)
             AND
             (p.CreativeStatus != 2
-            OR
+            AND
             p.CommunicatorStatus != 2)
             AND
             p.user = :userID

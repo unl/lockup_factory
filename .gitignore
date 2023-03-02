@@ -31,3 +31,6 @@ yarn-error.log
 .config
 .local
 
+# PHP Local Settings
+public/.user.ini
+

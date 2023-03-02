@@ -6,6 +6,7 @@ use App\Service\Mailer;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LockupsRepository;
 use App\Entity\Users;
+use App\Service\Core;
 
 
 class DailyDigest
@@ -14,12 +15,14 @@ class DailyDigest
 	private $doctrine;
 
 	private $lockupsRepository;
+	private $core;
 
-	public function __construct(Mailer $mailer, ManagerRegistry $doctrine, LockupsRepository $lockupsRepository)
+	public function __construct(Mailer $mailer, ManagerRegistry $doctrine, LockupsRepository $lockupsRepository, Core $core)
 	{
 		$this->mailer = $mailer;
 		$this->doctrine = $doctrine;
 		$this->lockupsRepository = $lockupsRepository;
+		$this->core = $core;
 	}
 
 	public function sendDailyDigestEmails(): bool
@@ -32,7 +35,7 @@ class DailyDigest
 			if (count($pendingApproverLockups) > 0) {
 				$lockup_names = array();
 				foreach ($pendingApproverLockups as $lockup) {
-					$lockup_names[] = $lockup->getName();
+					$lockup_names[] = $this->core->getLockupFileName($lockup);
 				}
 
 				$body = '

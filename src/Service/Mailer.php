@@ -24,7 +24,7 @@ class Mailer
     }
 
     public function sendMail($to, $subject, $body) {
-		$this->mail->setFrom('unl.lockup.factory@unl.edu', 'UNL Lockup Factory');
+		$this->mail->setFrom('mplioplis2@unl.edu', 'UNL Lockup Factory');
 		if (is_array($to)) {
 			foreach ($to as $email) {
 				$this->mail->addAddress($email);
@@ -32,7 +32,6 @@ class Mailer
 		} else {
 			$this->mail->addAddress($to);
 		}
-		$this->mail->addReplyTo('dxg@listserv.unl.edu', 'DXG Devs');
 		$this->mail->addReplyTo('mplioplis2@unl.edu', 'Marcelo Plioplis');
 		$this->mail->isHTML(true);
 

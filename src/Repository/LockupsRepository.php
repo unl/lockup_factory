@@ -230,7 +230,7 @@ class LockupsRepository extends ServiceEntityRepository
         // get lockups older than 30 days that have not been approved yet
         $entityManager = $this->getEntityManager();
         $lastDate = new \DateTime();
-        $lastDate->modify('-24 hour');
+        $lastDate->modify('-30 day');
         $query = $entityManager->createQuery(
             'SELECT p
                 FROM App\Entity\Lockups p

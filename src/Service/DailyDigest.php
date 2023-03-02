@@ -45,7 +45,7 @@ class DailyDigest
 							UNL Lockup Factory
 							';
 
-				$this->mailer->sendMail($approver->email, "UNL Lockup Factory Digest", $body);
+				$this->mailer->sendMail($approver->getEmail(), "UNL Lockup Factory Digest", $body);
 			}
 
 		}
@@ -77,14 +77,14 @@ class DailyDigest
 
 		// Now also check if there are lockups older than 30 days which are yet to be approved.
 
-		$pendingLockupsOlderThan30Days = $this->lockupsRepository->dailyDigestPendingLockups();
+		// $pendingLockupsOlderThan30Days = $this->lockupsRepository->dailyDigestPendingLockups();
 
-		foreach($pendingLockupsOlderThan30Days as $lockup) {
-			// reject all
-			$lockup->setCommunicatorStatus(2);
-			$lockup->setCreativeStatus(2);
-			$this->doctrine->getManager()->persist($lockup);
-		}
+		// foreach($pendingLockupsOlderThan30Days as $lockup) {
+		// 	// reject all
+		// 	$lockup->setCommunicatorStatus(2);
+		// 	$lockup->setCreativeStatus(2);
+		// 	$this->doctrine->getManager()->persist($lockup);
+		// }
 
 		$this->doctrine->getManager()->flush();
 

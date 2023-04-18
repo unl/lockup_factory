@@ -343,7 +343,7 @@ class LockupsController extends BaseController
                 '<br><br>
             Please visit <a href="https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
             <br><br>
-            If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu.
+            If you can\'t see your lockups or if there are issues with any versions, please contact Stephanie Severin at sseverin2@unl.edu.
             <br><br>
             UNL Lockup Factory';
 
@@ -357,7 +357,7 @@ class LockupsController extends BaseController
             <br><br>
             Please visit <a href="https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
             <br><br>
-            If you can\'t see your lockups or if there are issues with any versions, please contact Marcelo Plioplis at 2-7524 or mplioplis2@unl.edu.
+            If you can\'t see your lockups or if there are issues with any versions, please contact Stephanie Severin at sseverin2@unl.edu.
             <br><br>
             UNL Lockup Factory';
 

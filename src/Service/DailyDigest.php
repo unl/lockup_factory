@@ -47,6 +47,7 @@ class DailyDigest
 							<br><br>
 							UNL Lockup Factory
 							';
+				echo($body);
 
 				$this->mailer->sendMail($approver->getEmail(), "UNL Lockup Factory Digest", $body);
 			}
@@ -54,7 +55,7 @@ class DailyDigest
 		}
 
 		# also do this for creative
-		$creative_emails = array('mplioplis2@unl.edu'); # configurable value
+		$creative_emails = array('sseverin2@unl.edu'); # configurable value
 
 		$pendingCreativeLockups = $this->lockupsRepository->dailyDigestCreative();
 		# send an email if there is at least 1 of these

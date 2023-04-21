@@ -40,8 +40,8 @@ class LockupsConverter
     private function createFolder(string $folderName): string
     {
         if (!file_exists($folderName)) {
-            // mkdir($folderName, 0770, true);
-            exec('mkdir ' . $folderName);
+            mkdir($folderName, 0770, true);
+            // exec('mkdir ' . $folderName);
         }
         return $folderName;
     }
@@ -194,7 +194,7 @@ class LockupsConverter
         if ($color != "4c" || $color != "pms186cp") {
 
             // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape' . ' --export-plain-svg=' . $svgDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+            exec('inkscape' . ' --export-plain-svg=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
             // echo (var_dump($backend_output));
             // echo ($svgDirectory);
 
@@ -216,7 +216,7 @@ class LockupsConverter
 
         if ($color != "pms186cp") {
             // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape -h 800 --export-png=' . $pngDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+            exec('inkscape -h 800 --export-png=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
             if ($color != "4c") {
                 $lockupFileClass[1] = new LockupFiles();
@@ -237,7 +237,7 @@ class LockupsConverter
                 #for jpg | convert is a imagemagick function
                 $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
                 // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
-                exec('convert ' . $bg . $pngDirectory . ' ' . $jpgDirectory . ' 2>&1', $backend_output, $return_var);
+                exec('convert ' . escapeshellarg($bg). escapeshellarg($pngDirectory) . ' ' . escapeshellarg($jpgDirectory) . ' 2>&1', $backend_output, $return_var);
 
                 $lockupFileClass[2] = new LockupFiles();
                 $lockupFileClass[2]->setFileName($fileName . ".jpg");
@@ -256,7 +256,7 @@ class LockupsConverter
 
         #for eps
         // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -C --export-eps=' . $epsDirectory . ' ' . $SvgPath . ' 2>&1', $backend_output, $return_var);
+        exec('inkscape -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
         # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
         if ($color == '4c' || $color == 'pms186cp') {

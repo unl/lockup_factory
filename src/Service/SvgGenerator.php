@@ -487,7 +487,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
                     if ($preview) {
                         $height = 52;
                         $x = min($textX);

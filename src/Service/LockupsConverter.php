@@ -40,8 +40,8 @@ class LockupsConverter
     private function createFolder(string $folderName): string
     {
         if (!file_exists($folderName)) {
-            mkdir($folderName, 0770, true);
-            // exec('mkdir ' . $folderName);
+            // mkdir($folderName, 0770, true);
+            exec('mkdir ' . escapeshellarg($folderName));
         }
         return $folderName;
     }
@@ -237,7 +237,7 @@ class LockupsConverter
                 #for jpg | convert is a imagemagick function
                 $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
                 // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
-                exec('convert ' . escapeshellarg($bg). escapeshellarg($pngDirectory) . ' ' . escapeshellarg($jpgDirectory) . ' 2>&1', $backend_output, $return_var);
+                exec('convert ' . $bg. escapeshellarg($pngDirectory) . ' ' . escapeshellarg($jpgDirectory) . ' 2>&1', $backend_output, $return_var);
 
                 $lockupFileClass[2] = new LockupFiles();
                 $lockupFileClass[2]->setFileName($fileName . ".jpg");

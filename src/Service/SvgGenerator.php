@@ -502,12 +502,12 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_second_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_second_line"), array_slice($textX, -1)[0], 48);
+                    $svg->addText($this->getLockupFields($lockup, "org_second_line"), 100 - ($text_width / 2), 48);
 
                     if ($preview) {
                         $height = 65;
@@ -523,7 +523,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
                     $textX[1]  = 100 - ($text_width / 2);
                     $svg->setFontSVG($this->MERCURY);
@@ -533,7 +533,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), array_slice($textX, -1)[0], 55);
+                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), 100 - ($text_width / 2), 55);
 
                     if ($preview) {
                         $x = min($textX);
@@ -548,7 +548,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "student_org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), 100 - ($text_width / 2), 37);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -557,7 +557,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, array_slice($textX, -1)[0], 55);
+                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 100 - ($text_width / 2), 55);
 
                     if ($preview) {
                         $x = min($textX);
@@ -572,7 +572,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -581,12 +581,12 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), array_slice($textX, -1)[0], 55);
+                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), 100 - ($text_width / 2), 55);
 
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_second_line"))[0];
-                    $svg->addText($this->getLockupFields($lockup, "subject_second_line"), array_slice($textX, -1)[0], 64);
+                    $svg->addText($this->getLockupFields($lockup, "subject_second_line"), 100 - ($text_width / 2), 64);
 
                     if ($preview) {
                         $x = min($textX);
@@ -630,12 +630,12 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_second_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "org_second_line"), array_slice($textX, -1)[0], 48);
+                    $svg->addText($this->getLockupFields($lockup, "org_second_line"), 100 - ($text_width / 2), 48);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -644,12 +644,12 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), array_slice($textX, -1)[0], 61);
+                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), 100 - ($text_width / 2), 61);
 
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_second_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "subject_second_line"), array_slice($textX, -1)[0], 70);
+                    $svg->addText($this->getLockupFields($lockup, "subject_second_line"), 100 - ($text_width / 2), 70);
 
                     if ($preview) {
                         $x = min($textX);
@@ -664,12 +664,12 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "student_org_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), array_slice($textX, -1)[0], 37);
+                    $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), 100 - ($text_width / 2), 37);
 
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "student_org_second_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "student_org_second_line"), array_slice($textX, -1)[0], 48);
+                    $svg->addText($this->getLockupFields($lockup, "student_org_second_line"), 100 - ($text_width / 2), 48);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -678,7 +678,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions(self::RECOGNIZED_STUDENT_ORGANIZATION)[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, array_slice($textX, -1)[0], 66);
+                    $svg->addText(self::RECOGNIZED_STUDENT_ORGANIZATION, 100 - ($text_width / 2), 66);
 
                     if ($preview) {
                         $x = min($textX);
@@ -693,7 +693,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), array_slice($textX, -1)[0], 32);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), 100 - ($text_width / 2), 32);
 
                     if ($preview) {
                         $x = min($textX);
@@ -718,14 +718,14 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), array_slice($textX, -1)[0], 32);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), 100 - ($text_width / 2), 32);
 
                     $svg->setFontSize(16.25);
                     $svg->setFontColor($secondary_text_color);
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_subject"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_subject"), array_slice($textX, -1)[0], 56.25);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_subject"), 100 - ($text_width / 2), 56.25);
 
                     if ($preview) {
                         $x = min($textX);
@@ -740,19 +740,19 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), array_slice($textX, -1)[0], 32);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), 100 - ($text_width / 2), 32);
 
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_second_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_second_line"), array_slice($textX, -1)[0], 52);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_second_line"), 100 - ($text_width / 2), 52);
 
                     $svg->setFontSize(16.25);
                     $svg->setFontColor($secondary_text_color);
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "acronym_subject"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "acronym_subject"), array_slice($textX, -1)[0], 80);
+                    $svg->addText($this->getLockupFields($lockup, "acronym_subject"), 100 - ($text_width / 2), 80);
 
                     if ($preview) {
                         $x = min($textX);
@@ -767,7 +767,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions('EXTENSION')[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText('EXTENSION', array_slice($textX, -1)[0], 32);
+                    $svg->addText('EXTENSION', 100 - ($text_width / 2), 32);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -776,7 +776,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "extension"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "extension"), array_slice($textX, -1)[0], 60);
+                    $svg->addText($this->getLockupFields($lockup, "extension"), 100 - ($text_width / 2), 60);
 
                     if ($preview) {
                         $x = min($textX);
@@ -791,7 +791,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions('NCTA')[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText('NCTA', array_slice($textX, -1)[0], 32);
+                    $svg->addText('NCTA', 100 - ($text_width / 2), 32);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -800,7 +800,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "subject_first_line"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), array_slice($textX, -1)[0], 60);
+                    $svg->addText($this->getLockupFields($lockup, "subject_first_line"), 100 - ($text_width / 2), 60);
 
                     if ($preview) {
                         $x = min($textX);
@@ -815,7 +815,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions('EXTENSION')[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText('EXTENSION', array_slice($textX, -1)[0], 32);
+                    $svg->addText('EXTENSION', 100 - ($text_width / 2), 32);
 
                     $svg->setFontSVG($this->MERCURY);
                     $svg->setLetterSpacing(0);
@@ -824,7 +824,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "extension"))[0];
                     array_push($textX, 100 - ($text_width / 2));
                     array_push($textWidth, $text_width);
-                    $svg->addText($this->getLockupFields($lockup, "extension"), array_slice($textX, -1)[0], 66);
+                    $svg->addText($this->getLockupFields($lockup, "extension"), 100 - ($text_width / 2), 66);
 
                     array_push($textX, 55);
                     array_push($textWidth, 93);

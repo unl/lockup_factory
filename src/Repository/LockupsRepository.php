@@ -106,6 +106,8 @@ class LockupsRepository extends ServiceEntityRepository
                 p.CreativeStatus != 2)
                 AND
                 p.DateCreated between :lastDate AND :today
+                AND
+                p.approver != NULLL
                 ORDER BY p.DateCreated DESC'
             )->setParameters(new ArrayCollection([
                 new Parameter('lastDate', $lastDate),
@@ -148,9 +150,15 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
             FROM App\Entity\Lockups p
-            WHERE (p.CreativeStatus = 0
+            WHERE ((p.CreativeStatus = 0
             AND
             p.CommunicatorStatus = 1)
+            OR
+            (p.approver = NULL
+            AND
+            (p.CreativeStatus = 0
+            OR
+            p.CommunicatorStatus = 0)))
             AND
             p.DateCreated between :lastDate AND :today
             ORDER BY p.DateCreated DESC'
@@ -206,9 +214,15 @@ class LockupsRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p
                 FROM App\Entity\Lockups p
-                WHERE (p.CreativeStatus = 0
+                WHERE ((p.CreativeStatus = 0
                 AND
                 p.CommunicatorStatus = 1)
+                OR
+                (p.approver = NULL
+                AND
+                (p.CreativeStatus = 0
+                OR
+                p.CommunicatorStatus = 0)))
                 AND
                 p.DateCreated between :lastDate AND :today
                 ORDER BY p.DateCreated DESC'

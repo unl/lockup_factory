@@ -1,327 +1,340 @@
 {% block body %}
-	{% if alert['title'] is defined %}
-		<div class="dcf-notice {{ alert['alert_type']|default('dcf-notice-success') }}" hidden>
-			<h2>{{ alert['title'] }}</h2>
-			<div>{{ alert['msg'] }}</div>
-		</div>
-	{% endif %}
+{% if alert['title'] is defined %}
+<div class="dcf-notice {{ alert['alert_type']|default('dcf-notice-success') }}" hidden>
+	<h2>{{ alert['title'] }}</h2>
+	<div>{{ alert['msg'] }}</div>
+</div>
+{% endif %}
 
-	{% if (user.isApprover == false and user.isCreative == false) %}
-		<h3>Edit Lockup</h3>
+{% if (user.isApprover == false and user.isCreative == false) %}
+<h3>Edit Lockup</h3>
 
-		{% if alert['title'] is not defined %}
-			<div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? " dcf-notice-success" : " dcf-notice-info" }}" hidden>
-				<h2>{{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "Approved" : "Info"}}</h2>
-				<div>Your lockup
-					{{(Lockup.getCreativeStatus == 1 and
-                    Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}}
-					by your Communicator Contact and UComm.</div>
+{% if alert['title'] is not defined %}
+<div class="dcf-notice {{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? " dcf-notice-success"
+	: " dcf-notice-info" }}" hidden>
+	<h2>{{(Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus ==1) ? "Approved" : "Info"}}</h2>
+	<div>Your lockup
+		{{(Lockup.getCreativeStatus == 1 and
+		Lockup.getCommunicatorStatus ==1) ? "has been approved" : "is being reviewed"}}
+		by your Communicator Contact and UComm.</div>
+</div>
+{% endif %}
+{% else %}
+<h3>Lockup Details</h3>
+{% endif %}
+<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-vw">
+	<div>
+		<h4>
+			Preview
+		</h4>
+		{% if Lockup.getPreviewH != null%}
+		<div class="horiz">
+			<div class="lockups-preview dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
+				{{ Lockup.getPreviewH | raw }}
 			</div>
+			<p class="dcf-txt-center dcf-d-flex dcf-jc-center">
+				<i>
+					Horizontal
+				</i>
+			</p>
+		</div>
 		{% endif %}
-	{% else %}
-		<h3>Lockup Details</h3>
-	{% endif %}
-	<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-vw">
-		<div>
-			<h4>
-				Preview
-			</h4>
-			{% if Lockup.getPreviewH != null%}
-				<div class="horiz">
-					<div class="lockups-preview dcf-p-4 dcf-d-flex dcf-jc-center dcf-ai-center">
-						{{ Lockup.getPreviewH | raw }}
-					</div>
-					<p class="dcf-txt-center dcf-d-flex dcf-jc-center">
-						<i>
-							Horizontal
-						</i>
-					</p>
-				</div>
-			{% endif %}
-			{% if Lockup.getPreviewV != null%}
-				<div class="vert">
-					<div class="lockups-preview dcf-p-4 dcf-txt-center  dcf-ai-center">
-						{{ Lockup.getPreviewV | raw }}
-					</div>
-					<p class="dcf-txt-center">
-						<i>
-							Vertical
-						</i>
-					</p>
-				</div>
+		{% if Lockup.getPreviewV != null%}
+		<div class="vert">
+			<div class="lockups-preview dcf-p-4 dcf-txt-center  dcf-ai-center">
+				{{ Lockup.getPreviewV | raw }}
+			</div>
+			<p class="dcf-txt-center">
+				<i>
+					Vertical
+				</i>
+			</p>
+		</div>
 
+		{% endif %}
+	</div>
+
+	<div>
+		{% if user.getUser == Lockup.getUser and user.isAdmin != true %}
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h4>User Actions</h4>
+			{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
+			<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+			{% endif %}
+			{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
+			<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
+			{% endif %}
+			<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
+				<div class="dcf-form-group">
+					<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+					<div class="dcf-input-checkbox">
+						<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic==1) ? "checked" : "" }}
+							name="publish-lockup">
+						<label for="publishLockup">Make public after approval.</label>
+					</div>
+					<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
+				</div>
+			</form>
+			{# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download
+				Lockup</a> #}
+		</div>
+		{% endif %}
+
+		{% if user.isAdmin %}
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h4>Admin Actions</h4>
+			{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
+			<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
+			{% endif %}
+			<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
+				<div class="dcf-form-group">
+					<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+					<div class="dcf-input-checkbox">
+						<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic==1) ? "checked" : "" }}
+							name="publish-lockup">
+						<label for="publishLockup">Publish lockup after approval?</label>
+					</div>
+					<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
+				</div>
+			</form>
+			{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
+			<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
+			{% endif %}
+			{# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download
+				Lockup</a> #}
+		</div>
+		{% endif %}
+
+		{% if (user.isApprover and (user.getUser == Lockup.getApprover)) or user.isAdmin or user.isCreative %}
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h4>Communicator Actions</h4>
+			{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Feedback received</strong>
+			</div>
+			{% elseif (Lockup.getCommunicatorStatus == 1) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Approved</strong>
+			</div>
+			{% elseif (Lockup.getCommunicatorStatus == 2) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Denied</strong>
+			</div>
+			{% else %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Awaiting Approval</strong>
+			</div>
+			{% endif %}
+			{% if Lockup.getCommunicatorStatus != 1 %}
+			<form method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<input type="hidden" name="role" value="approver">
+				<input type="hidden" name="action" value="approve">
+			</form>
+			{% endif %}
+			{% if Lockup.getCommunicatorStatus != 2 %}
+			<form method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<input type="hidden" name="role" value="approver">
+				<input type="hidden" name="action" value="deny">
+			</form>
+			{% endif %}
+		</div>
+		{% endif %}
+
+		{% if user.isCreative or user.isAdmin %}
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h4>Creative Actions</h4>
+			{% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Feedback received</strong>
+			</div>
+			{% elseif (Lockup.getCreativeStatus == 1)%}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Approved</strong>
+			</div>
+			{% elseif (Lockup.getCreativeStatus == 2)%}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Denied</strong>
+			</div>
+			{% else %}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Awaiting Approval</strong>
+			</div>
+			{% endif %}
+			{% if Lockup.getCreativeStatus != 1 %}
+			<form method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<input type="hidden" name="role" value="creative">
+				<input type="hidden" name="action" value="approve">
+			</form>
+			{% endif %}
+			{% if Lockup.getCreativeStatus != 2 %}
+			<form method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<input type="hidden" name="role" value="creative">
+				<input type="hidden" name="action" value="deny">
+			</form>
+			{% endif %}
+		</div>
+		{% endif %}
+
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h5>Communicator Feedback</h5>
+			{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Feedback received</strong>
+			</div>
+			{% elseif (Lockup.getCommunicatorStatus == 1) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Approved</strong>
+			</div>
+			{% elseif (Lockup.getCommunicatorStatus == 2) %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Denied</strong>
+			</div>
+			{% else %}
+			<div class="dcf-mb-4 dcf-rounded">
+				{{ Lockup.getApprover.getName | default('Communicator not specified') }}
+				(Communicator)<strong>: Awaiting Approval</strong>
+			</div>
+			{% endif %}
+			{# feedback block start #}
+			{% if core.hasApproverFeedback(Lockup.getId) %}
+			<div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;"
+				class="dcf-p-4 dcf-mb-4 unl-bg-cream" id="ofcomm">
+				{% for item in Lockup.getFeedbacks %}
+				{% if item.type == "approver" %}
+				<div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4"
+					style="border-radius: 10px; position:relative;">
+					<p style="color: var(--darker-gray)">{{ item.value }}</p>
+					<p style="color: var(--darker-gray); position: absolute; bottom: 0px;"
+						class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			{% endif %}
+
+			{% if ((user.isApprover == true) and (Lockup.getApprover == user.getUser)) or (user.isAdmin) %}
+			<form class="dcf-form" method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<div class="dcf-form-group">
+					<label for="communicator-feedback">Feedback</label>
+					<textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback"
+						name="communicator-feedback" placeholder="Type your feedback here."></textarea>
+				</div>
+				<input type="hidden" name="role" value="approver">
+				<input type="hidden" name="action" value="feedback">
+				<button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Submit</button>
+			</form>
 			{% endif %}
 		</div>
 
-		<div>
-			{% if user.getUser == Lockup.getUser and user.isAdmin != true %}
-				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-					<h4>User Actions</h4>
-					{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
-					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
-					{% endif %}
-					{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
-						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
-					{% endif %}
-					<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
-					<div class="dcf-form-group">
-						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-						<div class="dcf-input-checkbox">
-							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
-							<label for="publishLockup">Make public after approval.</label>
-						</div>
-						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
-					</div>
-					</form>
-					{# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
-				</div>
-			{% endif %}
-
-			{% if user.isAdmin %}
-				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-					<h4>Admin Actions</h4>
-					{% if Lockup.getCreativeStatus != 1 and Lockup.getCommunicatorStatus != 1 %}
-					<a href="/lockups/edit/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary">Edit Lockup</a>
-					{% endif %}
-					<form class="dcf-form dcf-mt-3" id="publishLockupForm" method="POST">
-					<div class="dcf-form-group">
-					    <input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-						<div class="dcf-input-checkbox">
-							<input type="checkbox" id="publishLockup" {{ (Lockup.getPublic == 1) ? "checked" : ""}} name="publish-lockup">
-							<label for="publishLockup">Publish lockup after approval?</label>
-						</div>
-						<input type="hidden" value="0" id="publishLockupValue" name="publishLockup">
-						</div>
-					</form>
-					{% if Lockup.getCreativeStatus == 1 and Lockup.getCommunicatorStatus == 1 %}
-						<a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-primary">Download Lockup</a>
-					{% endif %}
-					{# <a href="/lockups/download/{{Lockup.getId}}" class="dcf-btn dcf-btn-secondary dcf-mt-3">Download Lockup</a> #}
-				</div>
-			{% endif %}
-
-			{% if (user.isApprover and (user.getUser == Lockup.getApprover)) or user.isAdmin or user.isCreative %}
-				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-					<h4>Communicator Actions</h4>
-					{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}
-						<div class="dcf-mb-4 dcf-rounded">
-							{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-							(Communicator)<strong>: Feedback received</strong>
-						</div>
-					{% elseif (Lockup.getCommunicatorStatus == 1) %}
-						<div class="dcf-mb-4 dcf-rounded">
-							{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-							(Communicator)<strong>: Approved</strong>
-						</div>
-					{% elseif (Lockup.getCommunicatorStatus == 2) %}
-						<div class="dcf-mb-4 dcf-rounded">
-							{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-							(Communicator)<strong>: Denied</strong>
-						</div>
-					{% else %}
-						<div class="dcf-mb-4 dcf-rounded">
-							{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-							(Communicator)<strong>: Awaiting Approval</strong>
-						</div>
-					{% endif %}
-					{% if Lockup.getCommunicatorStatus != 1 %}
-						<form method="POST" style="display: inline;">
-							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-							<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
-							<input type="hidden" name="id" value="{{Lockup.getId}}">
-							<input type="hidden" name="role" value="approver">
-							<input type="hidden" name="action" value="approve">
-						</form>
-					{% endif %}
-					{% if Lockup.getCommunicatorStatus != 2 %}
-						<form method="POST" style="display: inline;">
-							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-							<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
-							<input type="hidden" name="id" value="{{Lockup.getId}}">
-							<input type="hidden" name="role" value="approver">
-							<input type="hidden" name="action" value="deny">
-						</form>
-					{% endif %}
-				</div>
-			{% endif %}
-
-			{% if user.isCreative or user.isAdmin %}
-				<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-					<h4>Creative Actions</h4>
-					{% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
-						<div class="dcf-mb-4">
-							UComm:
-							<strong>Feedback received</strong>
-						</div>
-					{% elseif (Lockup.getCreativeStatus == 1)%}
-						<div class="dcf-mb-4">
-							UComm:
-							<strong>Approved</strong>
-						</div>
-					{% elseif (Lockup.getCreativeStatus == 2)%}
-						<div class="dcf-mb-4">
-							UComm:
-							<strong>Denied</strong>
-						</div>
-					{% else %}
-						<div class="dcf-mb-4">
-							UComm:
-							<strong>Awaiting Approval</strong>
-						</div>
-					{% endif %}
-					{% if Lockup.getCreativeStatus != 1 %}
-						<form method="POST" style="display: inline;">
-							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-							<button type="submit" class="dcf-btn dcf-btn-primary">Approve This Lockup</button>
-							<input type="hidden" name="id" value="{{Lockup.getId}}">
-							<input type="hidden" name="role" value="creative">
-							<input type="hidden" name="action" value="approve">
-						</form>
-					{% endif %}
-					{% if Lockup.getCreativeStatus != 2 %}
-						<form method="POST" style="display: inline;">
-							<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-							<button type="submit" class="dcf-btn dcf-btn-secondary">Deny This Lockup</button>
-							<input type="hidden" name="id" value="{{Lockup.getId}}">
-							<input type="hidden" name="role" value="creative">
-							<input type="hidden" name="action" value="deny">
-						</form>
-					{% endif %}
-				</div>
-			{% endif %}
-
-			<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-				<h5>Communicator Feedback</h5>
-				{% if (core.hasApproverFeedback(Lockup.getId)) and (Lockup.getCommunicatorStatus == 0) %}
-					<div class="dcf-mb-4 dcf-rounded">
-						{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-						(Communicator)<strong>: Feedback received</strong>
-					</div>
-				{% elseif (Lockup.getCommunicatorStatus == 1) %}
-					<div class="dcf-mb-4 dcf-rounded">
-						{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-						(Communicator)<strong>: Approved</strong>
-					</div>
-				{% elseif (Lockup.getCommunicatorStatus == 2) %}
-					<div class="dcf-mb-4 dcf-rounded">
-						{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-						(Communicator)<strong>: Denied</strong>
-					</div>
-				{% else %}
-					<div class="dcf-mb-4 dcf-rounded">
-						{{ Lockup.getApprover.getName | default('Communicator not specified') }}
-						(Communicator)<strong>: Awaiting Approval</strong>
-					</div>
-				{% endif %}
-				{# feedback block start #}
-				{% if core.hasApproverFeedback(Lockup.getId) %}
-					<div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4 unl-bg-cream" id="ofcomm">
-						{% for item in Lockup.getFeedbacks %}
-							{% if item.type == "approver" %}
-								<div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4" style="border-radius: 10px; position:relative;">
-									<p style="color: var(--darker-gray)">{{ item.value }}</p>
-									<p style="color: var(--darker-gray); position: absolute; bottom: 0px;" class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
-								</div>
-							{% endif %}
-						{% endfor %}
-					</div>
-				{% endif %}
-
-				{% if ((user.isApprover == true) and (Lockup.getApprover == user.getUser)) or (user.isAdmin) %}
-					<form class="dcf-form" method="POST" style="display: inline;">
-						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-						<input type="hidden" name="id" value="{{Lockup.getId}}">
-						<div class="dcf-form-group">
-							<label for="communicator-feedback">Feedback</label>
-							<textarea class="dcf-b-solid dcf-b-1 dcf-rounded dcf-p-2" rows="5" id="communicator-feedback" name="communicator-feedback" placeholder="Type your feedback here."></textarea>
-						</div>
-						<input type="hidden" name="role" value="approver">
-						<input type="hidden" name="action" value="feedback">
-						<button type="submit" class="dcf-btn dcf-btn-secondary dcf-mt-2">Submit</button>
-					</form>
-				{% endif %}
+		{# ucomm block #}
+		<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
+			<h5>Creative Feedback</h5>
+			{% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Feedback received</strong>
 			</div>
-
-			{# ucomm block #}
-			<div class="dcf-p-6 dcf-mb-6 unl-bg-lightest-gray dcf-rounded">
-				<h5>Creative Feedback</h5>
-				{% if (core.hasCreativeFeedback(Lockup.getId)) and (Lockup.getCreativeStatus == 0) %}
-					<div class="dcf-mb-4">
-						UComm:
-						<strong>Feedback received</strong>
-					</div>
-				{% elseif (Lockup.getCreativeStatus == 1)%}
-					<div class="dcf-mb-4">
-						UComm:
-						<strong>Approved</strong>
-					</div>
-				{% elseif (Lockup.getCreativeStatus == 2)%}
-					<div class="dcf-mb-4">
-						UComm:
-						<strong>Denied</strong>
-					</div>
-				{% else %}
-					<div class="dcf-mb-4">
-						UComm:
-						<strong>Awaiting Approval</strong>
-					</div>
-				{% endif %}
-				{% if core.hasCreativeFeedback(Lockup.getId) %}
-					<div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;" class="dcf-p-4 dcf-mb-4 unl-bg-cream" id="ofcrea">
-						{% for item in Lockup.getFeedbacks %}
-							{% if item.type == "creative" %}
-								<div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4" style="border-radius: 10px; position:relative;">
-									<p style="color: var(--darker-gray)">{{ item.value }}</p>
-									<p style="color: var(--darker-gray); position: absolute; bottom: 0px;" class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
-								</div>
-							{% endif %}
-						{% endfor %}
-					</div>
-				{% endif %}
-
-				{% if (user.isCreative == true) or (user.isAdmin) %}
-					<form class="dcf-form" method="POST" style="display: inline;">
-						<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}"/>
-						<div class="dcf-form-group">
-							<label for="creative-feedback">Feedback</label>
-
-							<textarea class="dcf-b-solid dcf-b-1 dcf-rounded" rows="5" id="creative-feedback" name="creative-feedback" placeholder="Type your feedback here."></textarea>
-						</div>
-						<button type="submit" class="dcf-btn dcf-btn-secondary">Submit</button>
-						<input type="hidden" name="id" value="{{Lockup.getId}}">
-						<input type="hidden" name="role" value="creative">
-						<input type="hidden" name="action" value="feedback">
-					</form>
-				{% endif %}
+			{% elseif (Lockup.getCreativeStatus == 1)%}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Approved</strong>
 			</div>
+			{% elseif (Lockup.getCreativeStatus == 2)%}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Denied</strong>
+			</div>
+			{% else %}
+			<div class="dcf-mb-4">
+				UComm:
+				<strong>Awaiting Approval</strong>
+			</div>
+			{% endif %}
+			{% if core.hasCreativeFeedback(Lockup.getId) %}
+			<div style="width: 100%; max-height: 200px; border: 1px solid #F4F3F2; border-radius: 10px; overflow-y: auto;"
+				class="dcf-p-4 dcf-mb-4 unl-bg-cream" id="ofcrea">
+				{% for item in Lockup.getFeedbacks %}
+				{% if item.type == "creative" %}
+				<div class="dcf-w-100% unl-bg-lighter-gray dcf-p-3 dcf-mb-4"
+					style="border-radius: 10px; position:relative;">
+					<p style="color: var(--darker-gray)">{{ item.value }}</p>
+					<p style="color: var(--darker-gray); position: absolute; bottom: 0px;"
+						class="dcf-subhead dcf-txt-3xs">{{ item.time }}</p>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+			{% endif %}
+
+			{% if (user.isCreative == true) or (user.isAdmin) %}
+			<form class="dcf-form" method="POST" style="display: inline;">
+				<input type="hidden" name="token" value="{{ csrf_token('lockups-action') }}" />
+				<div class="dcf-form-group">
+					<label for="creative-feedback">Feedback</label>
+
+					<textarea class="dcf-b-solid dcf-b-1 dcf-rounded" rows="5" id="creative-feedback"
+						name="creative-feedback" placeholder="Type your feedback here."></textarea>
+				</div>
+				<button type="submit" class="dcf-btn dcf-btn-secondary">Submit</button>
+				<input type="hidden" name="id" value="{{Lockup.getId}}">
+				<input type="hidden" name="role" value="creative">
+				<input type="hidden" name="action" value="feedback">
+			</form>
+			{% endif %}
 		</div>
 	</div>
-	<script>
-		var objDiv = document.getElementById("ofcomm");
-var objDiv2 = document.getElementById("ofcrea");
-objDiv.scrollTop = objDiv.scrollHeight;
-objDiv2.scrollTop = objDiv2.scrollHeight;
-	</script>
+</div>
+<script>
+	var objDiv = document.getElementById("ofcomm");
+	var objDiv2 = document.getElementById("ofcrea");
+	objDiv.scrollTop = objDiv.scrollHeight;
+	objDiv2.scrollTop = objDiv2.scrollHeight;
+</script>
 
-	<script>
-		const publishLockupForm = document.getElementById("publishLockupForm");
-const publishLockup = document.getElementById("publishLockup");
-const publishLockupValue = document.getElementById("publishLockupValue");
+<script>
+	const publishLockupForm = document.getElementById("publishLockupForm");
+	const publishLockup = document.getElementById("publishLockup");
+	const publishLockupValue = document.getElementById("publishLockupValue");
 
-// publishLockup.checked = false;
-publishLockup.addEventListener('change', function () {
-if (this.checked) {
-publishLockupValue.value = "1";
-publishLockupForm.submit();
-} else {
-publishLockupValue.value = "0";
-publishLockupForm.submit();
-}
-});
-	</script>
-	<script>
-		window.addEventListener('inlineJSReady', function () {
-WDN.initializePlugin('notice');
-}, false);
-	</script>
+	// publishLockup.checked = false;
+	publishLockup.addEventListener('change', function () {
+		if (this.checked) {
+			publishLockupValue.value = "1";
+			publishLockupForm.submit();
+		} else {
+			publishLockupValue.value = "0";
+			publishLockupForm.submit();
+		}
+	});
+</script>
+<script>
+	window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('notice');
+	}, false);
+</script>
 {% endblock %}

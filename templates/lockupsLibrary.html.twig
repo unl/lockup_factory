@@ -55,18 +55,18 @@
 				</div>
 
 				{# <div>
-																		<fieldset>
-																		<legend class="dcf-legend">More filters</legend>
-																		<label class="dcf-txt-sm" for="approver">Select organization name</label>
-																		<select def id="approver" name="approver"
-																			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-																		{% for key, value in allLockups %}
-																			<option value="0">{{ key }}</option>
-																		
-																		{% endfor %}
-																		</select>
-																		</fieldset>
-																		</div> #}
+																														<fieldset>
+																														<legend class="dcf-legend">More filters</legend>
+																														<label class="dcf-txt-sm" for="approver">Select organization name</label>
+																														<select def id="approver" name="approver"
+																															class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+																														{% for key, value in allLockups %}
+																															<option value="0">{{ key }}</option>
+																														
+																														{% endfor %}
+																														</select>
+																														</fieldset>
+																														</div> #}
 
 			{% endif %}
 
@@ -81,9 +81,9 @@
 			<p>No lockups found</p>
 		{% else %}
 			{# {% if search != "" %}
-							<h6>{{ lockups_array | length }}
-								items found</h6>
-						{% endif %} #}
+																<h6>{{ lockups_array | length }}
+																	items found</h6>
+															{% endif %} #}
 			{% for key, value in lockups_array%}
 				{% if auth.isAdmin %}
 					<h4>All Lockups For

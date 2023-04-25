@@ -77,7 +77,7 @@
 											View
 										</a>
 										{% if auth.isAdmin %}
-												<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
+											<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
 										{% endif %}
 									</td>
 								</tr>
@@ -142,7 +142,7 @@
 											View
 										</a>
 										{% if auth.isAdmin %}
-												<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
+											<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
 										{% endif %}
 									</td>
 								</tr>
@@ -156,11 +156,11 @@
 		<h4 class="dcf-mt-6">Your Lockups</h4>
 		<div class="dcf-tabs dcf-tabs-responsive">
 			<ul>
-			{% if (pendingUserLockups|length > 0)%}
-				<li>
-					<a href="#awaiting-approval">Awaiting Approval ({{pendingUserLockups | length}})</a>
-				</li>
-		{% endif %}
+				{% if (pendingUserLockups|length > 0)%}
+					<li>
+						<a href="#awaiting-approval">Awaiting Approval ({{pendingUserLockups | length}})</a>
+					</li>
+				{% endif %}
 				<li>
 					<a href="#approved">Approved ({{approvedUserLockups | length}})</a>
 				</li>
@@ -169,66 +169,66 @@
 				</li>
 			</ul>
 			{% if (pendingUserLockups|length > 0)%}
-			<div id="awaiting-approval" class="unl-bg-cream dcf-p-3">
-				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
-					<thead>
-						<tr>
-							<th scope="col" style="width: 15%;">Title</th>
-							<th scope="col" style="width: 20%;">Preview</th>
-							<th scope="col" style="width: 17%;">Category</th>
-							<th scope="col" style="width: 15%;">Approver</th>
-							<th scope="col" style="width: 20%;">Status</th>
-							<th scope="col" style="width: 13%;">Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item in pendingUserLockups %}
+				<div id="awaiting-approval" class="unl-bg-cream dcf-p-3">
+					<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+						<thead>
 							<tr>
-								<td data-label="Title">
-									{{item.getInstitution}}
-									{{item.getName}}
-								</td>
-								<td data-label="Preview">
-									<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-								</td>
-								<td data-label="Category">
-									{{ item.getTemplate.getCategory.getName }}
-								</td>
-								<td data-label="Approver">
-									{% if item.getApprover != null%}
-										{{item.getApprover.getName}}
-									{% else %}
-										<strong>Communicator not specified</strong>
-									{% endif %}
-								</td>
-								<td data-label="Status">
-									{% if (item.getApprover == null) %}
-										<p>Communicator:
-											<strong>Not specified</strong><br></p>
-									{% else %}
-										{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br></p>" | raw}}
-										{{(item.getCommunicatorStatus == 1) ? "<p>Approver: Approved<br></p>" | raw}}
-										{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" | raw}}
-									{% endif %}
-
-									{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-									{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
-									{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
-
-								</td>
-								<td data-label="Actions">
-									<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
-										View
-									</a>
-										<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
-
-								</td>
+								<th scope="col" style="width: 15%;">Title</th>
+								<th scope="col" style="width: 20%;">Preview</th>
+								<th scope="col" style="width: 17%;">Category</th>
+								<th scope="col" style="width: 15%;">Approver</th>
+								<th scope="col" style="width: 20%;">Status</th>
+								<th scope="col" style="width: 13%;">Actions</th>
 							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		{% endif %}
+						</thead>
+						<tbody>
+							{% for item in pendingUserLockups %}
+								<tr>
+									<td data-label="Title">
+										{{item.getInstitution}}
+										{{item.getName}}
+									</td>
+									<td data-label="Preview">
+										<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
+									</td>
+									<td data-label="Category">
+										{{ item.getTemplate.getCategory.getName }}
+									</td>
+									<td data-label="Approver">
+										{% if item.getApprover != null%}
+											{{item.getApprover.getName}}
+										{% else %}
+											<strong>Communicator not specified</strong>
+										{% endif %}
+									</td>
+									<td data-label="Status">
+										{% if (item.getApprover == null) %}
+											<p>Communicator:
+												<strong>Not specified</strong><br></p>
+										{% else %}
+											{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 1) ? "<p>Approver: Approved<br></p>" | raw}}
+											{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" | raw}}
+										{% endif %}
+
+										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+										{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+										{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+									</td>
+									<td data-label="Actions">
+										<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+											View
+										</a>
+										<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
+
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
 
 			<div id="approved" class="unl-bg-cream dcf-p-3">
 				<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
@@ -281,7 +281,7 @@
 									<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
 										View
 									</a>
-												<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
+									<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
 
 								</td>
 							</tr>
@@ -340,7 +340,7 @@
 									<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
 										View
 									</a>
-												<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
+									<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
 
 								</td>
 							</tr>
@@ -404,7 +404,7 @@
 									View
 								</a>
 								{% if auth.isApprover %}
-												<button onClick="deleteLockup("{{item.getId}}")" class="dcf-btn dcf-btn-primary">Delete</button>
+									<button onclick="deleteLockup(" {{item.getId}} ")" class="dcf-btn dcf-btn-primary">Delete</button>
 
 								{% endif %}
 							</td>
@@ -430,41 +430,40 @@ searchTermField.value = searchTerm;
 	</script>
 
 	<script>
-	let deleteLockup = (lockup_id) => {
+		let deleteLockup = (lockup_id) => {
 if (confirm("Are you sure you want to delete this lockup?") == true) {
-  // The rest of this code assumes you are not using a library.
-  // It can be made less verbose if you use one.
-  params = {
-	  token: {{{{ csrf_token('delete-lockups') }}}},
-	  id: lockup_id
-  }
-  const form = document.createElement('form');
-  form.method = 'post';
-  form.action = '/lockups/manage/';
+// The rest of this code assumes you are not using a library.
+// It can be made less verbose if you use one.
+params = {
+token: {{ csrf_token('delete-lockups') }},
+id : lockup_id
+}
+const form = document.createElement('form');
+form.method = 'post';
+form.action = '/lockups/manage/';
 
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
-      const hiddenField = document.createElement('input');
-      hiddenField.type = 'hidden';
-      hiddenField.name = key;
-      hiddenField.value = params[key];
+for (const key in params) {
+if (params.hasOwnProperty(key)) {
+const hiddenField = document.createElement('input');
+hiddenField.type = 'hidden';
+hiddenField.name = key;
+hiddenField.value = params[key];
 
-      form.appendChild(hiddenField);
-    }
-  }
+form.appendChild(hiddenField);
+}
+}
 
-  document.body.appendChild(form);
-  
+document.body.appendChild(form);
+
 
 try {
 form.submit();
+location.reload();
 } catch {
-	
-}
-} else {
-}
-	}
 
+}
+}
+}
 	</script>
 
 	<script>

@@ -36,8 +36,7 @@ class LockupsController extends BaseController
 
         if ($auth->isAdmin() || $auth->isCreative()) {
             $pendingApprover = $core->getPendingApproverLockups();
-        }
-        else if ($auth->isApprover()) {
+        } else if ($auth->isApprover()) {
             $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
         }
 
@@ -48,8 +47,7 @@ class LockupsController extends BaseController
 
         if ($auth->isApprover()) {
             $previouslyApproved = $core->previouslyApproved();
-        }
-        else {
+        } else {
             $previouslyApproved = array();
         }
 
@@ -57,8 +55,7 @@ class LockupsController extends BaseController
             $searchLockupResult = $core->search($search, true);
             if ($auth->isAdmin()) {
                 $pendingApprover = $core->getPendingApproverLockups();
-            }
-            else if ($auth->isApprover()) {
+            } else if ($auth->isApprover()) {
                 $pendingApprover = $core->getPendingApproverLockups($auth->getUser()->getId());
             }
 
@@ -168,8 +165,7 @@ class LockupsController extends BaseController
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
             return $response;
-        }
-        else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
+        } else if (($auth->getUser() != $lockup->getUser() && (!$auth->isAdmin() && !$auth->isCreative() && ($auth->getUser() != $lockup->getApprover())))) {
             return $this->redirectToRoute('downloadLockups', [
                 'id' => $id
             ], 302);
@@ -178,8 +174,7 @@ class LockupsController extends BaseController
         if ($action == "new-lockup") {
             $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully created the lockup";
-        }
-        elseif ($action == "edit-lockup") {
+        } elseif ($action == "edit-lockup") {
             $alert['title'] = "Success!";
             $alert['msg'] = "You have successfully edited your lockup. Your lockup now needs to be reapproved by your communicator and approver.";
         }
@@ -227,8 +222,7 @@ class LockupsController extends BaseController
                 'errorTitle' => "Access denied!",
                 'errorBody' => "The requested lockup could not be found or you have insufficient permissions."
             ]);
-        }
-        ;
+        };
 
         if ($lockups == null) {
             $response = $this->forward('App\Controller\AlertsController::errorPage', [
@@ -249,8 +243,7 @@ class LockupsController extends BaseController
                 'alert' => $alert
             ]);
             return $response;
-        }
-        else if ($publish == "0") {
+        } else if ($publish == "0") {
             $lockups->setPublic(0);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($lockups);
@@ -288,10 +281,21 @@ class LockupsController extends BaseController
                             $alert['msg'] = "Lockup has been denied. Owner of the lockups has been notified.";
                             break;
                         case "feedback":
-                            $msg = $creative_feedback;
-                            $alert['title'] = "Success!";
-                            $alert['msg'] = "Feedback has been added. Owner of the lockups has been notified.";
-                            break;
+                            if ($creative_feedback == "") {
+                                $alert['title'] = "Error!";
+                                $alert['msg'] = "Blank feedback submitted.";
+                                $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                                    'id' => $id,
+                                    'alert' => $alert,
+                                    'alert_type' => "dcf-notice-warning"
+                                ]);
+                                return $response;
+                            } else {
+                                $msg = $creative_feedback;
+                                $alert['title'] = "Success!";
+                                $alert['msg'] = "Feedback has been added. Owner of the lockups has been notified.";
+                                break;
+                            }
                     }
                     $feedback->setValue($msg);
                 }
@@ -318,10 +322,21 @@ class LockupsController extends BaseController
                             $alert['msg'] = "Lockup has been denied. Owner of the lockups has been notified.";
                             break;
                         case "feedback":
-                            $msg = $communicator_feedback;
-                            $alert['title'] = "Success!";
-                            $alert['msg'] = "Feedback has been added. Owner of the lockups has been notified.";
-                            break;
+                            if ($communicator_feedback == "") {
+                                $alert['title'] = "Error!";
+                                $alert['msg'] = "Blank feedback submitted.";
+                                $response = $this->forward('App\Controller\LockupsController::previewLockups', [
+                                    'id' => $id,
+                                    'alert' => $alert,
+                                    'alert_type' => "dcf-notice-warning"
+                                ]);
+                                return $response;
+                            } else {
+                                $msg = $communicator_feedback;
+                                $alert['title'] = "Success!";
+                                $alert['msg'] = "Feedback has been added. Owner of the lockups has been notified.";
+                                break;
+                            }
                     }
                     $feedback->setValue($msg);
                 }
@@ -341,7 +356,7 @@ class LockupsController extends BaseController
             Feedback: <br> '
                 . $msg .
                 '<br><br>
-            Please visit <a href="https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
+            Please visit <a href="https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
             <br><br>
             If you can\'t see your lockups or if there are issues with any versions, please contact Stephanie Severin at sseverin2@unl.edu.
             <br><br>
@@ -355,7 +370,7 @@ class LockupsController extends BaseController
             $body = '
             Your lockup, ' . $lockups->getName() . ', has been approved and is ready to generate.
             <br><br>
-            Please visit <a href="https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') .'/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
+            Please visit <a href="https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '</a> to generate its files.
             <br><br>
             If you can\'t see your lockups or if there are issues with any versions, please contact Stephanie Severin at sseverin2@unl.edu.
             <br><br>
@@ -441,7 +456,6 @@ class LockupsController extends BaseController
             'errorBody' => "The requested lockup could not be found."
         ]);
         return $response;
-
     }
 
     /**
@@ -471,6 +485,5 @@ class LockupsController extends BaseController
             'errorBody' => "The requested lockup could be found."
         ]);
         return $response;
-
     }
 }

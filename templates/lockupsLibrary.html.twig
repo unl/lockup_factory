@@ -1,310 +1,318 @@
 {% block body %}
-	<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
-		<h3>Lockups Library</h3>
-		<div class="dcf-mb-4">
-			<form class="dcf-form">
-				<label for="search-term">Search Lockups</label>
-				<div class="dcf-input-group">
-					<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
-					<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
-					{% if search != "" %}
-						<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
-					{% endif %}
-				</div>
-			</form>
-		</div>
-
-
-		<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-grid-thirds@lg dcf-mb-6 dcf-row-gap-1 dcf-col-gap-vw">
-
-			<div>
-				<form class="dcf-form" id="orgForm" method="POST">
-					<fieldset>
-						<legend class="dcf-legend">Filter By Organization</legend>
-						<div class="dcf-form-group">
-							<label class="dcf-txt-sm" for="approver">Select Organization Name</label>
-							<select id="organization" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-								<option value="0" selected>Select Approving Organization</option>
-								{% for key, value in allLockups%}
-									<option value="{{ key }}">{{ key }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</fieldset>
-				</form>
-			</div>
-
-			{% if auth.isAdmin %}
-
-				<div>
-					<form class="dcf-form" method="POST">
-						<fieldset>
-							<legend class="dcf-legend">Filter By User</legend>
-							<div class="dcf-form-group">
-								<label for="search-term">Enter username</label>
-								<div class="dcf-input-group">
-									<input value="" type="text" name="user_id" id="userIdField">
-									<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
-									{% if user_id != "" %}
-										<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
-									{% endif %}
-								</div>
-							</div>
-						</fieldset>
-					</form>
-				</div>
-
-				{# <div>
-																		<fieldset>
-																		<legend class="dcf-legend">More filters</legend>
-																		<label class="dcf-txt-sm" for="approver">Select organization name</label>
-																		<select def id="approver" name="approver"
-																			class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
-																		{% for key, value in allLockups %}
-																			<option value="0">{{ key }}</option>
-																		
-																		{% endfor %}
-																		</select>
-																		</fieldset>
-																		</div> #}
-
-			{% endif %}
-
-		</div>
-
-		{% if user_id != "" %}
-			<h3>Lockups For User
-				{{ user_id }}</h3>
-		{% endif %}
-
-		{% if (lockups_array is empty) %}
-			<p>No lockups found</p>
-		{% else %}
-			{# {% if search != "" %}
-							<h6>{{ lockups_array | length }}
-								items found</h6>
-						{% endif %} #}
-			{% for key, value in lockups_array%}
-				{% if auth.isAdmin %}
-					<h4>All Lockups For
-						{{ key }}</h4>
-					{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
-					<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-						<thead>
-							<tr>
-								<th style="width: 30%;" scope="col">Title</th>
-								<th style="width: 25%;" scope="col">Status</th>
-								<th style="width: 15%;" scope="col">Make public after approval</th>
-								<th style="width: 30%;" scope="col">Preview</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for item in value %}
-								<tr>
-									<td data-label="Title">
-										<a href="/lockups/download/{{item.getId}}">
-											{{item.getName}}
-											{{item.getInstitution}}
-										</a>
-									</td>
-									<td data-label="Approved">
-										{% if (item.getApprover == null) %}
-											<p>Communicator:
-												<strong>Not specified</strong><br></p>
-										{% else %}
-											{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting Approval</strong><br></p>") | raw}}
-											{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Approved</strong><br></p>") | raw}}
-											{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected</strong><br></p>") | raw}}
-										{% endif %}
-
-										{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
-										{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
-										{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
-									</td>
-									<td data-label="Publish lockup after approval">
-										{{ (item.getPublic == 1) ? "Yes" : "No" }}
-									</td>
-									<td data-label="Preview">
-										<a href="/lockups/download/{{item.getId}}">
-											<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-2" style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}</div>
-										</a>
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				{% else %}
-					<h4>Lockups Approved For
-						{{ key }}</h4>
-
-					<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
-						<thead>
-							<tr>
-								<th style="width: 60%;" scope="col">Title</th>
-								<th style="width: 40%;" scope="col">Preview</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for item in value %}
-								<tr>
-									<td data-label="Title">
-										<a href="/lockups/download/{{item.getId}}">
-											{{item.getName}}
-											{{item.getInstitution}}
-										</a>
-									</td>
-									<td data-label="Preview">
-										<a href="/lockups/download/{{item.getId}}">
-											<div style="background-color: #fff;" class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1">
-												{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
-											</div>
-										</a>
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+	<h3>Lockups Library</h3>
+	<div class="dcf-mb-4">
+		<form class="dcf-form">
+			<label for="search-term">Search Lockups</label>
+			<div class="dcf-input-group">
+				<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+				<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+				{% if search != "" %}
+				<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
 				{% endif %}
-			{% endfor %}
-		{% endif %}
-
-		{# Pagination Script #}
-
-		{% if totalPage > 1 %}
-			{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" : path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
-			<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
-				<ol class="dcf-list-bare dcf-list-inline">
-					{% if currentPage != 1%}
-						<li>
-							<a class="dcf-pagination-first" href="{{ currentPath }}1">First</a>
-						</li>
-						<li>
-							<a class="dcf-pagination-prev" href="{{ currentPath }}{{ currentPage - 1}}">Prev</a>
-						</li>
-					{% endif %}
-
-					{% if currentPage == 1 %}
-						<li>
-							<span class="dcf-pagination-selected">1</span>
-						</li>
-						{% for i in (currentPage + 1) .. totalPage %}
-							{% if (i - currentPage) <= 2%}
-								<li>
-									<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-								</li>
-							{% endif %}
-						{% endfor %}
-						{% if totalPage > 3 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-					{% elseif currentPage == totalPage %}
-						{% if totalPage > 3 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-						{% if totalPage == 2 %}
-							{% for i in 1 .. (totalPage - 1) %}
-								{% if i >= (totalPage - 2) %}
-									<li>
-										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-									</li>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							{% for i in (totalPage - 2) .. (totalPage - 1) %}
-								{% if i >= (totalPage - 2) %}
-									<li>
-										<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
-									</li>
-								{% endif %}
-							{% endfor %}
-						{% endif %}
-						<li>
-							<span class="dcf-pagination-selected">{{ currentPage }}</span>
-						</li>
-					{% else %}
-						{% if (currentPage - 1) > 1 %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-						<li>
-							<a href="{{ currentPath }}{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
-						</li>
-						<li>
-							<span class="dcf-pagination-selected">{{ currentPage }}</span>
-						</li>
-						<li>
-							<a href="{{ currentPath }}{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
-						</li>
-						{% if (currentPage + 1) < totalPage %}
-							<li>
-								<span class="dcf-pagination-ellipsis">…</span>
-							</li>
-						{% endif %}
-					{% endif %}
-
-					{% if currentPage != totalPage %}
-						<li>
-							<a class="dcf-pagination-next" href="{{ currentPath }}{{ currentPage + 1}}">Next</a>
-						</li>
-						<li>
-							<a class="dcf-pagination-last" href="{{ currentPath }}{{ totalPage }}">Last</a>
-						</li>
-					{% endif %}
-				</ol>
-			</nav>
-		{% endif %}
-		{# End Pagination Script #}
+			</div>
+		</form>
 	</div>
 
 
-	<script>
-		// search script
-let searchTerm = "{{ search }}";
-let searchTermField = document.getElementById("searchTermField");
-if (searchTerm != "") {
-searchTermField.value = searchTerm;
-}
-	</script>
+	<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-grid-thirds@lg dcf-mb-6 dcf-row-gap-1 dcf-col-gap-vw">
 
-	<script>
-		// user search script
-let userId = "{{ user_id }}";
-let userIdField = document.getElementById("userIdField");
-if (userId != "") {
-userIdField.value = userId;
-}
-	</script>
+		<div>
+			<form class="dcf-form" id="orgForm" method="POST">
+				<fieldset>
+					<legend class="dcf-legend">Filter By Organization</legend>
+					<div class="dcf-form-group">
+						<label class="dcf-txt-sm" for="approver">Select Organization Name</label>
+						<select id="organization" name="approver"
+							class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+							<option value="0" selected>Select Approving Organization</option>
+							{% for key, value in allLockups%}
+							<option value="{{ key }}">{{ key }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</fieldset>
+			</form>
+		</div>
 
-	<script>
-		// filter by organization script
-const org_list = document.getElementById("organization");
-const orgForm = document.getElementById("orgForm");
-org_list.addEventListener("change", sendOrganizationInput);
-let approverOrg = "{{ approver | default("") }}";
+		{% if auth.isAdmin %}
 
-function sendOrganizationInput() {
-orgForm.submit();
-}
-if (approverOrg != "") {
-org_list.value = approverOrg;
-}
-	</script>
+		<div>
+			<form class="dcf-form" method="POST">
+				<fieldset>
+					<legend class="dcf-legend">Filter By User</legend>
+					<div class="dcf-form-group">
+						<label for="search-term">Enter username</label>
+						<div class="dcf-input-group">
+							<input value="" type="text" name="user_id" id="userIdField">
+							<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+							{% if user_id != "" %}
+							<a href="/lockups/library" id="clear-search" class="dcf-btn dcf-btn-secondary"
+								type="button">×</a>
+							{% endif %}
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
 
-	<script>
-		// pagination javascript
-window.addEventListener('inlineJSReady', function () {
-WDN.initializePlugin('pagination');
-}, false);
-	</script>
-	<style>
-		.table-preview .preview {
-			padding: 2px;
-			background-color: #fff;
-		}
-	</style>
+		{# <div>
+			<fieldset>
+				<legend class="dcf-legend">More filters</legend>
+				<label class="dcf-txt-sm" for="approver">Select organization name</label>
+				<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded">
+					{% for key, value in allLockups %}
+					<option value="0">{{ key }}</option>
+
+					{% endfor %}
+				</select>
+			</fieldset>
+		</div> #}
+
+		{% endif %}
+
+	</div>
+
+	{% if user_id != "" %}
+	<h3>Lockups For User
+		{{ user_id }}</h3>
+	{% endif %}
+
+	{% if (lockups_array is empty) %}
+	<p>No lockups found</p>
+	{% else %}
+	{# {% if search != "" %}
+	<h6>{{ lockups_array | length }}
+		items found</h6>
+	{% endif %} #}
+	{% for key, value in lockups_array%}
+	{% if auth.isAdmin %}
+	<h4>All Lockups For
+		{{ key }}</h4>
+	{# {{ dump(value.getApprover.getOrganization | default("null")) }} #}
+	<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+		<thead>
+			<tr>
+				<th style="width: 30%;" scope="col">Title</th>
+				<th style="width: 25%;" scope="col">Status</th>
+				<th style="width: 15%;" scope="col">Make public after approval</th>
+				<th style="width: 30%;" scope="col">Preview</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in value %}
+			<tr>
+				<td data-label="Title">
+					<a href="/lockups/download/{{item.getId}}">
+						{{item.getName}}
+						{{item.getInstitution}}
+					</a>
+				</td>
+				<td data-label="Approved">
+					{% if (item.getApprover == null) %}
+					<p>Communicator:
+						<strong>Not specified</strong><br>
+					</p>
+					{% else %}
+					{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting
+							Approval</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>:
+							Approved</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>:
+							Rejected</strong><br></p>") | raw}}
+					{% endif %}
+
+					{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+					{{(item.getCreativeStatus == 1) ? "<p>UComm: <strong>Approved</strong></p>" | raw}}
+					{{(item.getCreativeStatus == 2) ? "<p>UComm: <strong>Rejected</strong></p>" | raw}}
+				</td>
+				<td data-label="Publish lockup after approval">
+					{{ (item.getPublic == 1) ? "Yes" : "No" }}
+				</td>
+				<td data-label="Preview">
+					<a href="/lockups/download/{{item.getId}}">
+						<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-2"
+							style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH |
+							raw : item.getPreviewV | raw }}</div>
+					</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<h4>Lockups Approved For
+		{{ key }}</h4>
+
+	<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100% dcf-mb-6">
+		<thead>
+			<tr>
+				<th style="width: 60%;" scope="col">Title</th>
+				<th style="width: 40%;" scope="col">Preview</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in value %}
+			<tr>
+				<td data-label="Title">
+					<a href="/lockups/download/{{item.getId}}">
+						{{item.getName}}
+						{{item.getInstitution}}
+					</a>
+				</td>
+				<td data-label="Preview">
+					<a href="/lockups/download/{{item.getId}}">
+						<div style="background-color: #fff;"
+							class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1">
+							{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw : item.getPreviewV | raw }}
+						</div>
+					</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+	{% endfor %}
+	{% endif %}
+
+	{# Pagination Script #}
+
+	{% if totalPage > 1 %}
+	{% set currentPath = (search != "") ? path(app.request.attributes.get('_route'),
+	app.request.attributes.get('_route_params')) ~ "?search_term=" ~ search ~ "&page=" :
+	path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) ~ "?page="%}
+	<nav class="dcf-pagination dcf-d-flex dcf-jc-center dcf-mt-6">
+		<ol class="dcf-list-bare dcf-list-inline">
+			{% if currentPage != 1%}
+			<li>
+				<a class="dcf-pagination-first" href="{{ currentPath }}1">First</a>
+			</li>
+			<li>
+				<a class="dcf-pagination-prev" href="{{ currentPath }}{{ currentPage - 1}}">Prev</a>
+			</li>
+			{% endif %}
+
+			{% if currentPage == 1 %}
+			<li>
+				<span class="dcf-pagination-selected">1</span>
+			</li>
+			{% for i in (currentPage + 1) .. totalPage %}
+			{% if (i - currentPage) <= 2%} <li>
+				<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+				{% if totalPage > 3 %}
+				<li>
+					<span class="dcf-pagination-ellipsis">…</span>
+				</li>
+				{% endif %}
+				{% elseif currentPage == totalPage %}
+				{% if totalPage > 3 %}
+				<li>
+					<span class="dcf-pagination-ellipsis">…</span>
+				</li>
+				{% endif %}
+				{% if totalPage == 2 %}
+				{% for i in 1 .. (totalPage - 1) %}
+				{% if i >= (totalPage - 2) %}
+				<li>
+					<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+				{% else %}
+				{% for i in (totalPage - 2) .. (totalPage - 1) %}
+				{% if i >= (totalPage - 2) %}
+				<li>
+					<a href="{{ currentPath }}{{ i }}">{{ i }}</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+				{% endif %}
+				<li>
+					<span class="dcf-pagination-selected">{{ currentPage }}</span>
+				</li>
+				{% else %}
+				{% if (currentPage - 1) > 1 %}
+				<li>
+					<span class="dcf-pagination-ellipsis">…</span>
+				</li>
+				{% endif %}
+				<li>
+					<a href="{{ currentPath }}{{ currentPage - 1 }}">{{ currentPage - 1 }}</a>
+				</li>
+				<li>
+					<span class="dcf-pagination-selected">{{ currentPage }}</span>
+				</li>
+				<li>
+					<a href="{{ currentPath }}{{ currentPage + 1 }}">{{ currentPage + 1 }}</a>
+				</li>
+				{% if (currentPage + 1) < totalPage %} <li>
+					<span class="dcf-pagination-ellipsis">…</span>
+					</li>
+					{% endif %}
+					{% endif %}
+
+					{% if currentPage != totalPage %}
+					<li>
+						<a class="dcf-pagination-next" href="{{ currentPath }}{{ currentPage + 1}}">Next</a>
+					</li>
+					<li>
+						<a class="dcf-pagination-last" href="{{ currentPath }}{{ totalPage }}">Last</a>
+					</li>
+					{% endif %}
+		</ol>
+	</nav>
+	{% endif %}
+	{# End Pagination Script #}
+</div>
+
+
+<script>
+	// search script
+	let searchTerm = "{{ search }}";
+	let searchTermField = document.getElementById("searchTermField");
+	if (searchTerm != "") {
+		searchTermField.value = searchTerm;
+	}
+</script>
+
+<script>
+	// user search script
+	let userId = "{{ user_id }}";
+	let userIdField = document.getElementById("userIdField");
+	if (userId != "") {
+		userIdField.value = userId;
+	}
+</script>
+
+<script>
+	// filter by organization script
+	const org_list = document.getElementById("organization");
+	const orgForm = document.getElementById("orgForm");
+	org_list.addEventListener("change", sendOrganizationInput);
+	let approverOrg = "{{ approver | default("") }}";
+
+	function sendOrganizationInput() {
+		orgForm.submit();
+	}
+	if (approverOrg != "") {
+		org_list.value = approverOrg;
+	}
+</script>
+
+<script>
+	// pagination javascript
+	window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('pagination');
+	}, false);
+</script>
+<style>
+	.table-preview .preview {
+		padding: 2px;
+		background-color: #fff;
+	}
+</style>
 {% endblock %}

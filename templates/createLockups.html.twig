@@ -200,6 +200,7 @@
 // tabClicked.style.display = "block";
 // }
 // </script>
+// </script>
 
 <!-- script to connect input field and svg rendered texts --> <script>
 	const inputArray = {{ all_lockups_fields_json | raw }};
@@ -239,16 +240,16 @@ for (let i = 0; i < lockupTemplates.length; i++) {
 lockupTemplates[i].addEventListener("click", selectLockupTemplate);
 }
 
-// document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
+	// document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
 
-function selectLockupTemplate(event) { // try catch because event object isn't passed when calling the function manually during edit lockups page
-try {
-elementId = event.target.id;
-} catch (error) {
-elementId = event.id;
-}
+	function selectLockupTemplate(event) { // try catch because event object isn't passed when calling the function manually during edit lockups page
+		try {
+			elementId = event.target.id;
+		} catch (error) {
+			elementId = event.id;
+		}
 
-let lockupTemplatesSelector = document.getElementById("lockup-templates-" + elementId);
+		let lockupTemplatesSelector = document.getElementById("lockup-templates-" + elementId);
 
 
 let selectedSvgTab = document.getElementById(elementId + "svg");
@@ -272,11 +273,11 @@ lockupSvgTabs[i].style.display = "none";
 // and set display: block to the one selected
 selectedSvgTab.style.display = "block";
 
-// check the fields in the SVG and display the form field
-// first set all fields to display: none
-for (let j = 0; j < InputDiv.length; j++) {
-InputDiv[j].style.display = "none";
-InputField[j].required = false;
+		// check the fields in the SVG and display the form field
+		// first set all fields to display: none
+		for (let j = 0; j < InputDiv.length; j++) {
+			InputDiv[j].style.display = "none";
+			InputField[j].required = false;
 
 }
 // now check for field class names in the SVG tab and display the field div accordingly.
@@ -324,36 +325,36 @@ let lockupApprover = "{{ (lockups.getApprover.getId is defined) ? lockups.getApp
 // lockup approver
 
 
-// if (lockupStyle == "h") {
-// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
-// } else if (lockupStyle == "v") {
-// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
-// }
+	// if (lockupStyle == "h") {
+	// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
+	// } else if (lockupStyle == "v") {
+	// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
+	// }
 
-if (lockupCategory != "") {
-category_list.value = lockupCategory;
-updateCategoryListing()
-}
+	if (lockupCategory != "") {
+		category_list.value = lockupCategory;
+		updateCategoryListing()
+	}
 
-if (lockupTemplateID != "") {
-let tempElement = document.getElementById(lockupTemplateID);
-selectLockupTemplate(tempElement);
-}
+	if (lockupTemplateID != "") {
+		let tempElement = document.getElementById(lockupTemplateID);
+		selectLockupTemplate(tempElement);
+	}
 
-if (lockupInstitution != "") {
-let tempElement = document.getElementById("institution");
-tempElement.value = lockupInstitution;
-}
+	if (lockupInstitution != "") {
+		let tempElement = document.getElementById("institution");
+		tempElement.value = lockupInstitution;
+	}
 
-if (lockupName != "") {
-let tempElement = document.getElementById("lockupName");
-tempElement.value = lockupName;
-}
+	if (lockupName != "") {
+		let tempElement = document.getElementById("lockupName");
+		tempElement.value = lockupName;
+	}
 
-if (lockupApprover != 0) {
-let tempElement = document.getElementById("approver");
-tempElement.value = lockupApprover;
-}
+	if (lockupApprover != 0) {
+		let tempElement = document.getElementById("approver");
+		tempElement.value = lockupApprover;
+	}
 
 {% if lockupFields | length > 2 %}
 for (let j = 0; j < inputArray.length; j++) {

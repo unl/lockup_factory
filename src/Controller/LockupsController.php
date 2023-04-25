@@ -284,10 +284,10 @@ class LockupsController extends BaseController
                             if ($creative_feedback == "") {
                                 $alert['title'] = "Error!";
                                 $alert['msg'] = "Blank feedback submitted.";
+                                $alert['alert_type'] = "dcf-notice-warning";
                                 $response = $this->forward('App\Controller\LockupsController::previewLockups', [
                                     'id' => $id,
-                                    'alert' => $alert,
-                                    'alert_type' => "dcf-notice-warning"
+                                    'alert' => $alert
                                 ]);
                                 return $response;
                             } else {
@@ -325,10 +325,10 @@ class LockupsController extends BaseController
                             if ($communicator_feedback == "") {
                                 $alert['title'] = "Error!";
                                 $alert['msg'] = "Blank feedback submitted.";
+                                $alert['alert_type'] = "dcf-notice-warning";
                                 $response = $this->forward('App\Controller\LockupsController::previewLockups', [
                                     'id' => $id,
                                     'alert' => $alert,
-                                    'alert_type' => "dcf-notice-warning"
                                 ]);
                                 return $response;
                             } else {

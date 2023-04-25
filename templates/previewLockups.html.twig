@@ -1,6 +1,6 @@
 {% block body %}
 	{% if alert['title'] is defined %}
-		<div class="dcf-notice {{ alert_type|default('dcf-notice-success') }}" hidden>
+		<div class="dcf-notice {{ alert['alert_type']|default('dcf-notice-success') }}" hidden>
 			<h2>{{ alert['title'] }}</h2>
 			<div>{{ alert['msg'] }}</div>
 		</div>

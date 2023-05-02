@@ -356,7 +356,7 @@ class LockupsController extends BaseController
             Feedback: <br> '
                 . $msg .
                 '<br><br>
-            Please visit <a href="https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '</a> to view all the feedback;
+            Please visit <a href="https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '">https://' . $this->getParameter('app.app_url') . '/lockups/preview/' . $lockups->getId() . '</a> to view all the feedbacks;
             <br><br>
             If you can\'t see your lockups or if there are issues with any versions, please contact Stephanie Severin at sseverin2@unl.edu.
             <br><br>

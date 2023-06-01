@@ -112,7 +112,7 @@ class Core
         $department_name = strtoupper($lockups->getInstitution());
         $lockups_name = str_replace(" ", "_", $lockups_name);
         $department_name = str_replace(" ", "_", $department_name);
-        $lockups_name = $department_name . "_" . $lockups_name . "_";
+        $lockups_name = $department_name . "_" . $lockups_name;
         $this->lockups = $lockups;
         return $lockups_name;
     }

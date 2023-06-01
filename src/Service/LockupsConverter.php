@@ -102,12 +102,9 @@ class LockupsConverter
 
     public function convertAll(Lockups $lockups, string $SvgPath, string $orient, bool $rev = false, string $color = "RGB"): bool
     {
-        // echo($color . "\n");
-        // echo($orient . "\n");
-        // echo($rev . "\n");
-
         $fileName = $this->core->getLockupFileName($lockups);
         $pathName = "";
+
         if ($orient == "h") {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
                 $pathName = "Nh_m_" . $this->core->getLockupFileName($lockups) . "/";
@@ -166,6 +163,8 @@ class LockupsConverter
             $fileName = $fileName . "_rev";
         }
 
+        $fileName = "_" . $fileName;
+
         $this->urlSuffix = "/lockups" . "/";
 
         $svgPathName = $pathName . $fileName . ".svg";
@@ -195,8 +194,6 @@ class LockupsConverter
 
             // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
             exec('inkscape' . ' --export-plain-svg=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
-            // echo (var_dump($backend_output));
-            // echo ($svgDirectory);
 
             $lockupFileClass[0] = new LockupFiles();
             $lockupFileClass[0]->setFileName($fileName . ".svg");

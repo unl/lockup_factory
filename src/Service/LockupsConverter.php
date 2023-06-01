@@ -133,6 +133,9 @@ class LockupsConverter
                 $fileName = "Nv_" . $fileName;
             }
         }
+
+        $fileName = $fileName . "_";
+
         switch ($color) {
             case "RGB":
                 $pathName = $pathName . "RGB_HEX/";
@@ -162,8 +165,6 @@ class LockupsConverter
         if ($rev == true) {
             $fileName = $fileName . "_rev";
         }
-
-        $fileName = "_" . $fileName;
 
         $this->urlSuffix = "/lockups" . "/";
 

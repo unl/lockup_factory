@@ -56,16 +56,16 @@ class SvgGenerator
 
 
     private $projectDir;
-    private $TUNGSTEN;
-    private $MERCURY;
+    private $CONDENSED;
+    private $SERIF;
 
 
 
     public function __construct(KernelInterface $appKernel)
     {
         $this->projectDir = $appKernel->getProjectDir();
-        $this->MERCURY = $this->projectDir . '/fonts/MercuryDisplay-SemIta.svg';
-        $this->TUNGSTEN = $this->projectDir . '/fonts/Tungsten-Semibold.svg';
+        $this->SERIF = $this->projectDir . '/fonts/MercuryDisplay-SemIta.svg';
+        $this->CONDENSED = $this->projectDir . '/fonts/Tungsten-Semibold.svg';
     }
 
     public function getLockupFields($object, $name): string
@@ -188,7 +188,7 @@ class SvgGenerator
         if ($orient == 'h') {
             switch ($template) {
                 case 'h_org':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -204,7 +204,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_org_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -223,14 +223,14 @@ class SvgGenerator
                     }
                     break;
                 case 'h_org_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
                     $svg->addText($this->getLockupFields($lockup, "org_first_line"), 44, 7.75);
                     $main_text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -246,14 +246,14 @@ class SvgGenerator
                     }
                     break;
                 case 'h_student_org':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
                     $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), 44, 7.75);
                     $main_text_width = $svg->textDimensions($this->getLockupFields($lockup, "student_org_first_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -269,14 +269,14 @@ class SvgGenerator
                     }
                     break;
                 case 'h_org_subject_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
                     $svg->addText($this->getLockupFields($lockup, "org_first_line"), 44, -5.8);
                     $main_text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_first_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -295,7 +295,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_org_2_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -305,7 +305,7 @@ class SvgGenerator
                     $svg->addText($this->getLockupFields($lockup, "org_second_line"), 44, 5.2);
                     $third_width = $svg->textDimensions($this->getLockupFields($lockup, "org_second_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -321,7 +321,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_org_2_subject_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -331,7 +331,7 @@ class SvgGenerator
                     $svg->addText($this->getLockupFields($lockup, "org_second_line"), 44, 4.2);
                     $third_width = $svg->textDimensions($this->getLockupFields($lockup, "org_second_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(7);
                     $svg->setFontColor($secondary_text_color);
@@ -350,7 +350,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_student_org_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -360,7 +360,7 @@ class SvgGenerator
                     $svg->addText($this->getLockupFields($lockup, "student_org_second_line"), 44, 5.2);
                     $third_width = $svg->textDimensions($this->getLockupFields($lockup, "student_org_second_line"))[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -376,7 +376,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_acronym':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -392,7 +392,7 @@ class SvgGenerator
                     }
                     break;
                 case 'h_acronym_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -413,14 +413,14 @@ class SvgGenerator
                     }
                     break;
                 case 'h_extension':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
                     $svg->addText('EXTENSION', 44, -0.5);
                     $main_text_width = $svg->textDimensions('EXTENSION')[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -436,14 +436,14 @@ class SvgGenerator
                     }
                     break;
                 case 'h_ncta':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
                     $svg->addText('NCTA', 44, -0.5);
                     $main_text_width = $svg->textDimensions('NCTA')[0];
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -480,7 +480,7 @@ class SvgGenerator
             array_push($textWidth, $NWidth);
             switch ($template) {
                 case 'v_org':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -495,7 +495,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_org_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -516,7 +516,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_org_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -526,7 +526,7 @@ class SvgGenerator
                     $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
                     $textX[1]  = 100 - ($text_width / 2);
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -541,7 +541,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_student_org':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -550,7 +550,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText($this->getLockupFields($lockup, "student_org_first_line"), 100 - ($text_width / 2), 37);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -565,7 +565,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_org_subject_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -574,7 +574,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText($this->getLockupFields($lockup, "org_first_line"), 100 - ($text_width / 2), 37);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -594,7 +594,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_org_2_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -608,7 +608,7 @@ class SvgGenerator
                     $text_width = $svg->textDimensions($this->getLockupFields($lockup, "org_second_line"))[0];
                     $svg->addText($this->getLockupFields($lockup, "org_second_line"), 100 - ($text_width / 2), 48);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -623,7 +623,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_org_2_subject_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -637,7 +637,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText($this->getLockupFields($lockup, "org_second_line"), 100 - ($text_width / 2), 48);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -657,7 +657,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_student_org_2':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(12);
                     $svg->setFontColor($main_text_color);
@@ -671,7 +671,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText($this->getLockupFields($lockup, "student_org_second_line"), 100 - ($text_width / 2), 48);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -686,7 +686,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_acronym':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -703,7 +703,7 @@ class SvgGenerator
                 case 'v_social':
                     $svg->addPath(self::VERT_BACKGROUND, array('fill' => $n_secondary_color));
 
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -711,7 +711,7 @@ class SvgGenerator
                     $svg->addText($this->getLockupFields($lockup, "acronym_first_line"), 100 - ($text_width / 2), 32);
                     break;
                 case 'v_acronym_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -733,7 +733,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_acronym_2_subject':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -760,7 +760,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_extension':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -769,7 +769,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText('EXTENSION', 100 - ($text_width / 2), 32);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -784,7 +784,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_ncta':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(22);
                     $svg->setFontColor($main_text_color);
@@ -793,7 +793,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText('NCTA', 100 - ($text_width / 2), 32);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);
@@ -808,7 +808,7 @@ class SvgGenerator
                     }
                     break;
                 case 'v_extension_4h':
-                    $svg->setFontSVG($this->TUNGSTEN);
+                    $svg->setFontSVG($this->CONDENSED);
                     $svg->setLetterSpacing(0.05);
                     $svg->setFontSize(28);
                     $svg->setFontColor($main_text_color);
@@ -817,7 +817,7 @@ class SvgGenerator
                     array_push($textWidth, $text_width);
                     $svg->addText('EXTENSION', 100 - ($text_width / 2), 32);
 
-                    $svg->setFontSVG($this->MERCURY);
+                    $svg->setFontSVG($this->SERIF);
                     $svg->setLetterSpacing(0);
                     $svg->setFontSize(8.125);
                     $svg->setFontColor($secondary_text_color);

@@ -1,0 +1,520 @@
+{% block body %}
+<div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
+	{% if alert['title'] is defined %}
+	<div class="dcf-notice {{ alert_type|default('dcf-notice-success') }}" hidden>
+		<h2>{{ alert['title'] }}</h2>
+		<div>{{ alert['msg'] }}</div>
+	</div>
+	{% endif %}
+	<h3>Manage Lockups</h3>
+	<p>Welcome
+		{{ auth.getUsername }},</p>
+	<div class="dcf-mb-4">
+		<form class="dcf-form">
+			<label for="search-term">Search Lockups</label>
+			<div class="dcf-input-group">
+				<input id="searchTermField" value="" type="text" name="search_term" id="search-term">
+				<button type="submit" class="dcf-btn dcf-btn-primary">Search</button>
+				{% if search != "" %}
+				<a href="/lockups/manage" id="clear-search" class="dcf-btn dcf-btn-secondary" type="button">×</a>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+	{% if pendingCreative[0] is defined %}
+
+	{% if auth.isCreative or auth.isAdmin %}
+	<h4>Recent Lockups Needing UComm Approval</h4>
+	<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+		<thead>
+			<tr>
+				<th scope="col" style="width: 15%;">Title</th>
+				<th scope="col" style="width: 20%;">Preview</th>
+				<th scope="col" style="width: 12%;">Category</th>
+				<th scope="col" style="width: 10%;">User</th>
+				<th scope="col" style="width: 10%;">Last Updated</th>
+				<th scope="col" style="width: 20%;">Status</th>
+				<th scope="col" style="width: 13%;">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in pendingCreative %}
+			{% if item.getCreativeStatus == 0 %}
+			<tr>
+				<td data-label="Title">
+					{{item.getInstitution}}
+					{{item.getName}}
+				</td>
+				<td data-label="Preview">
+					<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+						style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw :
+						item.getPreviewV | raw }}</div>
+				</td>
+				<td data-label="Category">
+					{{ item.getTemplate.getCategory.getName }}
+				</td>
+				<td data-label="User">
+					{{ item.getUser.getUsername }}
+				</td>
+				<td data-label="Last Updated">
+					{{ item.getDateCreated|date('Y-m-d') }}
+				</td>
+				<td data-label="Status">
+					{% if (item.getApprover == null) %}
+					<p>Communicator:
+						<strong>Not specified</strong><br>
+					</p>
+					{% else %}
+					{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting
+							Approval</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>:
+							Approved</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br>
+					</p>") | raw}}
+					{% endif %}
+
+					{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+					{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+					{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected</p>" | raw}}
+
+				</td>
+				<td data-label="Actions">
+					<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+						View
+					</a>
+					{% if auth.isAdmin %}
+					<button onClick="deleteLockup('{{item.getId}}')" class="dcf-btn dcf-btn-primary">Delete</button>
+					{% endif %}
+				</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+	{% endif %}
+	{% if pendingApprover[0] is defined %}
+	{% if auth.isApprover or auth.isAdmin or auth.isCreative %}
+	<h4 class="dcf-mt-6">Recent Lockups Needing Communicator Approval</h4>
+	<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+		<thead>
+			<tr>
+				<th scope="col" style="width: 15%;">Title</th>
+				<th scope="col" style="width: 20%;">Preview</th>
+				<th scope="col" style="width: 12%;">Category</th>
+				<th scope="col" style="width: 10%;">User</th>
+				<th scope="col" style="width: 10%;">Last Updated</th>
+				<th scope="col" style="width: 20%;">Status</th>
+				<th scope="col" style="width: 13%;">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in pendingApprover %}
+			{% if (item.getCommunicatorStatus == 0) %}
+			<tr>
+				<td data-label="Title">
+					{{item.getInstitution}}
+					{{item.getName}}
+				</td>
+				<td data-label="Preview">
+					<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+						style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw :
+						item.getPreviewV | raw }}</div>
+				</td>
+				<td data-label="Category">
+					{{ item.getTemplate.getCategory.getName }}
+				</td>
+				<td data-label="User">
+					{{ item.getUser.getUsername }}
+				</td>
+				<td data-label="Last Updated">
+					{{ item.getDateCreated|date('Y-m-d') }}
+				</td>
+				<td data-label="Status">
+					{% if (item.getApprover == null) %}
+					<p>Communicator:
+						<strong>Not specified</strong><br>
+					</p>
+					{% else %}
+					{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting
+							Approval</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>:
+							Approved</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br>
+					</p>") | raw}}
+					{% endif %}
+
+					{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+					{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+					{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+				</td>
+				<td data-label="Actions">
+					<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+						View
+					</a>
+					{% if auth.isAdmin %}
+					<button onClick="deleteLockup('{{item.getId}}')" class="dcf-btn dcf-btn-primary">Delete</button>
+					{% endif %}
+				</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+	{% endif %}
+
+	<h4 class="dcf-mt-6">Your Lockups</h4>
+	<div class="dcf-tabs dcf-tabs-responsive">
+		<ul>
+			{% if (pendingUserLockups|length > 0)%}
+			<li>
+				<a href="#awaiting-approval">Awaiting Approval ({{pendingUserLockups | length}})</a>
+			</li>
+			{% endif %}
+			<li>
+				<a href="#approved">Approved ({{approvedUserLockups | length}})</a>
+			</li>
+			<li>
+				<a href="#denied">Denied ({{deniedUserLockups | length}})</a>
+			</li>
+		</ul>
+		{% if (pendingUserLockups|length > 0)%}
+		<div id="awaiting-approval" class="unl-bg-cream dcf-p-3">
+			<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 15%;">Title</th>
+						<th scope="col" style="width: 20%;">Preview</th>
+						<th scope="col" style="width: 17%;">Category</th>
+						<th scope="col" style="width: 15%;">Approver</th>
+						<th scope="col" style="width: 20%;">Status</th>
+						<th scope="col" style="width: 13%;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in pendingUserLockups %}
+					<tr>
+						<td data-label="Title">
+							{{item.getInstitution}}
+							{{item.getName}}
+						</td>
+						<td data-label="Preview">
+							<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+								style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH
+								| raw : item.getPreviewV | raw }}</div>
+						</td>
+						<td data-label="Category">
+							{{ item.getTemplate.getCategory.getName }}
+						</td>
+						<td data-label="Approver">
+							{% if item.getApprover != null%}
+							{{item.getApprover.getName}}
+							{% else %}
+							<strong>Communicator not specified</strong>
+							{% endif %}
+						</td>
+						<td data-label="Status">
+							{% if (item.getApprover == null) %}
+							<p>Communicator:
+								<strong>Not specified</strong><br>
+							</p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br>
+							</p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Approver: Approved<br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" |
+							raw}}
+							{% endif %}
+
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+						</td>
+						<td data-label="Actions">
+							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+								View
+							</a>
+							<button onClick="deleteLockup('{{item.getId}}')"
+								class="dcf-btn dcf-btn-primary">Delete</button>
+
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% endif %}
+
+		<div id="approved" class="unl-bg-cream dcf-p-3">
+			<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 15%;">Title</th>
+						<th scope="col" style="width: 20%;">Preview</th>
+						<th scope="col" style="width: 17%;">Category</th>
+						<th scope="col" style="width: 15%;">Approver</th>
+						<th scope="col" style="width: 20%;">Status</th>
+						<th scope="col" style="width: 13%;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in approvedUserLockups%}
+					<tr>
+						<td data-label="Title">
+							{{item.getInstitution}}
+							{{item.getName}}
+						</td>
+						<td data-label="Preview">
+							<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+								style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH
+								| raw : item.getPreviewV | raw }}</div>
+						</td>
+						<td data-label="Category">
+							{{ item.getTemplate.getCategory.getName }}
+						</td>
+						<td data-label="Approver">
+							{% if item.getApprover != null%}
+							{{item.getApprover.getName}}
+							{% else %}
+							<strong>Communicator not specified</strong>
+							{% endif %}
+						</td>
+						<td data-label="Status">
+							{% if (item.getApprover == null) %}
+							<p>Communicator:
+								<strong>Not specified</strong><br>
+							</p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br>
+							</p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Approver: Approved<br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" |
+							raw}}
+							{% endif %}
+
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+						</td>
+						<td data-label="Actions">
+							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+								View
+							</a>
+							<button onClick="deleteLockup('{{item.getId}}')"
+								class="dcf-btn dcf-btn-primary">Delete</button>
+
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div id="denied" class="unl-bg-cream dcf-p-3">
+			<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 15%;">Title</th>
+						<th scope="col" style="width: 20%;">Preview</th>
+						<th scope="col" style="width: 17%;">Category</th>
+						<th scope="col" style="width: 15%;">Approver</th>
+						<th scope="col" style="width: 20%;">Status</th>
+						<th scope="col" style="width: 13%;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in deniedUserLockups%}
+					<tr>
+						<td data-label="Title">
+							{{item.getInstitution}}
+							{{item.getName}}
+						</td>
+						<td data-label="Preview">
+							<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+								style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH
+								| raw : item.getPreviewV | raw }}</div>
+						</td>
+						<td data-label="Category">
+							{{ item.getTemplate.getCategory.getName }}
+						</td>
+						<td data-label="Approver">
+							{% if item.getApprover != null%}
+							{{item.getApprover.getName}}
+							{% else %}
+							<strong>Communicator not specified</strong>
+							{% endif %}
+						</td>
+						<td data-label="Status">
+							{% if (item.getApprover == null) %}
+							<p>Communicator:
+								<strong>Not specified</strong><br>
+							</p>
+							{% else %}
+							{{(item.getCommunicatorStatus == 0) ? "<p>Approver: <strong>Awaiting Approval</strong><br>
+							</p>" | raw}}
+							{{(item.getCommunicatorStatus == 1) ? "<p>Approver: Approved<br></p>" | raw}}
+							{{(item.getCommunicatorStatus == 2) ? "<p>Approver: <strong>Rejected</strong><br></p>" |
+							raw}}
+							{% endif %}
+
+							{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+							{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+							{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+						</td>
+						<td data-label="Actions">
+							<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+								View
+							</a>
+							<button onClick="deleteLockup('{{item.getId}}')"
+								class="dcf-btn dcf-btn-primary">Delete</button>
+
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	{% if auth.isApprover and (previouslyApproved[0] is defined) %}
+	<h4 class="dcf-mt-6">Lockups You Have Access To</h4>
+	<table class="dcf-table dcf-table-bordered dcf-table-responsive dcf-table-striped dcf-w-100%">
+		<thead>
+			<tr>
+				<th scope="col" style="width: 15%;">Title</th>
+				<th scope="col" style="width: 20%;">Preview</th>
+				<th scope="col" style="width: 12%;">Category</th>
+				<th scope="col" style="width: 10%;">User</th>
+				<th scope="col" style="width: 10%;">Last Updated</th>
+				<th scope="col" style="width: 20%;">Status</th>
+				<th scope="col" style="width: 13%;">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in previouslyApproved %}
+			<tr>
+				<td data-label="Title">
+					{{item.getInstitution}}
+					{{item.getName}}
+				</td>
+				<td data-label="Preview">
+					<div class="table-preview dcf-b-1 dcf-b-solid unl-b-lighter-gray dcf-p-1"
+						style="background-color: #fff;">{{ (item.getTemplate.getStyle == 'h') ? item.getPreviewH | raw :
+						item.getPreviewV | raw }}</div>
+				</td>
+				<td data-label="Category">
+					{{ item.getTemplate.getCategory.getName }}
+				</td>
+				<td data-label="User">
+					{{ item.getUser.getUsername }}
+				</td>
+				<td data-label="Last Updated">
+					{{ item.getDateCreated|date('Y-m-d') }}
+				</td>
+				<td data-label="Status">
+					{% if (item.getApprover == null) %}
+					<p>Communicator:
+						<strong>Not specified</strong><br>
+					</p>
+					{% else %}
+					{{(item.getCommunicatorStatus == 0) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Awaiting
+							Approval</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 1) ? ("<p>" ~ item.getApprover.getName ~ "<strong>:
+							Approved</strong><br></p>") | raw}}
+					{{(item.getCommunicatorStatus == 2) ? ("<p>" ~ item.getApprover.getName ~ "<strong>: Rejected<br>
+					</p>") | raw}}
+					{% endif %}
+
+					{{(item.getCreativeStatus == 0) ? "<p>UComm: <strong>Awaiting Approval</strong></p>" | raw}}
+					{{(item.getCreativeStatus == 1) ? "<p>UComm: Approved</p>" | raw}}
+					{{(item.getCreativeStatus == 2) ? "<p>UComm: Rejected" | raw}}
+
+				</td>
+				<td data-label="Actions">
+					<a class="dcf-btn dcf-btn-secondary" href="/lockups/preview/{{item.getId}}">
+						View
+					</a>
+					{% if auth.isApprover %}
+					<button onClick="deleteLockup('{{item.getId}}')" class="dcf-btn dcf-btn-primary">Delete</button>
+
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+</div>
+<style>
+	.table-preview .preview {
+		padding: 2px;
+		background-color: #fff;
+	}
+</style>
+
+<script>
+	let searchTerm = "{{ search }}";
+	let searchTermField = document.getElementById("searchTermField");
+	if (searchTerm != "") {
+		searchTermField.value = searchTerm;
+	}
+</script>
+
+<script>
+	let deleteLockup = (lockup_id) => {
+		if (confirm("Are you sure you want to delete this lockup?") == true) {
+			// The rest of this code assumes you are not using a library.
+			// It can be made less verbose if you use one.
+			params = {
+				token: "{{ csrf_token('delete-lockups') }}",
+				id: lockup_id
+			}
+			const form = document.createElement('form');
+			form.method = 'post';
+			form.action = '/lockups/manage/';
+
+			for (const key in params) {
+				if (params.hasOwnProperty(key)) {
+					const hiddenField = document.createElement('input');
+					hiddenField.type = 'hidden';
+					hiddenField.name = key;
+					hiddenField.value = params[key];
+
+					form.appendChild(hiddenField);
+				}
+			}
+
+			document.body.appendChild(form);
+
+
+			try {
+				form.submit();
+			} catch {
+
+			}
+		}
+	}
+</script>
+
+<script>
+	window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('notice');
+	}, false);
+</script>
+<script>
+	// pagination javascript
+	window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('pagination');
+	}, false);
+</script>
+<script>
+	window.addEventListener('inlineJSReady', function () {
+		WDN.initializePlugin('tabs');
+	}, false);
+</script>
+{% endblock %}

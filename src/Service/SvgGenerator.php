@@ -64,8 +64,8 @@ class SvgGenerator
     public function __construct(KernelInterface $appKernel)
     {
         $this->projectDir = $appKernel->getProjectDir();
-        $this->SERIF = $this->projectDir . '/fonts/MercuryDisplay-SemIta.svg';
-        $this->CONDENSED = $this->projectDir . '/fonts/Tungsten-Semibold.svg';
+        $this->SERIF = $this->projectDir . '/fonts/SourceSerif4-SemiboldIt.svg';
+        $this->CONDENSED = $this->projectDir . '/fonts/Oswald-Medium.svg';
     }
 
     public function getLockupFields($object, $name): string

@@ -1,13 +1,13 @@
 @font-face {
-    font-family: Tungsten;
+    font-family: Oswald;
     font-weight: 600;
-    src: url('/fonts/tungsten600.ttf');
+    src: url('/fonts/Oswald-Medium.otf');
  }
 
  @font-face {
-  font-family: Mercury Display A;
+  font-family: Source-Serif-4;
   font-weight: 600;
-  src: url('/fonts/mercury/MercuryDisplay-SemIta.otf');
+  src: url('/fonts/SourceSerif4-SemiboldIt.otf');
 }
 .img-thumb {
     border-radius: 6px;
@@ -177,7 +177,7 @@
 }
 
 .lf-font-display-italic {
-  font-family: "Mercury Display A", "Mercury Display B"!important;
+  font-family: "Source-Serif-4"!important;
   font-style: italic!important;
   font-weight: 400!important;
  }

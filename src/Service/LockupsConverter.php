@@ -107,30 +107,30 @@ class LockupsConverter
 
         if ($orient == "h") {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nh_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_m" . $fileName;
+                $pathName = "Nh_2023_m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_2023_m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nh_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_e_" . $fileName;
+                $pathName = "Nh_2023_e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_2023_e_" . $fileName;
             }
             else {
-                $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_" . $fileName;
+                $pathName = "Nh_2023_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_2023_" . $fileName;
             }
         }
         else {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nv_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_m" . $fileName;
+                $pathName = "Nv_2023_m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_2023_m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nv_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_e_" . $fileName;
+                $pathName = "Nv_2023_e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_2023_e_" . $fileName;
             }
             else {
-                $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_" . $fileName;
+                $pathName = "Nv_2023_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_2023_" . $fileName;
             }
         }
 

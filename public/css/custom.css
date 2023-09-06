@@ -72,12 +72,23 @@
   background-color: #fff;
   border: 3px dashed var(--b);
 }
+
+.lockups-preview .preview {
+  width: 100%;
+  height: 100%;
+}
+
 .horiz .lockups-preview .preview {
   max-height: 14em;
 }
 
 .vert .lockups-preview .preview {
   max-height: 14em;
+}
+
+.lockups-download .preview {
+  width: 100%;
+  height: 100%;
 }
 
 .horiz .lockups-download .preview {
@@ -98,10 +109,9 @@
 
 /* Consistent sizing for vertical and horizontal */
 .table-preview .preview {
-  max-height: 9em;
-  max-width: 100%; /* Or like 18em */
-  width: auto;
-  height: auto;
+  max-height: 4em;
+  width: 100%;
+  height: 100%;
 }
 
 /* .table-preview .preview {

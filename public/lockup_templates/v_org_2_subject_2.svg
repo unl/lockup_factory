@@ -9,5 +9,5 @@
     </g>
   </g>
   <text style="text-align: center;" text-anchor="middle" transform="translate(109.63,0) scale(.93 1)" class="text_main_color" fill="#d00000" font-family="Oswald-Medium, Oswald" font-size="8" letter-spacing="-.02em"><tspan class="org_first_line" x="0" y="40.82">ORGANIZATION NAME</tspan><tspan class="org_second_line" x="0" y="49.57">ORGANIZATION SECOND LINE</tspan></text>
-  <text style="text-align: center;" text-anchor="middle" transform="translate(109.63,0)" class="text_secondary_color" fill="#000" font-family="SourceSerif4-SemiboldIt, &apos;Source Serif 4&apos;" font-size="6.25" font-weight="700" letter-spacing="0em"><tspan class="subject_first_line" x="0" y="56.57">Subject Name</tspan><tspan class="subject_second_line" x="0" y="63.57">Subject Second Line</tspan></text>
+  <text style="text-align: center;" text-anchor="middle" transform="translate(109.63,0)" class="text_secondary_color" fill="#000" font-family="SourceSerif4-SemiboldIt, &apos;Source Serif 4&apos;" font-size="6.25" font-weight="700" letter-spacing="-0.01em"><tspan class="subject_first_line" x="0" y="56.57">Subject Name</tspan><tspan class="subject_second_line" x="0" y="63.57">Subject Second Line</tspan></text>
 </svg>

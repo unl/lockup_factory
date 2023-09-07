@@ -9,5 +9,5 @@
     </g>
   </g>
   <text style="text-align: center;" text-anchor="middle" transform="translate(108.92,0) scale(.93 1)" class="text_main_color" fill="#d00000" font-family="Oswald-Medium, Oswald" font-size="15" letter-spacing="-.02em"><tspan x="0" y="46.49">EXTENSION</tspan></text>
-  <text style="text-align: center;" text-anchor="middle" class="text_secondary_color" transform="translate(108.92,0)" fill="#000" font-family="SourceSerif4-SemiboldIt, &apos;Source Serif 4&apos;" font-size="6.25" font-weight="700" letter-spacing="0em"><tspan class="extension" x="0" y="55.49">County</tspan></text>
+  <text style="text-align: center;" text-anchor="middle" class="text_secondary_color" transform="translate(108.92,0)" fill="#000" font-family="SourceSerif4-SemiboldIt, &apos;Source Serif 4&apos;" font-size="6.25" font-weight="700" letter-spacing="-0.01em"><tspan class="extension" x="0" y="55.49">County</tspan></text>
 </svg>

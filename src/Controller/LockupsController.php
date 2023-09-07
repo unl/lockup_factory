@@ -459,6 +459,34 @@ class LockupsController extends BaseController
     }
 
     /**
+     * @Route("/lockups/generate/preview/{id}", name="generatePreviewLockups", methods={"GET"})
+     */
+    public function generatePreviewLockups(int $id, ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response
+    {
+        $auth->requireAuth();
+        $lockup = $doctrine->getRepository(Lockups::class)->find($id);
+
+        if ($lockup == null) {
+            $response = $this->forward('App\Controller\AlertsController::errorPage', [
+                'errorTitle' => "Not found!",
+                'errorBody' => "The requested lockup could not be found."
+            ]);
+            return $response;
+        }
+
+        $lockupsGenerator->createPreview($lockup);
+
+        // return $this->redirectToRoute('downloadLockups', [
+        //     'id' => $id
+        // ], 302);
+        $response = $this->forward('App\Controller\AlertsController::errorPage', [
+            'errorTitle' => "DONE!",
+            'errorBody' => "The requested lockup could not be found."
+        ]);
+        return $response;
+    }
+
+    /**
      * @Route("/lockups/import/", name="importLockups", methods={"GET"})
      */
     public function importLockups(ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response

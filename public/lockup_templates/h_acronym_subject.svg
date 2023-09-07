@@ -12,6 +12,6 @@
     <tspan class="acronym_first_line" x="0" y="0">ACRONYM</tspan>
   </text>
   <text class="text_secondary_color" transform="translate(35.4 30.32) scale(.93 1)" fill="#000" font-family="Oswald-Medium, Oswald" font-size="10.25" letter-spacing="-.02em">
-    <tspan class="acronym_subject" x="0" y="0">SUBJECT ACRONYM</tspan>
+    <tspan class="acronym_subject" x="0" y="0">ACRONYM SUBJECT</tspan>
   </text>
 </svg>

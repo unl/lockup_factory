@@ -249,38 +249,37 @@ class LockupsConverter
                 $lockupFileClass[2]->setPathName($jpgPathName);
                 $this->doctrine->getManager()->persist($lockupFileClass[2]);
             }
+
+            #for eps
+            // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec('inkscape -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+
+            # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
+            if ($color == '4c') {
+                $file = fopen($epsDirectory, 'r');
+                $data = fread($file, filesize($epsDirectory));
+                $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
+                $data = str_replace('0.0705882 0.603922 0.388235 rg', '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
+                $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
+                fclose($file);
+
+                $file = fopen($epsDirectory, 'w');
+                fwrite($file, $data);
+                fclose($file);
+            }
+
+            $lockupFileClass[3] = new LockupFiles();
+            $lockupFileClass[3]->setFileName($fileName . ".eps");
+            $lockupFileClass[3]->setFormat("eps");
+            $lockupFileClass[3]->setLockup($lockups);
+            $lockupFileClass[3]->setOrient($orient);
+            $lockupFileClass[3]->setStyle($color);
+            $lockupFileClass[3]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[3]->setUrl($this->urlSuffix . $this->savePath() . $epsPathName);
+            $lockupFileClass[3]->setDirectory($epsDirectory);
+            $lockupFileClass[3]->setPathName($epsPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[3]);
         }
-
-
-        #for eps
-        // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
-
-        # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
-        if ($color == '4c' || $color == 'pms186cp') {
-            $file = fopen($epsDirectory, 'r');
-            $data = fread($file, filesize($epsDirectory));
-            $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
-            $data = str_replace('0.0705882 0.603922 0.388235 rg', '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
-            $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
-            fclose($file);
-
-            $file = fopen($epsDirectory, 'w');
-            fwrite($file, $data);
-            fclose($file);
-        }
-
-        $lockupFileClass[3] = new LockupFiles();
-        $lockupFileClass[3]->setFileName($fileName . ".eps");
-        $lockupFileClass[3]->setFormat("eps");
-        $lockupFileClass[3]->setLockup($lockups);
-        $lockupFileClass[3]->setOrient($orient);
-        $lockupFileClass[3]->setStyle($color);
-        $lockupFileClass[3]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[3]->setUrl($this->urlSuffix . $this->savePath() . $epsPathName);
-        $lockupFileClass[3]->setDirectory($epsDirectory);
-        $lockupFileClass[3]->setPathName($epsPathName);
-        $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
 
         #for .ai

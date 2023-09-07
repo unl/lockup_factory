@@ -971,8 +971,8 @@ class SvgGenerator
         }
 
 
-        $textSVGFile = '/' . uniqid('text_svg_', true) . '.svg';
-        $pathSVGFile = '/' . uniqid('path_svg_', true) . '.svg';
+        $textSVGFile = uniqid('text_svg_', true) . '.svg';
+        $pathSVGFile = uniqid('path_svg_', true) . '.svg';
 
         $textSVGPath = $this->tmpDirectory . $textSVGFile;
         $pathSVGPath = $this->tmpDirectory . $pathSVGFile;

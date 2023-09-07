@@ -985,7 +985,16 @@ class SvgGenerator
             die("Internal error");
         }
 
-        exec("inkscape " . $textSVGPath . " --actions='select-all;page-fit-to-selection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
+        exec("inkscape --action-list", $actionList, $actionListCode);
+
+        if ($actionListCode !== 0
+            || strpos(implode("", $actionList), 'select-all') === false
+            || strpos(implode("", $actionList), 'page-fit-to-selection') === false
+        ){
+            exec("inkscape " . $textSVGPath . " --verb='EditSelectAll;FitCanvasToSelection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
+        } else {
+            exec("inkscape " . $textSVGPath . " --actions='select-all;page-fit-to-selection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
+        }
 
         $this->logger->info($execCode);
 

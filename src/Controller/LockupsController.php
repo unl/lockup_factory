@@ -463,6 +463,7 @@ class LockupsController extends BaseController
      */
     public function generatePreviewLockups(int $id, ManagerRegistry $doctrine, Auth $auth, LockupsGenerator $lockupsGenerator): Response
     {
+        $auth->requireAuth();
         $lockup = $doctrine->getRepository(Lockups::class)->find($id);
 
         if ($lockup == null) {

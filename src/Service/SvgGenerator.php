@@ -29,6 +29,7 @@ class SvgGenerator
 
         $this->projectDir = $appKernel->getProjectDir();
 
+        // This directory is for saving svg temporarily while we are converting things
         $this->tmpDirectory = $this->projectDir . "/public/temp/";
         if (!file_exists($this->tmpDirectory)) {
             mkdir($this->tmpDirectory, 0777, true);

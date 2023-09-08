@@ -25,6 +25,7 @@ yarn-error.log
 /templates/wdn
 /public/wdn
 /public/temp
+/scripts/*.txt
 
 # VSCode folders
 .vscode

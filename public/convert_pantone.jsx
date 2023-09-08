@@ -38,7 +38,7 @@ function createFile(sourceDoc, destDoc){
         destDoc = open(destFile);
 
         var scarlet = destDoc.swatches.getByName("PANTONE 186 CP");
-        var four_h_green = destDoc.swatches.getByName("PANTONE 347 U");
+        var four_h_green = destDoc.swatches.getByName("PANTONE 347");
 
         sourceDoc.activate();
 
@@ -63,7 +63,7 @@ function setPantone(pathItem, scarlet, four_h_green){
         if(Math.round(pathItem.fillColor.black) == 6 && Math.round(pathItem.fillColor.magenta) == 100 && Math.round(pathItem.fillColor.cyan) == 2 && Math.round(pathItem.fillColor.yellow) == 85){
             pathItem.fillColor = scarlet.color;
         }
-        if(Math.round(pathItem.fillColor.black) == 2 && Math.round(pathItem.fillColor.magenta) == 15 && Math.round(pathItem.fillColor.cyan) == 83 && Math.round(pathItem.fillColor.yellow) == 80){
+        if(Math.round(pathItem.fillColor.black) == 0 && Math.round(pathItem.fillColor.magenta) == 0 && Math.round(pathItem.fillColor.cyan) == 100 && Math.round(pathItem.fillColor.yellow) == 90){
             pathItem.fillColor = four_h_green.color;
         }
     }

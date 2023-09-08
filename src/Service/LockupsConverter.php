@@ -259,7 +259,7 @@ class LockupsConverter
                 $file = fopen($epsDirectory, 'r');
                 $data = fread($file, filesize($epsDirectory));
                 $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
-                $data = str_replace('0.0705882 0.603922 0.388235 rg', '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
+                $data = str_replace('0.2 0.6 0.4 rg', '1 0 0.90 0 rg', $data); # replaces green of 4H
                 $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
                 fclose($file);
 

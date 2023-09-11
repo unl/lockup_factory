@@ -19,10 +19,12 @@ class LockupsConverter
     private $lockups;
     private $core;
     private $urlSuffix;
+    private $inkscapeCommand;
 
-    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, string $inkscapeCommand)
     {
         $this->doctrine = $doctrine;
+        $this->inkscapeCommand = $inkscapeCommand;
         $this->appKernel = $appKernel;
         $this->projectRoot = $this->appKernel->getProjectDir();
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
@@ -193,8 +195,8 @@ class LockupsConverter
 
         if ($color != "4c" || $color != "pms186cp") {
 
-            // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape' . ' --export-plain-svg=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+            // exec($this->inkscapeCommand . ' --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec($this->inkscapeCommand . ' --export-plain-svg=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
             $lockupFileClass[0] = new LockupFiles();
             $lockupFileClass[0]->setFileName($fileName . ".svg");
@@ -213,8 +215,8 @@ class LockupsConverter
         #for png
 
         if ($color != "pms186cp") {
-            // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape -h 800 --export-png=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+            // exec('$this->inkscapeCommand . ' --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec($this->inkscapeCommand . ' -h 800 --export-png=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
             if ($color != "4c") {
                 $lockupFileClass[1] = new LockupFiles();
@@ -251,8 +253,8 @@ class LockupsConverter
             }
 
             #for eps
-            // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+            // exec($this->inkscapeCommand . ' --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec($this->inkscapeCommand . ' -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
             # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
             if ($color == '4c') {

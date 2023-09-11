@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\LockupTemplates;
 use Symfony\Component\HttpKernel\KernelInterface;
-
 use Doctrine\Persistence\ManagerRegistry;
 
 class SvgGenerator
@@ -22,10 +21,12 @@ class SvgGenerator
     private $projectDir;
     private $doctrine;
     private $tmpDirectory;
+    private $inkscapeCommand;
 
-    public function __construct(KernelInterface $appKernel, ManagerRegistry $doctrine)
+    public function __construct(KernelInterface $appKernel, ManagerRegistry $doctrine, string $inkscapeCommand)
     {
         $this->doctrine = $doctrine;
+        $this->inkscapeCommand = $inkscapeCommand;
 
         $this->projectDir = $appKernel->getProjectDir();
 
@@ -192,6 +193,7 @@ class SvgGenerator
             }
         }
 
+
         // Generate the file names for temporary use
         $textSVGFile = uniqid('text_svg_', true) . '.svg';
         $pathSVGFile = uniqid('path_svg_', true) . '.svg';
@@ -203,27 +205,14 @@ class SvgGenerator
 
         // If we did not save it then die
         if ($textSVGWrite === false) {
-            die("Internal error");
+            die("Internal error - Can not write SVG");
         }
 
-        // Check which actions we can use
-        exec("inkscape --action-list", $actionList, $actionListCode);
-
-        // If we are missing actions they might be called verbs (This is inkscape version issues)
-        if ($actionListCode !== 0
-            || strpos(implode("", $actionList), 'select-all') === false
-            || strpos(implode("", $actionList), 'page-fit-to-selection') === false
-        ){
-            // Select all the text and fit the canvas to size, convert text to paths, export the SVG
-            exec("inkscape " . $textSVGPath . " --verb='EditSelectAll;FitCanvasToSelection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
-        } else {
-            // Select all the text and fit the canvas to size, convert text to paths, export the SVG
-            exec("inkscape " . $textSVGPath . " --actions='select-all;page-fit-to-selection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
-        }
+        exec($this->inkscapeCommand . ' ' . $textSVGPath . " --actions='select-all;page-fit-to-selection' --export-text-to-path --export-plain-svg --export-type=svg --export-filename=" . $pathSVGPath, $execOutput, $execCode);
 
         // If we run into issues then die
         if ($execCode !== 0) {
-            die("Internal error");
+            die("Internal error - Can not execute inkscape command: ");
         }
 
         // Get the updated file and delete the temp ones

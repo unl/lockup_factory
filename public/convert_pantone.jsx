@@ -66,6 +66,15 @@ function setPantone(pathItem, scarlet, four_h_green){
         if(Math.round(pathItem.fillColor.black) == 0 && Math.round(pathItem.fillColor.magenta) == 0 && Math.round(pathItem.fillColor.cyan) == 100 && Math.round(pathItem.fillColor.yellow) == 90){
             pathItem.fillColor = four_h_green.color;
         }
+    } else if(pathItem.fillColor.typename == "GrayColor") {
+        if(parseFloat(pathItem.fillColor.gray) == 100){
+            pathItem.fillColor = scarlet.color;
+        }
+    }
+    if(pathItem.strokeColor.typename == "GrayColor"){
+        if(parseFloat(pathItem.strokeColor.gray) == 100){
+            pathItem.strokeColor = scarlet.color;
+        }
     }
 }
 

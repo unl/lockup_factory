@@ -8,7 +8,6 @@ use App\Entity\Lockups;
 use App\Entity\LockupFiles;
 use App\Service\Core;
 use ZipArchive;
-use Psr\Log\LoggerInterface;
 
 
 class LockupsConverter
@@ -21,12 +20,10 @@ class LockupsConverter
     private $core;
     private $urlSuffix;
     private $inkscapeCommand;
-    private $logger;
 
-    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, LoggerInterface $logger, string $inkscapeCommand)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, string $inkscapeCommand)
     {
         $this->doctrine = $doctrine;
-        $this->logger = $logger;
         $this->inkscapeCommand = $inkscapeCommand;
         $this->appKernel = $appKernel;
         $this->projectRoot = $this->appKernel->getProjectDir();
@@ -81,7 +78,6 @@ class LockupsConverter
         if ($zip->open($zippathName, ZipArchive::CREATE) === TRUE) {
             // Add files to the zip file
             foreach ($lockupFiles as $item) {
-                $this->logger->info($item->getPathName());
                 $zip->addFile($item->getDirectory(), $item->getPathName());
             }
             $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
@@ -202,7 +198,7 @@ class LockupsConverter
             exec($this->inkscapeCommand . ' -C --export-type=eps --export-filename=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
             # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
-            if ($color == '4c') {
+            if ($color == '4c' || $color == 'blk') {
                 $file = fopen($epsDirectory, 'r');
                 $data = fread($file, filesize($epsDirectory));
                 $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
@@ -214,10 +210,6 @@ class LockupsConverter
                 fwrite($file, $data);
                 fclose($file);
             }
-
-            $this->logger->info('EPS ' . $color . ' ' . $orient . ' ' . ($rev ? 'true' : 'false'));
-            $this->logger->info(implode(' / ', $backend_output));
-            $this->logger->info($return_var);
 
             $lockupFileClass[3] = new LockupFiles();
             $lockupFileClass[3]->setFileName($fileName . ".eps");
@@ -232,12 +224,8 @@ class LockupsConverter
             $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
             if ($color != "4c") {
-                $this->logger->info('png ' . $color . ' ' . $orient . ' ' . ($rev ? 'true' : 'false'));
                 // exec('$this->inkscapeCommand . ' --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
                 exec($this->inkscapeCommand . ' -h 800 --export-type=png --export-filename=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
-
-                $this->logger->info(implode(' / ', $backend_output));
-                $this->logger->info($return_var);
 
                 $lockupFileClass[1] = new LockupFiles();
                 $lockupFileClass[1]->setFileName($fileName . ".png");
@@ -258,7 +246,6 @@ class LockupsConverter
                 // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
                 exec('convert ' . $bg. escapeshellarg($pngDirectory) . ' ' . escapeshellarg($jpgDirectory) . ' 2>&1', $backend_output, $return_var);
 
-                $this->logger->info('JPG ' . $color . ' ' . $orient . ' ' . ($rev ? 'true' : 'false'));
                 $lockupFileClass[2] = new LockupFiles();
                 $lockupFileClass[2]->setFileName($fileName . ".jpg");
                 $lockupFileClass[2]->setFormat("jpg");
@@ -297,7 +284,6 @@ class LockupsConverter
         if ($color == "pms186cp" || $color == "4c") {
             unlink($svgDirectory);
         } else {
-            $this->logger->info('svg ' . $color . ' ' . $orient . ' ' . ($rev ? 'true' : 'false'));
             $lockupFileClass[0] = new LockupFiles();
             $lockupFileClass[0]->setFileName($fileName . ".svg");
             $lockupFileClass[0]->setFormat("svg");
@@ -311,7 +297,6 @@ class LockupsConverter
             $this->doctrine->getManager()->persist($lockupFileClass[0]);
         }
 
-        $this->logger->info('AI ' . $color . ' ' . $orient . ' ' . ($rev ? 'true' : 'false'));
         $lockupFileClass[4] = new LockupFiles();
         $lockupFileClass[4]->setFileName($fileName . ".ai");
         $lockupFileClass[4]->setFormat("ai");

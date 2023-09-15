@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.app_url: '%env(APP_URL)%'
+    app.inkscape_command: '%env(INKSCAPE_COMMAND)%'
+    app.version_string: '%env(VERSION_STRING)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -20,7 +22,14 @@ services:
             - '../src/Kernel.php'
     App\Service\Auth:
         arguments:
-            $appUrl: 'app.app_url'
+            $appUrl: '%app.app_url%'
+    App\Service\SvgGenerator:
+        arguments:
+            $inkscapeCommand: '%app.inkscape_command%'
+    App\Service\LockupsConverter:
+        arguments:
+            $inkscapeCommand: '%app.inkscape_command%'
+            $versionString: '%app.version_string%'
 
 
     # add more service definitions when explicit configuration is needed

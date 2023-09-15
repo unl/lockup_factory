@@ -41,7 +41,7 @@
 							</div>
 						</div>
 						<div id="vertical-tab">
-							<div class="dcf-grid dcf-grid-full dcf-grid-halves@sm dcf-grid dcf-grid-full@md">
+							<div class="dcf-grid dcf-grid-halves dcf-grid-full@sm">
 								{% for categories in lockup_categories %}
 									{% for lockupTemplates in categories.getLockupTemplates |sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
 										{% if lockupTemplates.getStyle == "v" %}
@@ -78,7 +78,7 @@
 												<h6>{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}
 												</h6>
 											</div>
-											<div class="dcf-pt-3 dcf-pl-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
+											<div class="dcf-pt-2 dcf-pl-2 dcf-pr-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
 												{{lockupTemplates.getSvg | raw}}
 											</div>
 										</div>
@@ -90,7 +90,7 @@
 															<div class="dcf-txt-center">
 																<h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
 															</div>
-															<div class="dcf-pt-3 dcf-pl-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
+															<div class="dcf-pt-2 dcf-pl-2 dcf-pr-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
 																<div>
 																	{{ subitem.getSvg | raw }}
 																{% endif %}
@@ -154,7 +154,7 @@
 										<strong>Are you sure your communicator is not listed?</strong>
 									</p>
 								</div>
-								<label for="approver" class="form-label">Select your communicator contract</label>
+								<label for="approver" class="form-label">Select your communicator contact</label>
 								<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded" required>
 									<option value="">Select your Communicator Contact</option>
 									{% for item in approvers %}

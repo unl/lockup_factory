@@ -1,0 +1,17 @@
+<svg data-name="h_acronym_subject" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142.54 33.63">
+  <g>
+    <path class="n_main_color" d="M30.09,30.04c-.34,0-.61-.26-.61-.6s.27-.6,.61-.6c.32,0,.6,.28,.6,.6s-.27,.6-.6,.6m.02-1.36c-.44,0-.78,.34-.78,.76s.34,.76,.76,.76,.76-.34,.76-.76-.34-.76-.74-.76" fill="#d00000"/>
+    <path class="n_secondary_color" d="M30.09,30.04c-.34,0-.61-.26-.61-.6s.27-.6,.61-.6c.32,0,.6,.28,.6,.6,0,.34-.27,.6-.6,.6" fill="#fff"/>
+    <g>
+      <path class="n_secondary_color" d="M11.16,22.63v6.62H.94v-6.62h1.89V9H.94V2.37H9.65l9.84,15.52V9h-1.89V2.37h10.22v6.62h-1.89v13.63h1.89v6.62h-8.71L9.27,13.73v8.9h1.89ZM27.82,1.8h-10.79v7.76h1.89v6.38L10.13,2.07l-.15-.27H.38v7.76h1.89v12.49H.38v7.76H11.73v-7.76h-1.89v-6.38l8.8,13.88,.17,.27h9.58v-7.76h-1.89V9.57h1.89V1.8h-.57Z" fill="#fff"/>
+      <polygon class="n_main_color" points="19.49 17.89 9.65 2.37 .94 2.37 .94 9 2.84 9 2.84 22.63 .94 22.63 .94 29.25 11.16 29.25 11.16 22.63 9.27 22.63 9.27 13.73 19.12 29.25 27.82 29.25 27.82 22.63 25.93 22.63 25.93 9 27.82 9 27.82 2.37 17.6 2.37 17.6 9 19.49 9 19.49 17.89" fill="#d00000"/>
+      <path class="n_main_color" d="M28.39,2.37v7.19h-1.89v12.49h1.89v7.76h-9.58l-.17-.27L9.84,15.68v6.38h1.89v7.76H.38v-7.76h1.89V9.57H.38V1.8H9.95l.17,.27,8.8,13.87v-6.38h-1.89V1.8h11.36v.57Zm-.57-.95h-11.17V9.94h1.89v4.7L10.45,1.86l-.27-.44H0V9.94H1.89v11.73H0v8.52H12.11v-8.52h-1.89v-4.69l8.1,12.78,.29,.44h10.16v-8.52h-1.89V9.94h1.89V1.43h-.94Zm2.2,27.96h.07c.07-.02,.11-.05,.11-.15,0-.06-.02-.09-.07-.11h-.19v.26h.08Zm-.23-.4h.27c.11,0,.15,0,.21,.04,.07,.04,.11,.11,.11,.21,0,.08-.02,.13-.06,.19-.02,.04-.05,.04-.11,.08h-.02l.21,.4h-.15l-.19-.38h-.11v.38h-.15v-.91Z" fill="#d00000"/>
+    </g>
+  </g>
+  <text class="text_main_color" transform="translate(35.4 13.58) scale(.93 1)" fill="#d00000" font-family="Oswald-Medium, Oswald" font-size="15" letter-spacing="-.02em">
+    <tspan class="acronym_first_line" x="0" y="0">ACRONYM</tspan>
+  </text>
+  <text class="text_secondary_color" transform="translate(35.4 30.32) scale(.93 1)" fill="#000" font-family="Oswald-Medium, Oswald" font-size="10.25" letter-spacing="-.02em">
+    <tspan class="acronym_subject" x="0" y="0">ACRONYM SUBJECT</tspan>
+  </text>
+</svg>

@@ -19,15 +19,32 @@ class LockupsConverter
     private $lockups;
     private $core;
     private $urlSuffix;
+    private $inkscapeCommand;
+    private $version_string;
 
-    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, string $inkscapeCommand, string $versionString)
     {
         $this->doctrine = $doctrine;
+        $this->inkscapeCommand = $inkscapeCommand;
         $this->appKernel = $appKernel;
         $this->projectRoot = $this->appKernel->getProjectDir();
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
         $this->core = $core;
         $this->urlSuffix = "/lockups" . "/";
+
+        // If no version string is there then do not add anything
+        if (empty($versionString)) {
+            $this->version_string = "";
+        } else {
+            // Find any string within curly braces and replace it with the date function output
+            $this->version_string = preg_replace_callback(
+                '/({[^}]*})/',
+                function($matches) {
+                    return date(preg_replace('/({|})/', '', $matches[0]));
+                },
+                $versionString
+            ) . "_";
+        }
 
     }
 
@@ -67,7 +84,7 @@ class LockupsConverter
     public function createZip(Lockups $lockup)
     {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
-        $fileName = "N_" . $this->core->getLockupFileName($lockup) . "_lockups.zip";
+        $fileName = "N_" . $this->version_string . $this->core->getLockupFileName($lockup) . "_lockups.zip";
         $zippathName = $this->saveFolder() . $fileName;
 
         $zipDownloadUrl = $this->urlSuffix . $this->savePath() . $fileName;
@@ -78,7 +95,10 @@ class LockupsConverter
             foreach ($lockupFiles as $item) {
                 $zip->addFile($item->getDirectory(), $item->getPathName());
             }
-            $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
+
+            if ($lockup->getTemplate()->getSlug() !== 'v_social') {
+                $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
+            }
             // All files are added, so close the zip file.
             $zip->close();
         }
@@ -107,30 +127,30 @@ class LockupsConverter
 
         if ($orient == "h") {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nh_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_m" . $fileName;
+                $pathName = "Nh_" . $this->version_string . "m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . "m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nh_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_e_" . $fileName;
+                $pathName = "Nh_" . $this->version_string . "e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . "e_" . $fileName;
             }
             else {
-                $pathName = "Nh_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_" . $fileName;
+                $pathName = "Nh_" . $this->version_string . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . $fileName;
             }
         }
         else {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nv_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_m" . $fileName;
+                $pathName = "Nv_" . $this->version_string . "m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . "m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nv_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_e_" . $fileName;
+                $pathName = "Nv_" . $this->version_string . "e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . "e_" . $fileName;
             }
             else {
-                $pathName = "Nv_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_" . $fileName;
+                $pathName = "Nv_" . $this->version_string . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . $fileName;
             }
         }
 
@@ -150,19 +170,20 @@ class LockupsConverter
                 $fileName = $fileName . "4c";
                 break;
             case "blk":
-                $fileName = $fileName . "blk";
                 if ($rev) {
                     $pathName = $pathName . "Rev/";
+                    $fileName = $fileName . "rev";
                 }
                 else {
                     $pathName = $pathName . "Black/";
+                    $fileName = $fileName . "blk";
                 }
                 break;
         }
 
         $this->createFolder($pathName);
 
-        if ($rev == true) {
+        if ($rev == true && $color !== 'blk') {
             $fileName = $fileName . "_rev";
         }
 
@@ -189,34 +210,42 @@ class LockupsConverter
 
         $lockupFileClass = [];
 
-        #for svg
-
-        if ($color != "4c" || $color != "pms186cp") {
-
-            // exec('inkscape --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape' . ' --export-plain-svg=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
-
-            $lockupFileClass[0] = new LockupFiles();
-            $lockupFileClass[0]->setFileName($fileName . ".svg");
-            $lockupFileClass[0]->setFormat("svg");
-            $lockupFileClass[0]->setLockup($lockups);
-            $lockupFileClass[0]->setOrient($orient);
-            $lockupFileClass[0]->setStyle($color);
-            $lockupFileClass[0]->setTemplate($lockups->getTemplate());
-            $lockupFileClass[0]->setUrl($this->urlSuffix . $this->savePath() . $svgPathName);
-            $lockupFileClass[0]->setDirectory($svgDirectory);
-            $lockupFileClass[0]->setPathName($svgPathName);
-            $this->doctrine->getManager()->persist($lockupFileClass[0]);
-        }
-
-
-        #for png
-
+        
         if ($color != "pms186cp") {
-            // exec('inkscape --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-            exec('inkscape -h 800 --export-png=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+            #for eps
+            // exec($this->inkscapeCommand . ' --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+            exec($this->inkscapeCommand . ' -C --export-type=eps --export-filename=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+
+            # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
+            if ($color == '4c' || $color == 'blk') {
+                $file = fopen($epsDirectory, 'r');
+                $data = fread($file, filesize($epsDirectory));
+                $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
+                $data = str_replace('0.2 0.6 0.4 rg', '1 0 0.90 0 rg', $data); # replaces green of 4H
+                $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
+                fclose($file);
+
+                $file = fopen($epsDirectory, 'w');
+                fwrite($file, $data);
+                fclose($file);
+            }
+
+            $lockupFileClass[3] = new LockupFiles();
+            $lockupFileClass[3]->setFileName($fileName . ".eps");
+            $lockupFileClass[3]->setFormat("eps");
+            $lockupFileClass[3]->setLockup($lockups);
+            $lockupFileClass[3]->setOrient($orient);
+            $lockupFileClass[3]->setStyle($color);
+            $lockupFileClass[3]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[3]->setUrl($this->urlSuffix . $this->savePath() . $epsPathName);
+            $lockupFileClass[3]->setDirectory($epsDirectory);
+            $lockupFileClass[3]->setPathName($epsPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[3]);
 
             if ($color != "4c") {
+                // exec('$this->inkscapeCommand . ' --export-type="png" --export-area-snap -h 800 "' . $SvgPath . '" -o "' . $pngDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+                exec($this->inkscapeCommand . ' -h 800 --export-type=png --export-filename=' . escapeshellarg($pngDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
+
                 $lockupFileClass[1] = new LockupFiles();
                 $lockupFileClass[1]->setFileName($fileName . ".png");
                 $lockupFileClass[1]->setFormat("png");
@@ -228,10 +257,9 @@ class LockupsConverter
                 $lockupFileClass[1]->setDirectory($pngDirectory);
                 $lockupFileClass[1]->setPathName($pngPathName);
                 $this->doctrine->getManager()->persist($lockupFileClass[1]);
-
             }
-            if ($rev == false) {
 
+            if ( $color != '4c' && $rev !== true) {
                 #for jpg | convert is a imagemagick function
                 $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
                 // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);
@@ -251,37 +279,9 @@ class LockupsConverter
             }
         }
 
-
-        #for eps
-        // exec('inkscape --export-type="eps" --export-area-snap --export-area-drawing "' . $SvgPath . '" -o "' . $epsDirectory . '"' . ' 2>&1', $backend_output, $return_var);
-        exec('inkscape -C --export-eps=' . escapeshellarg($epsDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
-
-        # POSSIBLE FIX: replace the rgb colors in teh cairo commands with cmyk here (for both 4c and Pantone?)
-        if ($color == '4c' || $color == 'pms186cp') {
-            $file = fopen($epsDirectory, 'r');
-            $data = fread($file, filesize($epsDirectory));
-            $data = str_replace('setrgbcolor', 'setcmykcolor', $data); # changes the rg cairo command to setcmykcolor
-            $data = str_replace('0.0705882 0.603922 0.388235 rg', '0.83 0.15 0.80 0.02 rg', $data); # replaces green of 4H
-            $data = str_replace('0.854902 0.101961 0.196078 rg', '0.02 1 0.85 0.06 rg', $data); # replaces scarlet red
-            fclose($file);
-
-            $file = fopen($epsDirectory, 'w');
-            fwrite($file, $data);
-            fclose($file);
-        }
-
-        $lockupFileClass[3] = new LockupFiles();
-        $lockupFileClass[3]->setFileName($fileName . ".eps");
-        $lockupFileClass[3]->setFormat("eps");
-        $lockupFileClass[3]->setLockup($lockups);
-        $lockupFileClass[3]->setOrient($orient);
-        $lockupFileClass[3]->setStyle($color);
-        $lockupFileClass[3]->setTemplate($lockups->getTemplate());
-        $lockupFileClass[3]->setUrl($this->urlSuffix . $this->savePath() . $epsPathName);
-        $lockupFileClass[3]->setDirectory($epsDirectory);
-        $lockupFileClass[3]->setPathName($epsPathName);
-        $this->doctrine->getManager()->persist($lockupFileClass[3]);
-
+        #for svg (This file may be deleted later on)
+        // exec($this->inkscapeCommand . ' --export-type="svg" --export-plain-svg --export-area-snap "' . $SvgPath . '" -o "' . $svgDirectory . '"' . ' 2>&1', $backend_output, $return_var);
+        exec($this->inkscapeCommand . ' --export-type=svg --export-plain-svg --export-filename=' . escapeshellarg($svgDirectory) . ' ' . escapeshellarg($SvgPath) . ' 2>&1', $backend_output, $return_var);
 
         #for .ai
         if ($color == "pms186cp") {
@@ -298,6 +298,23 @@ class LockupsConverter
             copy($epsDirectory, $aiDirectory);
         }
 
+        // We do this here because we don't have the permissions to make a directory but inkscape does
+        // We do not want the SVG in these color spaces
+        if ($color == "pms186cp" || $color == "4c") {
+            unlink($svgDirectory);
+        } else {
+            $lockupFileClass[0] = new LockupFiles();
+            $lockupFileClass[0]->setFileName($fileName . ".svg");
+            $lockupFileClass[0]->setFormat("svg");
+            $lockupFileClass[0]->setLockup($lockups);
+            $lockupFileClass[0]->setOrient($orient);
+            $lockupFileClass[0]->setStyle($color);
+            $lockupFileClass[0]->setTemplate($lockups->getTemplate());
+            $lockupFileClass[0]->setUrl($this->urlSuffix . $this->savePath() . $svgPathName);
+            $lockupFileClass[0]->setDirectory($svgDirectory);
+            $lockupFileClass[0]->setPathName($svgPathName);
+            $this->doctrine->getManager()->persist($lockupFileClass[0]);
+        }
 
         $lockupFileClass[4] = new LockupFiles();
         $lockupFileClass[4]->setFileName($fileName . ".ai");

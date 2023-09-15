@@ -188,14 +188,24 @@ class LockupTemplates
 
     public function getPreview(): ?string
     {
-        return $this->preview;
-    }
 
-    public function setPreview(?string $preview): self
-    {
-        $this->preview = $preview;
+        // Load the SVG column
+        $svgXML = new \SimpleXMLElement($this->getSVG());
+        $svgXML->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
 
-        return $this;
+        // Remove all classes that are on anything
+        $class_elements = $svgXML->xpath('//svg:*[@class]');
+        if (isset($class_elements) && $class_elements !== false) {
+            foreach ($class_elements as $class_element) {
+                unset($class_element['class']);
+            }
+        }
+
+        // Add a class for the template_preview (This is not really needed)
+        $svgXML->addAttribute('class', 'template_preview');
+
+        // returns the SVG
+        return $svgXML->asXML();
     }
 
     public function getListingOrder(): ?int

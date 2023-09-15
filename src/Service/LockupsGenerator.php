@@ -115,6 +115,8 @@ class LockupsGenerator
 
         $this->lockupsConverter->createZip($lockups);
 
+        $this->createPreview($lockups);
+
         $lockups->setGenerating(0);
         $lockups->setIsGenerated(1);
         $this->doctrine->getManager()->persist($lockups);

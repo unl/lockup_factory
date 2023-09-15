@@ -43,7 +43,7 @@ class LockupsConverter
                     return date(preg_replace('/({|})/', '', $matches[0]));
                 },
                 $versionString
-            ) . '_';
+            ) . "_";
         }
 
     }
@@ -135,8 +135,8 @@ class LockupsConverter
                 $fileName = "Nh_" . $this->version_string . "e_" . $fileName;
             }
             else {
-                $pathName = "Nh_" . $this->version_string . "_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_" . $this->version_string . "_" . $fileName;
+                $pathName = "Nh_" . $this->version_string . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . $fileName;
             }
         }
         else {
@@ -170,19 +170,20 @@ class LockupsConverter
                 $fileName = $fileName . "4c";
                 break;
             case "blk":
-                $fileName = $fileName . "blk";
                 if ($rev) {
                     $pathName = $pathName . "Rev/";
+                    $fileName = $fileName . "rev";
                 }
                 else {
                     $pathName = $pathName . "Black/";
+                    $fileName = $fileName . "blk";
                 }
                 break;
         }
 
         $this->createFolder($pathName);
 
-        if ($rev == true) {
+        if ($rev == true && $color !== 'blk') {
             $fileName = $fileName . "_rev";
         }
 
@@ -258,7 +259,7 @@ class LockupsConverter
                 $this->doctrine->getManager()->persist($lockupFileClass[1]);
             }
 
-            if ( $color != '4c') {
+            if ( $color != '4c' && $rev !== true) {
                 #for jpg | convert is a imagemagick function
                 $bg = $rev ? '-background "#000000" -flatten ' : '-background "#ffffff" -flatten ';
                 // exec('convert "' . $pngDirectory . '" ' . $bg . ' "' . $jpgDirectory . '" 2>&1', $backend_output, $return_var);

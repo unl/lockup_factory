@@ -20,8 +20,9 @@ class LockupsConverter
     private $core;
     private $urlSuffix;
     private $inkscapeCommand;
+    private $version_string;
 
-    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, string $inkscapeCommand)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $appKernel, Core $core, string $inkscapeCommand, string $versionString)
     {
         $this->doctrine = $doctrine;
         $this->inkscapeCommand = $inkscapeCommand;
@@ -30,6 +31,20 @@ class LockupsConverter
         $this->saveDirectory = realpath($this->projectRoot . "/public/lockups/");
         $this->core = $core;
         $this->urlSuffix = "/lockups" . "/";
+
+        // If no version string is there then do not add anything
+        if (empty($versionString)) {
+            $this->version_string = "";
+        } else {
+            // Find any string within curly braces and replace it with the date function output
+            $this->version_string = preg_replace_callback(
+                '/({[^}]*})/',
+                function($matches) {
+                    return date(preg_replace('/({|})/', '', $matches[0]));
+                },
+                $versionString
+            ) . '_';
+        }
 
     }
 
@@ -69,7 +84,7 @@ class LockupsConverter
     public function createZip(Lockups $lockup)
     {
         $lockupFiles = $this->doctrine->getRepository(LockupFiles::class)->findBy(['lockup' => $lockup->getId()]);
-        $fileName = "N_" . $this->core->getLockupFileName($lockup) . "_lockups.zip";
+        $fileName = "N_" . $this->version_string . $this->core->getLockupFileName($lockup) . "_lockups.zip";
         $zippathName = $this->saveFolder() . $fileName;
 
         $zipDownloadUrl = $this->urlSuffix . $this->savePath() . $fileName;
@@ -112,30 +127,30 @@ class LockupsConverter
 
         if ($orient == "h") {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nh_2023_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_2023_m" . $fileName;
+                $pathName = "Nh_" . $this->version_string . "m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . "m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nh_2023_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_2023_e_" . $fileName;
+                $pathName = "Nh_" . $this->version_string . "e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . "e_" . $fileName;
             }
             else {
-                $pathName = "Nh_2023_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nh_2023_" . $fileName;
+                $pathName = "Nh_" . $this->version_string . "_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nh_" . $this->version_string . "_" . $fileName;
             }
         }
         else {
             if ($lockups->getTemplate()->getCategory()->getId() == 3) { //merchandise
-                $pathName = "Nv_2023_m_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_2023_m" . $fileName;
+                $pathName = "Nv_" . $this->version_string . "m_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . "m" . $fileName;
             }
             else if ($lockups->getTemplate()->getCategory()->getId() == 4) { // embroidery
-                $pathName = "Nv_2023_e_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_2023_e_" . $fileName;
+                $pathName = "Nv_" . $this->version_string . "e_" . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . "e_" . $fileName;
             }
             else {
-                $pathName = "Nv_2023_" . $this->core->getLockupFileName($lockups) . "/";
-                $fileName = "Nv_2023_" . $fileName;
+                $pathName = "Nv_" . $this->version_string . $this->core->getLockupFileName($lockups) . "/";
+                $fileName = "Nv_" . $this->version_string . $fileName;
             }
         }
 

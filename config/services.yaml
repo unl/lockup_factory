@@ -6,6 +6,7 @@
 parameters:
     app.app_url: '%env(APP_URL)%'
     app.inkscape_command: '%env(INKSCAPE_COMMAND)%'
+    app.version_string: '%env(VERSION_STRING)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -28,6 +29,7 @@ services:
     App\Service\LockupsConverter:
         arguments:
             $inkscapeCommand: '%app.inkscape_command%'
+            $versionString: '%app.version_string%'
 
 
     # add more service definitions when explicit configuration is needed

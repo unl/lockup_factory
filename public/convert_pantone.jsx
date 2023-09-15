@@ -9,21 +9,21 @@ fileName = fileName.substring(0, fileName.lastIndexOf("_lockups"));
 fileName = fileName.substring(2);
 
 createFile(
-    rootFolder+"/Nh_2023_"+fileName+"/4c_CMYK/Nh_2023_"+fileName+"_4c_rev.ai",
-    rootFolder+"/Nh_2023_"+fileName+"/PMS186cp/Nh_2023_"+fileName+"_pms186cp_rev.ai"
+    rootFolder+"/Nh_"+fileName+"/4c_CMYK/Nh_"+fileName+"_4c_rev.ai",
+    rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp_rev.ai"
 );
 createFile(
-    rootFolder+"/Nh_2023_"+fileName+"/4c_CMYK/Nh_2023_"+fileName+"_4c.ai",
-    rootFolder+"/Nh_2023_"+fileName+"/PMS186cp/Nh_2023_"+fileName+"_pms186cp.ai"
+    rootFolder+"/Nh_"+fileName+"/4c_CMYK/Nh_"+fileName+"_4c.ai",
+    rootFolder+"/Nh_"+fileName+"/PMS186cp/Nh_"+fileName+"_pms186cp.ai"
 );
 
 createFile(
-    rootFolder+"/Nv_2023_"+fileName+"/4c_CMYK/Nv_2023_"+fileName+"_4c_rev.ai",
-    rootFolder+"/Nv_2023_"+fileName+"/PMS186cp/Nv_2023_"+fileName+"_pms186cp_rev.ai"
+    rootFolder+"/Nv_"+fileName+"/4c_CMYK/Nv_"+fileName+"_4c_rev.ai",
+    rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp_rev.ai"
 );
 createFile(
-    rootFolder+"/Nv_2023_"+fileName+"/4c_CMYK/Nv_2023_"+fileName+"_4c.ai",
-    rootFolder+"/Nv_2023_"+fileName+"/PMS186cp/Nv_2023_"+fileName+"_pms186cp.ai"
+    rootFolder+"/Nv_"+fileName+"/4c_CMYK/Nv_"+fileName+"_4c.ai",
+    rootFolder+"/Nv_"+fileName+"/PMS186cp/Nv_"+fileName+"_pms186cp.ai"
 );
 
 function createFile(sourceDoc, destDoc){

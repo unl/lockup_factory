@@ -80,7 +80,10 @@ class LockupsConverter
             foreach ($lockupFiles as $item) {
                 $zip->addFile($item->getDirectory(), $item->getPathName());
             }
-            $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
+
+            if ($lockup->getTemplate()->getSlug() !== 'v_social') {
+                $zip->addFile($this->projectRoot . "/public/convert_pantone.jsx", "convert_pantone.jsx");
+            }
             // All files are added, so close the zip file.
             $zip->close();
         }

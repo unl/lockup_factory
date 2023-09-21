@@ -110,8 +110,8 @@ class Core
     {
         $lockups_name = $lockups->getName();
         $department_name = strtoupper($lockups->getInstitution());
-        $lockups_name = str_replace(" ", "_", $lockups_name);
-        $department_name = str_replace(" ", "_", $department_name);
+        $lockups_name = preg_replace('/[^A-Za-z0-9_\-]+/', '_', $lockups_name);
+        $department_name = preg_replace('/[^A-Za-z0-9_\-]+/', '_', $department_name);
         if (!empty($department_name)) {
             $lockups_name = $department_name . "_" . $lockups_name;
         }

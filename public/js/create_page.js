@@ -105,10 +105,6 @@ lockupNameElement.addEventListener("input", () => {
 // Handles back to step one button click
 back_to_step_one_button.addEventListener('click', () => {
     to_step_one();
-
-    all_lockup_templates.forEach((template) => {
-        template.classList.remove('lockups-selected-template');
-    });
 });
 
 // Handles back to step two button click
@@ -215,9 +211,11 @@ function to_step_one()
     step_three.classList.remove('lockups-step-disabled');
 
     category_list.removeAttribute('tabindex');
+    category_list.value = "";
     back_to_step_one_button.removeAttribute('tabindex');
     all_lockup_templates.forEach((template) => {
         template.setAttribute('tabindex', '0');
+        template.classList.remove('lockups-selected-template');
     });
 
     step_one.scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -236,6 +234,7 @@ function to_step_two()
     back_to_step_one_button.removeAttribute('tabindex');
     all_lockup_templates.forEach((template) => {
         template.setAttribute('tabindex', '0');
+        template.classList.remove('lockups-selected-template');
     });
 
     step_two.scrollIntoView({behavior: 'smooth', block: 'start'});

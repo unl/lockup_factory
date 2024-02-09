@@ -99,14 +99,24 @@
 					<div class="dcf-form-group">
 						{% for item in all_lockups_fields %}
 							<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class dcf-d-none" data-default="{{ item.value }}">
-								<label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
-								<input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}" {{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}} placeholder="{{item.getPlaceholder}}">
-								{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%} 
-								<span class="dcf-form-help">Please do not use all caps.</span>
+								<label for="{{ item.getSlug }}_input" class="form-label">{{ item.getName }}</label>
+								<input
+									id="{{ item.getSlug }}_input"
+									type="text"
+									class="dcf-input-text dcf-w-100%"
+									name="{{ item.getSlug }}"
+									{{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}}
+									placeholder="{{item.getPlaceholder}}"
+									aria-describedby="{{ item.getSlug }}_input_help"
+								>
+								<p class="dcf-form-help" id="{{ item.getSlug }}_input_help">
+								{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%}
+									<span>Please do not use all caps.</span>
 								{% endif %}
-								<span class="dcf-mt-2 dcf-form-help">{{user.isAdmin ? "Unlimited" :
-						"Maximum " ~ item.getLength }}
-									characters.</span>
+									<span>
+										{{user.isAdmin ? "Unlimited" :"Maximum " ~ item.getLength }} characters.
+									</span>
+								</p>
 							</div>
 						{% endfor %}
 					</div>
@@ -116,8 +126,9 @@
 							</b>
 							<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
 								<div>
-									<label for="institution" class="form-label">College/Organization/Institution
-																		Acronym</label>
+									<label for="institution" class="form-label">
+										College/Organization/Institution Acronym
+									</label>
 									<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" placeholder="e.g. COB" required>
 								</div>
 
@@ -126,7 +137,9 @@
 									<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
 								</div>
 							</div>
-							<p class="dcf-mt-3">Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span></p>
+							<p class="dcf-mt-3">
+								Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span>
+							</p>
 						</div>
 						<hr>
 						<div class="dcf-form-group">

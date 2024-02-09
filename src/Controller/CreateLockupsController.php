@@ -42,7 +42,25 @@ class CreateLockupsController extends BaseController
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
-        $json_lockups_fields = $serializer->serialize($all_lockups_fields, 'json', [AbstractNormalizer::ATTRIBUTES => ['slug', 'uppercase', 'value']]);
+
+        $json_field_data = array();
+        foreach($all_lockups_fields as $single_field) {
+            $templates_using = array();
+
+            foreach($single_field->getTemplateFields() as $template_field_link) {
+                $templates_using[] = $template_field_link->getLockupTemplates()->getId();
+            }
+
+            $json_field_data[] = array(
+                'slug' => $single_field->getSlug(),
+                'uppercase' => $single_field->getUppercase(),
+                'value' => $single_field->getValue(),
+                'templates' => $templates_using,
+            );
+        }
+
+        $json_lockups_fields = $serializer->serialize($json_field_data, 'json');
+
 
         if ($lockups != null && count($lockupFields) == 0) {
             $lockupFields = null;

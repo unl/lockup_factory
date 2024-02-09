@@ -32,33 +32,46 @@
     /* cursor: pointer; */
 }
 
-.lockup-templates-event-listener{
-  cursor: pointer;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  left: 0px;
-  z-index: 50;
-}
-
-.lockup-templates-event-listener:hover {
-  transition: .5s;
-}
-
 .img-thumb-active {
     background-color: rgba(0, 0, 0, .07);
     z-index: 100;
 }
 
-.unl-bg-lighter-gray-custom {
-  background-color: var(--btn-inverse-secondary)!important;
+.lockup-templates {
+  border: solid rgba(0, 0, 0, .07) 3px;
+  background-color: transparent;
+  cursor: pointer;
+}
+.lockup-templates.lockups-selected-template {
+  border: solid #d00000 3px;
+  background-color: #d0000009;
 }
 
-.svgTabs {
+.lockups-step-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#step_two .template_preview {
+  position: absolute;
+  top: 0;
+  /* bottom: 0; */
+  height: 100%;
+  left: 50%;
+  translate: -50%;
+  padding: 0.5rem;
+}
+
+.lockup-preview {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+}
+
+.lockup-previews svg {
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .tabs-button {

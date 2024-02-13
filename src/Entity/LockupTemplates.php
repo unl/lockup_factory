@@ -49,6 +49,9 @@ class LockupTemplates
     #[ORM\Column(type: 'integer', nullable: true)]
     private $ListingOrder;
 
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private $disabled;
+
     public function __construct()
     {
         $this->template = new ArrayCollection();
@@ -152,6 +155,18 @@ class LockupTemplates
     public function setCategory(?LockupTemplatesCategories $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDisabled(): ?int
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled(?int $disabled): self
+    {
+        $this->disabled = $disabled;
 
         return $this;
     }

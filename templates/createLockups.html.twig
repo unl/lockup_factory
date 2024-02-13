@@ -1,8 +1,16 @@
 {% block content %}
 	{% block body %}
+		<div class="dcf-m-auto" style="width: min(100%, 70ch);">
+			<h1>Create Lockup</h1>
+			<p>
+				Creating a lockup is simple by selecting your style, choosing a template, and inserting your content.
+				Once created, your lockup will need to go through an approval process before it is able to be downloaded.
+			</p>
+		</div>
 		<div class="dcf-wrapper dcf-bleed dcf-pb-7" style="margin-bottom: 15rem;">
 			<section id="step_one" class="dcf-m-auto" style="width: min(100%, 70ch);">
-				<h3>Select Lockup Style</h3>
+				<hr>
+				<h2>Select Lockup Style</h2>
 				<div>
 					<label for="category_list">Lockup Syles</label>
 					<select id="category_list" name="category_list" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-mt-2">
@@ -17,8 +25,8 @@
 				<hr>
 				<div class="dcf-d-flex dcf-jc-between dcf-ai-center">
 					<div>
-						<h3 class="dcf-mb-1">Select Your Lockup Template</h3>
-						<p id="template_help_text" class="dcf-ml-2 dcf-txt-sm">Most options also include a horizontal template.</p>
+						<h2 class="dcf-mb-1">Select Your Lockup Template</h2>
+						<p id="template_help_text" class="dcf-txt-sm">Most options also include a horizontal template.</p>
 					</div>
 					<button id="back_to_step_one" class="dcf-btn dcf-btn-secondary">Back a step</button>
 				</div>
@@ -38,121 +46,123 @@
 			<section id="step_three" class="dcf-d-none dcf-m-auto" style="width: min(100%, 70ch);">
 				<hr>
 				<div class="dcf-d-flex dcf-jc-between dcf-ai-center dcf-mb-8">
-					<h3>Fill In Your Content</h3>
+					<h2>Fill In Your Content</h2>
 					<button id="back_to_step_two" class="dcf-btn dcf-btn-secondary">Back a step</button>
 				</div>
-				<!-- error tag -->
-				{% if error_msg['title'] is defined %}
-					<div class="dcf-notice dcf-notice-danger" hidden>
-						<h2>{{ (error_msg['title'] is defined) ? error_msg['title'] }}</h2>
-						<div>{{ (error_msg['body'] is defined) ? error_msg['body'] }}</div>
-					</div>
-				{% endif %}
-
 				<div>
-					{% for lockupsCategories in lockup_categories %}
-						{% for lockupTemplates in lockupsCategories.getLockupTemplates %}
-							<div id="lockup-preview-{{lockupTemplates.getId}}" data-id="{{lockupTemplates.getId}}" class="lockup-previews dcf-d-none">
-								<div class="dcf-gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); max-height: 30rem;">
-									<div style="display: grid; grid-template-rows: auto 1fr;">
-										<p class="dcf-bold dcf-txt-center">{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
-										<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
-											{{lockupTemplates.getSvg | raw}}
-										</div>
-									</div>
-									{% if lockupTemplates.getLinksTo != null%}
-										{% for lockupsCategories in lockup_categories %}
-											{% for subitem in lockupsCategories.getLockupTemplates %}
-												{% if (subitem.getId == lockupTemplates.getLinksTo) %}
-													<div style="display: grid; grid-template-rows: auto 1fr;">
-														<p class="dcf-bold dcf-txt-center">{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
-														<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
-															{{ subitem.getSvg | raw }}
-														</div>
-													</div>
-												{% endif %}
-											{% endfor %}
-										{% endfor %}
-									{% endif %}
-								</div>
-								<p class="dcf-mt-5 dcf-txt-2xs">
-									<i class="dxf-txt-left">{{lockupTemplates.getDescription}}</i>
-								</p>
-							</div>
-						{% endfor %}
-					{% endfor %}
-				</div>
-				<form
-					method="POST" action="" class="dcf-form">
-					<!--  name stores the post form data -->
-					<input type="hidden" id="lockupTemplateId" name="lockuptemplate" value="1">
-					<input type="hidden" name="token" value="{{ csrf_token('add-lockups') }}"/>
-					<div class="dcf-form-group">
-						{% for item in all_lockups_fields %}
-							<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class dcf-d-none" data-default="{{ item.value }}">
-								<label for="{{ item.getSlug }}_input" class="form-label">{{ item.getName }}</label>
-								<input
-									id="{{ item.getSlug }}_input"
-									type="text"
-									class="dcf-input-text dcf-w-100%"
-									name="{{ item.getSlug }}"
-									{{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}}
-									placeholder="{{item.getPlaceholder}}"
-									aria-describedby="{{ item.getSlug }}_input_help"
-								>
-								<p class="dcf-form-help" id="{{ item.getSlug }}_input_help">
-								{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%}
-									<span>Please do not use all caps.</span>
-								{% endif %}
-									<span>
-										{{user.isAdmin ? "Unlimited" :"Maximum " ~ item.getLength }} characters.
-									</span>
-								</p>
-							</div>
-						{% endfor %}
-					</div>
-						<hr>
-						<div class="dcf-form-group">
-							<b class="dcf-mb-4 dcf-d-block">Lockup Filename
-							</b>
-							<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
-								<div>
-									<label for="institution" class="form-label">
-										College/Organization/Institution Acronym
-									</label>
-									<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" placeholder="e.g. COB" required>
-								</div>
+					<!-- error tag -->
+					{% if error_msg['title'] is defined %}
+						<div class="dcf-notice dcf-notice-danger" hidden>
+							<h2>{{ (error_msg['title'] is defined) ? error_msg['title'] }}</h2>
+							<div>{{ (error_msg['body'] is defined) ? error_msg['body'] }}</div>
+						</div>
+					{% endif %}
 
-								<div>
-									<label for="lockupName" class="form-label">Lockup Name</label>
-									<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
+					<div>
+						{% for lockupsCategories in lockup_categories %}
+							{% for lockupTemplates in lockupsCategories.getLockupTemplates %}
+								<div id="lockup-preview-{{lockupTemplates.getId}}" data-id="{{lockupTemplates.getId}}" class="lockup-previews dcf-d-none">
+									<div class="dcf-gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); max-height: 30rem;">
+										<div style="display: grid; grid-template-rows: auto 1fr;">
+											<p class="dcf-bold dcf-txt-center">{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
+											<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
+												{{lockupTemplates.getSvg | raw}}
+											</div>
+										</div>
+										{% if lockupTemplates.getLinksTo != null%}
+											{% for lockupsCategories in lockup_categories %}
+												{% for subitem in lockupsCategories.getLockupTemplates %}
+													{% if (subitem.getId == lockupTemplates.getLinksTo) %}
+														<div style="display: grid; grid-template-rows: auto 1fr;">
+															<p class="dcf-bold dcf-txt-center">{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
+															<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
+																{{ subitem.getSvg | raw }}
+															</div>
+														</div>
+													{% endif %}
+												{% endfor %}
+											{% endfor %}
+										{% endif %}
+									</div>
+									<p class="dcf-mt-5 dcf-txt-2xs">
+										<i class="dxf-txt-left">{{lockupTemplates.getDescription}}</i>
+									</p>
 								</div>
-							</div>
-							<p class="dcf-mt-3">
-								Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span>
-							</p>
-						</div>
-						<hr>
+							{% endfor %}
+						{% endfor %}
+					</div>
+					<form
+						method="POST" action="" class="dcf-form">
+						<!--  name stores the post form data -->
+						<input type="hidden" id="lockupTemplateId" name="lockuptemplate" value="1">
+						<input type="hidden" name="token" value="{{ csrf_token('add-lockups') }}"/>
 						<div class="dcf-form-group">
-							<b class="dcf-mb-4 dcf-d-block">Communicator Contact</b>
-							<div id="commNotListed" class="dcf-d-none unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
-								<p class="dcf-mb-0">
-									<strong>Are you sure your communicator is not listed?</strong>
+							{% for item in all_lockups_fields %}
+								<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class dcf-d-none" data-default="{{ item.value }}">
+									<label for="{{ item.getSlug }}_input" class="form-label">{{ item.getName }}</label>
+									<input
+										id="{{ item.getSlug }}_input"
+										type="text"
+										class="dcf-input-text dcf-w-100%"
+										name="{{ item.getSlug }}"
+										{{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}}
+										placeholder="{{item.getPlaceholder}}"
+										aria-describedby="{{ item.getSlug }}_input_help"
+									>
+									<p class="dcf-form-help" id="{{ item.getSlug }}_input_help">
+									{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%}
+										<span>Please do not use all caps.</span>
+									{% endif %}
+										<span>
+											{{user.isAdmin ? "Unlimited" :"Maximum " ~ item.getLength }} characters.
+										</span>
+									</p>
+								</div>
+							{% endfor %}
+						</div>
+							<hr>
+							<div class="dcf-form-group">
+								<b class="dcf-mb-4 dcf-d-block">Lockup Filename
+								</b>
+								<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
+									<div>
+										<label for="institution" class="form-label">
+											College/Organization/Institution Acronym
+										</label>
+										<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" placeholder="e.g. COB" required>
+									</div>
+
+									<div>
+										<label for="lockupName" class="form-label">Lockup Name</label>
+										<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
+									</div>
+								</div>
+								<p class="dcf-mt-3">
+									Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span>
 								</p>
 							</div>
-							<label for="approver" class="form-label">Select your communicator contact</label>
-							<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded" required>
-								<option value="" selected disabled>Select your Communicator Contact</option>
-								{% for item in approvers %}
-									<option value="{{item.getId}}">{{item.getName}}
-										({{ item.getOrganizationAcronym }})</option>
-								{% endfor %}
-								<option value="-1">I'm not sure / not listed / N/A</option>
-							</select>
+							<hr>
+							<div class="dcf-form-group">
+								<b class="dcf-mb-4 dcf-d-block">Communicator Contact</b>
+								<div id="commNotListed" class="dcf-d-none unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
+									<p class="dcf-mb-0">
+										<strong>Are you sure your communicator is not listed?</strong>
+									</p>
+								</div>
+								<label for="approver" class="form-label">Select your communicator contact</label>
+								<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded" required>
+									<option value="" selected disabled>Select your Communicator Contact</option>
+									{% for item in approvers %}
+										<option value="{{item.getId}}">{{item.getName}}
+											({{ item.getOrganizationAcronym }})</option>
+									{% endfor %}
+									<option value="-1">I'm not sure / not listed / N/A</option>
+								</select>
+							</div>
+							<button class="dcf-btn dcf-btn-primary dcf-mt-5">Submit</button>
 						</div>
-						<button class="dcf-btn dcf-btn-primary dcf-mt-5">Submit</button>
-					</div>
-				</form>
+					</form>
+				</div>
 			</section>
 		</div>
 

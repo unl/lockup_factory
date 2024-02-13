@@ -8,7 +8,9 @@ const back_to_step_two_button = document.getElementById('back_to_step_two');
 
 const category_list = document.getElementById('category_list');
 
+const template_container = document.getElementById('template-container');
 const all_lockup_templates = document.querySelectorAll('.lockup-templates');
+const template_help_text = document.getElementById('template_help_text');
 
 const all_lockup_previews = document.querySelectorAll('.lockup-previews');
 const all_field_input = document.querySelectorAll('.input_field_class');
@@ -159,15 +161,31 @@ function selectLockupTemplate(template_id)
 function updateCategoryListing()
 {
     const category_selected = category_list.value;
+    let category_count = 0;
 
     all_lockup_templates.forEach((template) => {
         template.classList.remove('lockups-selected-template');
         if (template.classList.contains(category_selected)) {
             template.classList.remove('dcf-d-none');
+            category_count++;
         } else {
             template.classList.add('dcf-d-none');
         }
     });
+
+    if (category_count === 1) {
+        template_container.classList.add('dcf-grid-full');
+        template_container.classList.remove('dcf-grid-halves');
+    } else {
+        template_container.classList.remove('dcf-grid-full');
+        template_container.classList.add('dcf-grid-halves');
+    }
+
+    if (category_selected === "cat_social" || category_selected === "cat_emb") {
+        template_help_text.classList.add('dcf-d-none');
+    } else {
+        template_help_text.classList.remove('dcf-d-none');
+    }
 }
 
 function updateGeneratedLockupName()

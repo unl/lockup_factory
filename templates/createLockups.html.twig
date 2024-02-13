@@ -1,21 +1,9 @@
 {% block content %}
 	{% block body %}
-		<div class="dcf-wrapper dcf-bleed dcf-pb-7">
-			<section id="step_one">
-				<h2>Step One: Select Lockup Style</h2>
-				<div style="width: min(100%, 60ch); margin: auto;">
-					{# <div>
-						<div class="dcf-form-group dcf-w-100% dcf-d-inline-flex dcf-flex-nowrap dcf-p-1 dcf-rounded dcf-b-1 dcf-b-solid unl-b-light-gray">
-							<div id="horizontal-button" class="dcf-input-switch" style="width: 50%;">
-								<input id="campus-city" name="campus" type="radio" value="city" checked>
-								<label for="campus-city" class="dcf-w-100%">Horizontal</label>
-							</div>
-							<div id="vertical-button" class="dcf-input-switch" style="width: 50%;">
-								<input id="campus-east" name="campus" type="radio" value="east">
-								<label for="campus-east" class="dcf-w-100%">Vertical</label>
-							</div>
-						</div>
-					</div> #}
+		<div class="dcf-wrapper dcf-bleed dcf-pb-7" style="margin-bottom: 15rem;">
+			<section id="step_one" class="dcf-m-auto" style="width: min(100%, 70ch);">
+				<h3>Select Lockup Style</h3>
+				<div>
 					<label for="category_list">Lockup Syles</label>
 					<select id="category_list" name="category_list" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-mt-2">
 						<option value="" selected disabled>Please select a style</option>
@@ -25,15 +13,19 @@
 					</select>
 				</div>
 			</section>
-			<section id="step_two" class="dcf-d-none">
+			<section id="step_two" class="dcf-d-none dcf-m-auto" style="width: min(100%, 70ch);">
 				<hr>
 				<div class="dcf-d-flex dcf-jc-between dcf-ai-center">
-					<h2>Step Two: Select Your Lockup Template</h2>
-					<button id="back_to_step_one" class="dcf-btn dcf-btn-secondary">Back to Step One</button>
+					<div>
+						<h3 class="dcf-mb-1">Select Your Lockup Template</h3>
+						<p id="template_help_text" class="dcf-ml-2 dcf-txt-sm">Most options also include a horizontal template.</p>
+					</div>
+					<button id="back_to_step_one" class="dcf-btn dcf-btn-secondary">Back a step</button>
 				</div>
-				<div class="unl-bg-cream@dark dcf-rounded dcf-grid-halves dcf-row-gap-3 dcf-col-gap-3 dcf-p-3 dcf-m-auto" style="width: min(100%, 60ch);">
+				<div id="template-container" class="unl-bg-cream@dark dcf-rounded dcf-grid-halves dcf-row-gap-3 dcf-col-gap-3 dcf-mt-6 dcf-p-3">
 					{% for categories in lockup_categories %}
-						{% for lockupTemplates in categories.getLockupTemplates |sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
+						{# `getLockupTemplates` filters disabled templates out #}
+						{% for lockupTemplates in categories.getLockupTemplates | sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
 							{% if lockupTemplates.getStyle == "v" %}
 								<div id="lockup-template-{{lockupTemplates.getId}}" tabindex="0" data-id="{{lockupTemplates.getId}}" class="lockup-templates {{categories.getSlug}} dcf-rounded dcf-ratio dcf-ratio-1x1 dcf-mr-auto dcf-ml-auto dcf-d-none" style="width: 10rem; height: 10rem;">
 									<img class="dcf-ratio-child" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
@@ -42,13 +34,12 @@
 						{% endfor %}
 					{% endfor %}
 				</div>
-				<p class="dcf-txt-sm dcf-txt-center dcf-mt-3">Most options also include a horizontal template.</p>
 			</section>
-			<section id="step_three" class="dcf-d-none">
+			<section id="step_three" class="dcf-d-none dcf-m-auto" style="width: min(100%, 70ch);">
 				<hr>
-				<div class="dcf-d-flex dcf-jc-between dcf-ai-center">
-					<h2>Step Three: Fill In Your Content</h2>
-					<button id="back_to_step_two" class="dcf-btn dcf-btn-secondary">Back to Step Two</button>
+				<div class="dcf-d-flex dcf-jc-between dcf-ai-center dcf-mb-8">
+					<h3>Fill In Your Content</h3>
+					<button id="back_to_step_two" class="dcf-btn dcf-btn-secondary">Back a step</button>
 				</div>
 				<!-- error tag -->
 				{% if error_msg['title'] is defined %}
@@ -62,9 +53,9 @@
 					{% for lockupsCategories in lockup_categories %}
 						{% for lockupTemplates in lockupsCategories.getLockupTemplates %}
 							<div id="lockup-preview-{{lockupTemplates.getId}}" data-id="{{lockupTemplates.getId}}" class="lockup-previews dcf-d-none">
-								<div class="dcf-row-gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); max-height: 30rem;">
+								<div class="dcf-gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); max-height: 30rem;">
 									<div style="display: grid; grid-template-rows: auto 1fr;">
-										<h6 class="dcf-txt-center">{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
+										<p class="dcf-bold dcf-txt-center">{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
 										<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
 											{{lockupTemplates.getSvg | raw}}
 										</div>
@@ -74,7 +65,7 @@
 											{% for subitem in lockupsCategories.getLockupTemplates %}
 												{% if (subitem.getId == lockupTemplates.getLinksTo) %}
 													<div style="display: grid; grid-template-rows: auto 1fr;">
-														<h6 class="dcf-txt-center">{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
+														<p class="dcf-bold dcf-txt-center">{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
 														<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
 															{{ subitem.getSvg | raw }}
 														</div>

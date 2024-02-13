@@ -71,7 +71,9 @@ if (edit_mode === true) {
 // Handles event when category list is changed
 category_list.addEventListener('input', () => {
     updateCategoryListing();
-    to_step_two();
+    setTimeout(() => {
+        to_step_two();
+    }, 250);
 });
 
 // Sets up templates
@@ -81,7 +83,9 @@ all_lockup_templates.forEach((template) => {
     // Handles template click events
     template.addEventListener('click', () => {
         selectLockupTemplate(template_id);
-        to_step_three();
+        setTimeout(() => {
+            to_step_three();
+        }, 250);
     });
 });
 

@@ -63,7 +63,11 @@ class LockupTemplatesCategories
      */
     public function getLockupTemplates(): Collection
     {
-        return $this->lockupTemplates;
+        $temp = $this->lockupTemplates->filter(function($single_template) {
+            return $single_template->getDisabled() === 0;
+        });
+
+        return $temp;
     }
 
     public function addLockupTemplate(LockupTemplates $lockupTemplate): self

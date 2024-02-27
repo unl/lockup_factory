@@ -1,64 +1,55 @@
 {% block content %}
 	{% block body %}
-		<div class="dcf-wrapper dcf-bleed dcf-pb-7">
-			<div class="dcf-grid dcf-col-gap-vw">
-				<div class="dcf-col-100% dcf-col-25%-start@md dcf-rounded dcf-pb-6">
-					<h5 class="dcf-mb-5">Select Lockup Style</h5>
-					<div class="dcf-mb-6">
-						{# <div>
-							<div class="dcf-form-group dcf-w-100% dcf-d-inline-flex dcf-flex-nowrap dcf-p-1 dcf-rounded dcf-b-1 dcf-b-solid unl-b-light-gray">
-								<div id="horizontal-button" class="dcf-input-switch" style="width: 50%;">
-									<input id="campus-city" name="campus" type="radio" value="city" checked>
-									<label for="campus-city" class="dcf-w-100%">Horizontal</label>
-								</div>
-								<div id="vertical-button" class="dcf-input-switch" style="width: 50%;">
-									<input id="campus-east" name="campus" type="radio" value="east">
-									<label for="campus-east" class="dcf-w-100%">Vertical</label>
-								</div>
-							</div>
-						</div> #}
-						<p>Most options also include a horizontal template.</p>
-						<select id="category_list" name="category_list" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-mt-2">
-							{% for item in lockup_categories %}
-								<option value="{{item.getSlug}}">{{item.getName}}</option>
-							{% endfor %}
-						</select>
-					</div>
-					<div style="max-height: 60vh; overflow-y: auto;">
-						<div id="horizontal-tab" style="display: none;">
-							<div class="dcf-grid-full dcf-grid-halves@sm dcf-grid dcf-grid-full@md">
-								{% for categories in lockup_categories %}
-									{% for lockupTemplates in categories.getLockupTemplates %}
-										{% if lockupTemplates.getStyle == "h" %}
-											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-3 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded" style="display: none;" value="{{categories.getSlug}}">
-												{# <img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}"> #}
-												{{lockupTemplates.getPreview | raw}}
-												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
-											</div>
-										{% endif %}
-									{% endfor %}
-								{% endfor %}
-							</div>
-						</div>
-						<div id="vertical-tab">
-							<div class="dcf-grid dcf-grid-halves dcf-grid-full@sm">
-								{% for categories in lockup_categories %}
-									{% for lockupTemplates in categories.getLockupTemplates |sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
-										{% if lockupTemplates.getStyle == "v" %}
-											<div id="lockup-templates-{{lockupTemplates.getId}}" class="dcf-p-1 dcf-mt-3 dcf-mb-3 dcf-relative lockup-templates {{categories.getSlug}} unl-b-1 dcf-rounded {{ (lockupTemplates.getId == 4) ? "unl-bg-lighter-gray-custom" : ""}}" style="display: none;" value="{{categories.getSlug}}">
-												{{lockupTemplates.getPreview | raw}}
-												{# <img style="width: 400px; height: auto;" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}"> #}
-												<div id="{{lockupTemplates.getId}}" class="lockup-templates-event-listener dcf-absolute"></div>
-											</div>
-										{% endif %}
-									{% endfor %}
-								{% endfor %}
-							</div>
-						</div>
-					</div>
+		<div class="dcf-m-auto" style="width: min(100%, 70ch);">
+			<h1>Create Lockup</h1>
+			<p>
+				Creating a lockup is simple by selecting your style, choosing a template, and inserting your content.
+				Once created, your lockup will need to go through an approval process before it is able to be downloaded.
+			</p>
+		</div>
+		<div class="dcf-wrapper dcf-bleed dcf-pb-7" style="margin-bottom: 15rem;">
+			<section id="step_one" class="dcf-m-auto" style="width: min(100%, 70ch);">
+				<hr>
+				<h2>Select Lockup Style</h2>
+				<div>
+					<label for="category_list">Lockup Styles</label>
+					<select id="category_list" name="category_list" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded dcf-mt-2">
+						<option value="" selected disabled>Please select a style</option>
+						{% for item in lockup_categories %}
+							<option value="{{item.getSlug}}">{{item.getName}}</option>
+						{% endfor %}
+					</select>
 				</div>
-				<div class="dcf-col-100% dcf-col-75%-end@md dcf-pb-6 dcf-pr-2">
-					<h5 class="dcf-mb-6">Preview</h5>
+			</section>
+			<section id="step_two" class="dcf-d-none dcf-m-auto" style="width: min(100%, 70ch);">
+				<hr>
+				<div class="dcf-d-flex dcf-jc-between dcf-ai-center">
+					<div>
+						<h2 class="dcf-mb-1">Select Your Lockup Template</h2>
+						<p id="template_help_text" class="dcf-txt-sm">Most options also include a horizontal template.</p>
+					</div>
+					<button id="back_to_step_one" class="dcf-btn dcf-btn-secondary">Back a step</button>
+				</div>
+				<div id="template-container" class="unl-bg-cream@dark dcf-rounded dcf-grid-halves dcf-row-gap-3 dcf-col-gap-3 dcf-mt-6 dcf-p-3">
+					{% for categories in lockup_categories %}
+						{# `getLockupTemplates` filters disabled templates out #}
+						{% for lockupTemplates in categories.getLockupTemplates | sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
+							{% if lockupTemplates.getStyle == "v" %}
+								<div id="lockup-template-{{lockupTemplates.getId}}" tabindex="0" data-id="{{lockupTemplates.getId}}" class="lockup-templates {{categories.getSlug}} dcf-rounded dcf-ratio dcf-ratio-1x1 dcf-mr-auto dcf-ml-auto dcf-d-none" style="width: 10rem; height: 10rem;">
+									<img class="dcf-ratio-child" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
+								</div>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				</div>
+			</section>
+			<section id="step_three" class="dcf-d-none dcf-m-auto" style="width: min(100%, 70ch);">
+				<hr>
+				<div class="dcf-d-flex dcf-jc-between dcf-ai-center dcf-mb-8">
+					<h2>Fill In Your Content</h2>
+					<button id="back_to_step_two" class="dcf-btn dcf-btn-secondary">Back a step</button>
+				</div>
+				<div>
 					<!-- error tag -->
 					{% if error_msg['title'] is defined %}
 						<div class="dcf-notice dcf-notice-danger" hidden>
@@ -70,15 +61,11 @@
 					<div>
 						{% for lockupsCategories in lockup_categories %}
 							{% for lockupTemplates in lockupsCategories.getLockupTemplates %}
-								<div id="{{lockupTemplates.getId}}svg" style="display:{{ (lockupTemplates.getId == 1) ? " block"
-														: " none" }}" class="svgTabs">
-									<div class="dcf-grid dcf-grid-full dcf-grid-halves@lg dcf-col-gap-vw dcf-row-gap-1">
-										<div>
-											<div class="dcf-txt-center">
-												<h6>{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}
-												</h6>
-											</div>
-											<div class="dcf-pt-2 dcf-pl-2 dcf-pr-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
+								<div id="lockup-preview-{{lockupTemplates.getId}}" data-id="{{lockupTemplates.getId}}" class="lockup-previews dcf-d-none">
+									<div class="dcf-gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); max-height: 30rem;">
+										<div style="display: grid; grid-template-rows: auto 1fr;">
+											<p class="dcf-bold dcf-txt-center">{{(lockupTemplates.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
+											<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
 												{{lockupTemplates.getSvg | raw}}
 											</div>
 										</div>
@@ -86,19 +73,15 @@
 											{% for lockupsCategories in lockup_categories %}
 												{% for subitem in lockupsCategories.getLockupTemplates %}
 													{% if (subitem.getId == lockupTemplates.getLinksTo) %}
-														<div>
-															<div class="dcf-txt-center">
-																<h6>{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</h6>
+														<div style="display: grid; grid-template-rows: auto 1fr;">
+															<p class="dcf-bold dcf-txt-center">{{(subitem.getStyle == "h") ? "Horizontal" : "Vertical"}}</p>
+															<div class="dcf-b-1 dcf-b-solid unl-b-lighter-gray unl-bg-cream@dark dcf-rounded dcf-d-flex dcf-jc-center dcf-ai-center dcf-p-3 dcf-w-100% dcf-h-100% dcf-as-center dcf-js-center" style="max-height: 15rem; max-width: 25rem;">
+																{{ subitem.getSvg | raw }}
 															</div>
-															<div class="dcf-pt-2 dcf-pl-2 dcf-pr-2 dcf-b-1 dcf-b-solid unl-b-lighter-gray" style="background-color: #fff;">
-																<div>
-																	{{ subitem.getSvg | raw }}
-																{% endif %}
-															{% endfor %}
-														{% endfor %}
-													</div>
-												</div>
-											</div>
+														</div>
+													{% endif %}
+												{% endfor %}
+											{% endfor %}
 										{% endif %}
 									</div>
 									<p class="dcf-mt-5 dcf-txt-2xs">
@@ -115,15 +98,25 @@
 						<input type="hidden" name="token" value="{{ csrf_token('add-lockups') }}"/>
 						<div class="dcf-form-group">
 							{% for item in all_lockups_fields %}
-								<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class" style="display: {{(item.getId == 1) ? " block" : " none" }};">
-									<label for="exampleFormControlInput1" class="form-label">{{ item.getName }}</label>
-									<input type="text" class="dcf-input-text dcf-w-100%" name="{{ item.getSlug }}" {{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}} placeholder="{{item.getPlaceholder}}">
-									{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%} 
-									<span class="dcf-form-help">Please do not use all caps.</span>
+								<div id="{{ item.getSlug }}" class="dcf-mb-3 input_field_class dcf-d-none" data-default="{{ item.value }}">
+									<label for="{{ item.getSlug }}_input" class="form-label">{{ item.getName }}</label>
+									<input
+										id="{{ item.getSlug }}_input"
+										type="text"
+										class="dcf-input-text dcf-w-100%"
+										name="{{ item.getSlug }}"
+										{{ (user.isAdmin==false) ? 'maxlength=' ~ item.getLength}}
+										placeholder="{{item.getPlaceholder}}"
+										aria-describedby="{{ item.getSlug }}_input_help"
+									>
+									<p class="dcf-form-help" id="{{ item.getSlug }}_input_help">
+									{% if item.getSlug == "subject_first_line" or item.getSlug == "subject_second_line"%}
+										<span>Please do not use all caps.</span>
 									{% endif %}
-									<span class="dcf-mt-2 dcf-form-help">{{user.isAdmin ? "Unlimited" :
-							"Maximum " ~ item.getLength }}
-										characters.</span>
+										<span>
+											{{user.isAdmin ? "Unlimited" :"Maximum " ~ item.getLength }} characters.
+										</span>
+									</p>
 								</div>
 							{% endfor %}
 						</div>
@@ -133,8 +126,9 @@
 								</b>
 								<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
 									<div>
-										<label for="institution" class="form-label">College/Organization/Institution
-																			Acronym</label>
+										<label for="institution" class="form-label">
+											College/Organization/Institution Acronym
+										</label>
 										<input id="institution" type="text" class="dcf-input-text dcf-w-100%" name="institution" placeholder="e.g. COB" required>
 									</div>
 
@@ -143,20 +137,21 @@
 										<input id="lockupName" type="text" class="dcf-input-text dcf-w-100%" name="lockupName" placeholder="e.g. Sample Lockup" required>
 									</div>
 								</div>
-								<p class="dcf-mt-3">Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span></p>
+								<p class="dcf-mt-3">
+									Your Lockup will be saved as <span id="generateLockupName" class="unl-bg-lighter-gray dcf-p-1">COB_Sample_Lockup.zip</span>
+								</p>
 							</div>
 							<hr>
 							<div class="dcf-form-group">
-															<b class="dcf-mb-4 dcf-d-block">Communicator Contact
-								</b>
-								<div style="display:none;" id="commNotListed" class="unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
+								<b class="dcf-mb-4 dcf-d-block">Communicator Contact</b>
+								<div id="commNotListed" class="dcf-d-none unl-bg-lighter-gray dcf-p-2 dcf-mb-2 dcf-rounded">
 									<p class="dcf-mb-0">
 										<strong>Are you sure your communicator is not listed?</strong>
 									</p>
 								</div>
 								<label for="approver" class="form-label">Select your communicator contact</label>
 								<select def id="approver" name="approver" class="dcf-input-select dcf-b-1 dcf-b-solid dcf-rounded" required>
-									<option value="">Select your Communicator Contact</option>
+									<option value="" selected disabled>Select your Communicator Contact</option>
 									{% for item in approvers %}
 										<option value="{{item.getId}}">{{item.getName}}
 											({{ item.getOrganizationAcronym }})</option>
@@ -164,260 +159,36 @@
 									<option value="-1">I'm not sure / not listed / N/A</option>
 								</select>
 							</div>
-							{# {% if lockup_style|length > 2 %}
-												{% if lockup_style['lockup_id'] != null %}
-												<a href="/lockups/preview/{{ lockup_style['lockup_id'] }}" class="dcf-btn dcf-btn-secondary">Go
-													Back</a>
-												{% endif %}
-												{% endif %} #}
 							<button class="dcf-btn dcf-btn-primary dcf-mt-5">Submit</button>
 						</div>
 					</form>
 				</div>
-			</div>
+			</section>
 		</div>
 
-
-		<!-- tabs script -->
- 		<script>
-// 			const horizontalBtn = document.getElementById("horizontal-button");
-// const verticalBtn = document.getElementById("vertical-button");
-// const horizontalTab = document.getElementById("horizontal-tab");
-// const verticalTab = document.getElementById("vertical-tab");
-
-// horizontalBtn.addEventListener("click", function () {
-// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab)
-// });
-
-// verticalBtn.addEventListener("click", function () {
-// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab)
-// });
-
-// function switchTabs(btnClicked, btnCurrent, tabClicked, tabCurrent) {
-// btnClicked.getElementsByTagName("input")[0].checked = true;
-// btnCurrent.getElementsByTagName("input")[0].checked = false;
-
-// tabCurrent.style.display = "none";
-// tabClicked.style.display = "block";
-// }
-// 		</script>
-
-		<!-- script to connect input field and svg rendered texts -->
-		<script>
-			const inputArray = {{ all_lockups_fields_json | raw }};
-let Svg = []; // select the fields accross all SVGs
-let InputDiv = []; // used to store the input field div container. used for showing and hiding input fields.
-let InputField = []; // used to store the input field itself. used for updating values accross field and SVGs.
-
-for (let k = 0; k < inputArray.length; k++) {
-Svg[k] = document.getElementsByClassName(inputArray[k]['slug']);
-InputDiv[k] = document.getElementById(inputArray[k]['slug']);
-InputField[k] = InputDiv[k].getElementsByTagName("input")[0];
-InputField[k].addEventListener("input", function () {updateSvgs(k)});
-}
-
-InputField[0].value = "";
-
-function updateSvgs(k) {
-for (let i = 0; i < Svg[k].length; i++) {
-if (inputArray[k]['uppercase'] == 1) {
-Svg[k][i].innerHTML = InputField[k].value.toUpperCase();
-} else {
-Svg[k][i].innerHTML = InputField[k].value;
-}
-}
-}
-		</script>
-
-
-		<!-- lockups selector script -->
-		<script>
-			const lockupTemplates = document.getElementsByClassName("lockup-templates");
-const lockupSvgTabs = document.getElementsByClassName("svgTabs");
-const templateFormInput = document.getElementById("lockupTemplateId");
-for (let i = 0; i < lockupTemplates.length; i++) {
-lockupTemplates[i].addEventListener("click", selectLockupTemplate);
-}
-
-// document.getElementById("lockup-templates-1").classList.add("unl-bg-lighter-gray-custom");
-
-function selectLockupTemplate(event) { // try catch because event object isn't passed when calling the function manually during edit lockups page
-try {
-elementId = event.target.id;
-} catch (error) {
-elementId = event.id;
-}
-
-let lockupTemplatesSelector = document.getElementById("lockup-templates-" + elementId);
-
-
-let selectedSvgTab = document.getElementById(elementId + "svg");
-templateFormInput.value = elementId;
-// remove the active tag from all the lockups
-for (let i = 0; i < lockupTemplates.length; i++) {
-try {
-lockupTemplates[i].classList.remove("unl-bg-lighter-gray-custom");
-} catch {
-
-}
-}
-// add the active tag to the selected element
-try {
-lockupTemplatesSelector.classList.add("unl-bg-lighter-gray-custom");
-} catch (error) {
-lockupTemplatesSelector.add("unl-bg-lighter-gray-custom");
-}
-// change the SVG tabs too
-// first set display: none to all SVG tabs
-for (let i = 0; i < lockupSvgTabs.length; i++) {
-lockupSvgTabs[i].style.display = "none";
-}
-// and set display: block to the one selected
-selectedSvgTab.style.display = "block";
-
-// check the fields in the SVG and display the form field
-// first set all fields to display: none
-for (let j = 0; j < InputDiv.length; j++) {
-InputDiv[j].style.display = "none";
-InputField[j].required = false;
-
-}
-// now check for field class names in the SVG tab and display the field div accordingly.
-// as of now, the only way to assign fields to the SVG is through the SVG code itself.
-for (let j = 0; j < InputDiv.length; j++) {
-if (selectedSvgTab.getElementsByClassName(inputArray[j]['slug']).length != 0) {
-InputDiv[j].style.display = "block";
-InputField[j].required = true;
-}
-}
-}
-		</script>
-
-		<script>
-			// category dropdown selector script
-const category_list = document.getElementById("category_list");
-updateCategoryListing()
-category_list.addEventListener("change", updateCategoryListing);
-
-function updateCategoryListing() {
-for (let i = 0; i < lockupTemplates.length; i++) {
-tempCategory = category_list.value;
-if (lockupTemplates[i].classList.contains(tempCategory)) {
-lockupTemplates[i].style.display = "block";
-} else {
-lockupTemplates[i].style.display = "none";
-}
-}
-}
-		</script>
-
-		<script>
-			// this is a code for edit lockups and error handling where lockup fields are updated accordinly.
-{% if lockups != null %}
-// {
-// # reads json value as text so length of "[]" = 2 #
-// }
-let lockupFields = {{ lockupFields | raw }};
-let lockupStyle = "{{ lockups.getTemplate.getStyle }}"; // h or v
-let lockupCategory = "{{ lockups.getTemplate.getCategory.getSlug }}"; // category
-let lockupTemplateID = "{{ editLockupTemplate.getId }}"; // template ID
-let lockupInstitution = "{{ lockups.getInstitution }}"; // college institution
-let lockupName = "{{ lockups.getName }}"; // lockup name
-let lockupApprover = "{{ (lockups.getApprover.getId is defined) ? lockups.getApprover.getId : 0 }}"; // lockup approver
-
-
-// if (lockupStyle == "h") {
-// switchTabs(horizontalBtn, verticalBtn, horizontalTab, verticalTab);
-// } else if (lockupStyle == "v") {
-// switchTabs(verticalBtn, horizontalBtn, verticalTab, horizontalTab);
-// }
-
-if (lockupCategory != "") {
-category_list.value = lockupCategory;
-updateCategoryListing()
-}
-
-if (lockupTemplateID != "") {
-let tempElement = document.getElementById(lockupTemplateID);
-selectLockupTemplate(tempElement);
-}
-
-if (lockupInstitution != "") {
-let tempElement = document.getElementById("institution");
-tempElement.value = lockupInstitution;
-}
-
-if (lockupName != "") {
-let tempElement = document.getElementById("lockupName");
-tempElement.value = lockupName;
-}
-
-if (lockupApprover != 0) {
-let tempElement = document.getElementById("approver");
-tempElement.value = lockupApprover;
-}
-
-{% if lockupFields | length > 2 %}
-for (let j = 0; j < inputArray.length; j++) {
-for (let i = 0; i < lockupFields.length; i++) {
-if (lockupFields[i]['fields']['slug'] == inputArray[j]['slug']) {
-InputField[j].value = lockupFields[i]['value'];
-updateSvgs(j);
-}
-}
-}
-{% endif %}
-{% endif %}
-		</script>
-
-		<script>
-			// approver alert "are you sure your approver isn't listed?" message
-approverDropdown = document.getElementById("approver");
-commNotListed = document.getElementById("commNotListed");
-
-approverDropdown.addEventListener("change", function () {
-if (approverDropdown.value == "-1") {
-commNotListed.style.display = "block";
-} else {
-commNotListed.style.display = "none";
-}
-});
-		</script>
-
-<script>
-// javascript code to dynamically generate lockup name
-const lockupNameElement = document.getElementById("lockupName");
-const institutionElement = document.getElementById("institution");
-const generatedLockupName = document.getElementById("generateLockupName");
-
-institutionElement.addEventListener("input", function() {updateGeneratedLockupName()});
-lockupNameElement.addEventListener("input", function() {updateGeneratedLockupName()});
-
-
-function updateGeneratedLockupName() {
-	let getInstitutionName = institutionElement.value;
-	let getLockupName = lockupNameElement.value;
-
-	if (getInstitutionName === "") {
-		getInstitutionName = "COB";
-	}
-	if (getLockupName === "") {
-		getLockupName = "Sample Lockup";
-	}
-	let sanitizedInstitutionName = getInstitutionName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
-	let sanitizedLockupName = getLockupName.toString().replace(/[^a-zA-Z0-9 ]/g, '');
-
-
-	sanitizedInstitutionName = sanitizedInstitutionName.replaceAll(" ", "_");
-	sanitizedInstitutionName = sanitizedInstitutionName.toUpperCase(); //uppercase
-
-
- 	sanitizedLockupName = sanitizedLockupName.replaceAll(" ", "_");
-
-
-	generatedLockupName.textContent = sanitizedInstitutionName + "_" + sanitizedLockupName + ".zip";
-}
-</script>
+	<script>
+		const inputArray = {{ all_lockups_fields_json | raw }};
+		{% if lockups != null %}
+			const edit_mode = true;
+			const lockupFields = {{ lockupFields | raw }};
+			const lockupStyle = "{{ lockups.getTemplate.getStyle }}"; // h or v
+			const lockupCategory = "{{ lockups.getTemplate.getCategory.getSlug }}"; // category
+			const lockupTemplateID = "{{ editLockupTemplate.getId }}"; // template ID
+			const lockupInstitution = "{{ lockups.getInstitution }}"; // college institution
+			const lockupName = "{{ lockups.getName }}"; // lockup name
+			const lockupApprover = "{{ (lockups.getApprover.getId is defined) ? lockups.getApprover.getId : 0 }}"; // lockup approver
+		{% else %}
+			const edit_mode = false;
+			const lockupFields = null;
+			const lockupStyle = null; // h or v
+			const lockupCategory = null; // category
+			const lockupTemplateID = null; // template ID
+			const lockupInstitution = null; // college institution
+			const lockupName = null; // lockup name
+			const lockupApprover = null; // lockup approver
+		{% endif %}
+	</script>
+	<script src="/js/create_page.js"defer></script>
 
 	{% endblock %}
 {% endblock %}

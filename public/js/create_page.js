@@ -178,11 +178,11 @@ function updateCategoryListing()
     });
 
     if (category_count === 1) {
-        template_container.classList.add('dcf-grid-full');
-        template_container.classList.remove('dcf-grid-halves');
+        template_container.classList.add('dcf-grid-cols-1');
+        template_container.classList.remove('dcf-grid-cols-2');
     } else {
-        template_container.classList.remove('dcf-grid-full');
-        template_container.classList.add('dcf-grid-halves');
+        template_container.classList.remove('dcf-grid-cols-1');
+        template_container.classList.add('dcf-grid-cols-2');
     }
 
     if (category_selected === "cat_social" || category_selected === "cat_emb") {

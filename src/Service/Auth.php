@@ -53,8 +53,31 @@ class Auth
         return true;
     }
 
+    public function isLoggedIn():bool
+    {
+        if (!phpCAS::isInitialized()) {
+            return false;
+        }
+
+        $check_auth = phpCAS::checkAuthentication();
+        if (!$check_auth) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getUsername(): string
     {
+        if (!phpCAS::isInitialized()) {
+            return '';
+        }
+
+        $check_auth = phpCAS::checkAuthentication();
+        if (!$check_auth) {
+            return '';
+        }
+
         return phpCAS::getUser();
     }
 

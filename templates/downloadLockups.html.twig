@@ -1,8 +1,8 @@
 {% block body %}
 <div class="dcf-wrapper dcf-bleed dcf-pb-7 unl-bg-cream">
 	<h3>Download Lockup Files</h3>
-	<div class="dcf-w-max-xl dcf-mr-auto dcf-ml-auto dcf-mb-10">
-		<div class="dcf-grid dcf-grid-full dcf-grid-halves@lg dcf-col-gap-vw dcf-row-gap-9">
+	<div class="dcf-max-w-xl dcf-mr-auto dcf-ml-auto dcf-mb-10">
+		<div class="dcf-d-grid dcf-grid-cols-1 dcf-grid-cols-2@lg dcf-col-gap-vw dcf-row-gap-9">
 			{% if Lockup.getPreviewH != null%}
 			<div class="horiz lockups-border dcf-d-flex dcf-ai-center dcf-relative">
 				<div class="lockups-download dcf-p-4 dcf-d-flex-col dcf-w-100%">
@@ -56,7 +56,7 @@
 		</div>
 		{% endif %}
 		<div class="dcf-bleed dcf-wrapper dcf-mt-6 dcf-mb-6">
-			<table class="dcf-table dcf-table-bordered dcf-w-max-xl dcf-mr-auto dcf-ml-auto dcf-txt-left">
+			<table class="dcf-table dcf-table-bordered dcf-max-w-xl dcf-mr-auto dcf-ml-auto dcf-txt-left">
 				<thead>
 					<tr>
 						<th>
@@ -331,9 +331,4 @@
 	});
 </script>
 
-<script>
-	window.addEventListener('inlineJSReady', function () {
-		WDN.initializePlugin('notice');
-	}, false);
-</script>
 {% endblock %}

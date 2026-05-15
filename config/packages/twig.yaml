@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         cache_version: '%env(CACHE_VERSION)%'
+        auth: '@App\Service\Auth'
 
 when@test:
     twig:

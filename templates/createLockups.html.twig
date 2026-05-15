@@ -1,5 +1,7 @@
 {% block content %}
 	{% block body %}
+		{{ app.user }}
+
 		<div class="dcf-m-auto" style="width: min(100%, 70ch);">
 			<h1>Create Lockup</h1>
 			<p>
@@ -30,13 +32,13 @@
 					</div>
 					<button id="back_to_step_one" class="dcf-btn dcf-btn-secondary">Back a step</button>
 				</div>
-				<div id="template-container" class="unl-bg-cream@dark dcf-rounded dcf-grid-halves dcf-row-gap-3 dcf-col-gap-3 dcf-mt-6 dcf-p-3">
+				<div id="template-container" class="unl-bg-cream@dark dcf-rounded dcf-d-grid dcf-grid-cols-2 dcf-row-gap-3 dcf-col-gap-3 dcf-mt-6 dcf-p-3">
 					{% for categories in lockup_categories %}
 						{# `getLockupTemplates` filters disabled templates out #}
 						{% for lockupTemplates in categories.getLockupTemplates | sort((a, b) => a.getListingOrder <=> b.getListingOrder) %}
 							{% if lockupTemplates.getStyle == "v" %}
-								<div id="lockup-template-{{lockupTemplates.getId}}" tabindex="0" data-id="{{lockupTemplates.getId}}" class="lockup-templates {{categories.getSlug}} dcf-rounded dcf-ratio dcf-ratio-1x1 dcf-mr-auto dcf-ml-auto dcf-d-none" style="width: 10rem; height: 10rem;">
-									<img class="dcf-ratio-child" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
+								<div id="lockup-template-{{lockupTemplates.getId}}" tabindex="0" data-id="{{lockupTemplates.getId}}" class="lockup-templates {{categories.getSlug}} dcf-rounded dcf-mr-auto dcf-ml-auto dcf-d-none" style="width: 10rem; height: 10rem;">
+									<img class="dcf-1x1 dcf-obj-fit-cover" src="{{lockupTemplates.getImage}}" alt="{{lockupTemplates.getName}}">
 								</div>
 							{% endif %}
 						{% endfor %}
@@ -124,7 +126,7 @@
 							<div class="dcf-form-group">
 								<b class="dcf-mb-4 dcf-d-block">Lockup Filename
 								</b>
-								<div class="dcf-grid dcf-grid-full dcf-grid-halves@md dcf-col-gap-5">
+								<div class="dcf-d-grid dcf-grid-cols-1 dcf-grid-cols-2@md dcf-col-gap-5">
 									<div>
 										<label for="institution" class="form-label">
 											College/Organization/Institution Acronym

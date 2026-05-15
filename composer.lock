@@ -3845,28 +3845,32 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v2.1.6",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "dd7dafe3bfebf8441e167b76d8a18974585467f3"
+                "reference": "9cd384775973eabbf6e8b05784dda279fc67c28d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/dd7dafe3bfebf8441e167b76d8a18974585467f3",
-                "reference": "dd7dafe3bfebf8441e167b76d8a18974585467f3",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/9cd384775973eabbf6e8b05784dda279fc67c28d",
+                "reference": "9cd384775973eabbf6e8b05784dda279fc67c28d",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.1",
-                "php": ">=8.0"
+                "php": ">=8.1"
+            },
+            "conflict": {
+                "composer/semver": "<1.7.2",
+                "symfony/dotenv": "<5.4"
             },
             "require-dev": {
                 "composer/composer": "^2.1",
-                "symfony/dotenv": "^5.4|^6.0",
-                "symfony/filesystem": "^5.4|^6.0",
-                "symfony/phpunit-bridge": "^5.4|^6.0",
-                "symfony/process": "^5.4|^6.0"
+                "symfony/dotenv": "^6.4|^7.4|^8.0",
+                "symfony/filesystem": "^6.4|^7.4|^8.0",
+                "symfony/phpunit-bridge": "^6.4|^7.4|^8.0",
+                "symfony/process": "^6.4|^7.4|^8.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -3890,7 +3894,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v2.1.6"
+                "source": "https://github.com/symfony/flex/tree/v2.10.0"
             },
             "funding": [
                 {
@@ -3902,11 +3906,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-16T17:31:43+00:00"
+            "time": "2025-11-16T09:38:19+00:00"
         },
         {
             "name": "symfony/form",
@@ -7915,12 +7923,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/unl/wdn-symfony-framework.git",
-                "reference": "f067bd96215a054fc3066ed1eaea695643eab6f6"
+                "reference": "4c89582f3c63ff2aad0459ddb6c886e3e794702b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unl/wdn-symfony-framework/zipball/f067bd96215a054fc3066ed1eaea695643eab6f6",
-                "reference": "f067bd96215a054fc3066ed1eaea695643eab6f6",
+                "url": "https://api.github.com/repos/unl/wdn-symfony-framework/zipball/4c89582f3c63ff2aad0459ddb6c886e3e794702b",
+                "reference": "4c89582f3c63ff2aad0459ddb6c886e3e794702b",
                 "shasum": ""
             },
             "require": {
@@ -7951,7 +7959,7 @@
                 "issues": "https://github.com/unl/wdn-symfony-framework/issues",
                 "source": "https://github.com/unl/wdn-symfony-framework/tree/main"
             },
-            "time": "2022-03-07T21:45:15+00:00"
+            "time": "2022-03-10T20:14:51+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -8328,6 +8336,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

@@ -1,21 +1,20 @@
 {# templates/wdnbase.html.twig #}
-{% extends '@WDNFramework/5.3/php.app_local.dwt.twig' %}
+{% extends '@WDNFramework/6.0/php.app_local.dwt.twig' %}
 
 {% block head %}
 <link rel="stylesheet" href="/css/custom.css?v={{ cache_version }}">
-{# <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7717652/7503352/css/fonts.css" /> #}
+<script>
+    window.UNL.idm.pushConfig('logoutRoute', '/logout/');
+    {% if auth.isLoggedIn() %}
+    window.UNL.idm.pushConfig('serverUser', '{{ auth.getUsername() }}');
+    {% endif %}
+</script>
 {% endblock %}
 
 {% block highlighted %}
 {{ include('@DCFFramework/partials/flash-notices.html.twig') }}
 {% endblock %}
 
-{% block jsbody %}
-<script>
-    WDN.setPluginParam("idm", "logout", "/logout/");
-    WDN.initializePlugin("notice");
-</script>
-{% endblock %}
 
 {# Default Block Values #}
 {% block doctitle %}<title>UNL Lockup Factory</title>{% endblock %}
